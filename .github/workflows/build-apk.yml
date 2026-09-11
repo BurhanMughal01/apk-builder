@@ -37,25 +37,24 @@ jobs:
             --auto-add-overlay
           echo "=== APK after aapt2 ==="
           ls -lh app-unsigned.apk
-          unzip -l app-unsigned.apk
       
       - name: Compile Java
         run: |
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           javac --release 8 -cp $PLATFORM -d app/build \
-            app/src/com/example/myapp/MainActivity.java \
-            app/src/com/example/myapp/R.java
+            app/src/com/burhan/myapp2/MainActivity.java \
+            app/src/com/burhan/myapp2/R.java
       
       - name: Build DEX
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
-          $BT/d8 --output app/ app/build/com/example/myapp/*.class \
+          $BT/d8 --output app/ app/build/com/burhan/myapp2/*.class \
             --lib $PLATFORM --min-api 21
           echo "=== DEX file ==="
           ls -lh app/classes.dex
       
-      - name: Add files to APK (CORRECT PATHS)
+      - name: Add files to APK
         run: |
           echo "=== Adding classes.dex ==="
           zip -j app-unsigned.apk app/classes.dex
@@ -86,6 +85,8 @@ jobs:
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
             --key-pass pass:123456 --min-sdk-version 21 \
+            --v1-signing-enabled true --v2-signing-enabled true \
+            --v3-signing-enabled true \
             --out output.apk app-unsigned.apk
           echo "=== Signed APK ==="
           ls -lh output.apk
