@@ -28,18 +28,20 @@ jobs:
       
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: 'platforms;android-33 build-tools;33.0.2'
-          accept-licenses: true
       
-      - name: Make build.sh executable
-        run: chmod +x build.sh
+      - name: Install Android Platform 33
+        run: |
+          sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools"
+          yes | sdkmanager --licenses || true
       
       - name: Verify SDK
         run: |
           echo "ANDROID_HOME: $ANDROID_HOME"
           ls $ANDROID_HOME/platforms/
           ls $ANDROID_HOME/build-tools/
+      
+      - name: Make build.sh executable
+        run: chmod +x build.sh
       
       - name: Build APK
         run: ./build.sh
