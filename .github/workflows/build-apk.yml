@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout code
@@ -26,7 +28,6 @@ jobs:
       - name: Install Android SDK Components
         run: |
           sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
-          test -f $ANDROID_HOME/platforms/android-34/android.jar && echo "✅ SDK ready" || echo "❌ SDK MISSING"
       
       - name: Compile and Link resources
         run: |
@@ -38,8 +39,6 @@ jobs:
             -R compiled.zip --java app/src \
             --min-sdk-version 21 --target-sdk-version 34 \
             --auto-add-overlay
-          echo "=== APK after aapt2 ==="
-          ls -lh app-unsigned.apk
       
       - name: Compile Java
         run: |
@@ -54,27 +53,15 @@ jobs:
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           $BT/d8 --output app/ app/build/com/burhan/myapp2/*.class \
             --lib $PLATFORM --min-api 21
-          echo "=== DEX file ==="
-          ls -lh app/classes.dex
       
       - name: Add files to APK
         run: |
-          echo "=== Adding classes.dex ==="
           zip -j app-unsigned.apk app/classes.dex
-          
-          echo "=== Adding assets ==="
           cd app
           zip -r ../app-unsigned.apk assets/
           cd ..
-          
-          echo "=== Final APK contents ==="
-          ls -lh app-unsigned.apk
+          echo "=== APK contents ==="
           unzip -l app-unsigned.apk
-          
-          echo "=== Essential files check ==="
-          unzip -l app-unsigned.apk | grep -q "AndroidManifest.xml" && echo "✅ AndroidManifest.xml FOUND" || echo "❌ MISSING"
-          unzip -l app-unsigned.apk | grep -q "classes.dex" && echo "✅ classes.dex FOUND" || echo "❌ MISSING"
-          unzip -l app-unsigned.apk | grep -q "assets/index.html" && echo "✅ index.html FOUND" || echo "❌ MISSING"
       
       - name: Create keystore
         run: |
@@ -89,13 +76,27 @@ jobs:
           $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
             --key-pass pass:123456 --min-sdk-version 21 \
             --v1-signing-enabled true --v2-signing-enabled true \
-            --v3-signing-enabled true \
             --out output.apk app-unsigned.apk
-          echo "=== Signed APK ==="
           ls -lh output.apk
-          $BT/apksigner verify --verbose output.apk
       
-      - name: Upload APK
+      - name: Get timestamp
+        id: timestamp
+        run: echo "ts=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: build-${{ steps.timestamp.outputs.ts }}
+          name: APK Build ${{ steps.timestamp.outputs.ts }}
+          body: |
+            ✅ Your APK is ready!
+            
+            Download: output.apk
+          files: output.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-apk
