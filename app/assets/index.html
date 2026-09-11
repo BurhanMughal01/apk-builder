@@ -1,115 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reflex Tap Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #121212;
-            color: #fff;
-            margin: 0;
-            padding: 20px;
-            user-select: none;
-        }
-        h1 { margin-bottom: 5px; color: #4CAF50; }
-        .stats { font-size: 18px; margin: 15px 0; }
-        #game-board {
-            width: 300px;
-            height: 300px;
-            border: 3px solid #4CAF50;
-            border-radius: 15px;
-            margin: 0 auto;
-            position: relative;
-            background-color: #1e1e1e;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-        #target {
-            width: 50px;
-            height: 50px;
-            background-color: #ff4081;
-            border-radius: 50%;
-            position: absolute;
-            display: none;
-            cursor: pointer;
-            box-shadow: 0 0 15px #ff4081;
-        }
-        .btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        .btn:disabled { background-color: #555; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML to APK</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.box{background:#1a1a2e;border-radius:20px;padding:30px;max-width:420px;width:100%;border:1px solid rgba(243,156,18,.2)}
+h1{color:#f39c12;text-align:center;margin-bottom:8px}
+p{color:#8899aa;text-align:center;font-size:14px;margin-bottom:20px}
+label{display:block;color:#8899aa;font-size:13px;margin-bottom:6px;margin-top:14px}
+input[type=text]{width:100%;padding:12px;background:#0a0a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:15px}
+.file{padding:24px;border:2px dashed #444;border-radius:10px;text-align:center;cursor:pointer;color:#8899aa}
+.file input{display:none}
+.fname{color:#2ecc71;font-size:13px;margin-top:8px;display:none}
+button{width:100%;padding:15px;background:#f39c12;border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:700;margin-top:14px;cursor:pointer}
+button:disabled{opacity:.5}
+.msg{margin-top:16px;padding:16px;border-radius:10px;text-align:center;font-size:14px;display:none;line-height:1.6}
+.msg.show{display:block}
+.info{background:rgba(52,152,219,.15);color:#5dade2}
+.ok{background:rgba(46,204,113,.15);color:#2ecc71}
+.err{background:rgba(231,76,60,.15);color:#e74c3c}
+a.link{display:block;margin-top:10px;padding:14px;background:#2ecc71;color:#fff;text-decoration:none;border-radius:10px;font-weight:700}
+</style>
 </head>
 <body>
+<div class="box">
+<h1>🚀 HTML to APK</h1>
+<p>Convert HTML to Android APK</p>
 
-    <h1>Reflex Tap</h1>
-    <p>Tap the pink target as many times as you can in 100 seconds!</p>
+<label>App Name</label>
+<input type="text" id="name" value="My App">
 
-    <div class="stats">
-        <span>Score: <b id="score">0</b></span> | 
-        <span>Time Left: <b id="time">100</b>s</span>
-    </div>
+<label>HTML File</label>
+<label class="file" for="file">
+📁 Click to upload HTML
+<input type="file" id="file" accept=".html,.htm">
+</label>
+<div class="fname" id="fname"></div>
 
-    <div id="game-board">
-        <div id="target" onclick="hitTarget()"></div>
-    </div>
+<button id="go" onclick="go()">🚀 Build APK</button>
 
-    <button id="start-btn" class="btn" onclick="startGame()">Start Game</button>
+<div class="msg" id="msg"></div>
+</div>
 
-    <script>
-        let score = 0;
-        let timeLeft = 100;
-        let timer = null;
-        const target = document.getElementById('target');
-        const board = document.getElementById('game-board');
+<script>
+const API = 'https://apk-builder-api.buisch2314.workers.dev';
+const REL = 'https://github.com/BurhanMughal01/apk-builder/releases/latest';
 
-        function startGame() {
-            score = 0;
-            timeLeft = 100;
-            document.getElementById('score').innerText = score;
-            document.getElementById('time').innerText = timeLeft;
-            document.getElementById('start-btn').disabled = true;
+document.getElementById('file').onchange = e => {
+    const f = document.getElementById('fname');
+    f.textContent = '✅ ' + e.target.files[0].name;
+    f.style.display = 'block';
+};
 
-            moveTarget();
-            target.style.display = 'block';
+function show(html, type) {
+    const m = document.getElementById('msg');
+    m.className = 'msg show ' + type;
+    m.innerHTML = html;
+}
 
-            timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('time').innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    target.style.display = 'none';
-                    document.getElementById('start-btn').disabled = false;
-                    alert('Game Over! Your final score is: ' + score);
-                }
-            }, 1000);
-        }
-
-        function hitTarget() {
-            score++;
-            document.getElementById('score').innerText = score;
-            moveTarget();
-        }
-
-        function moveTarget() {
-            const maxX = board.clientWidth - 50;
-            const maxY = board.clientHeight - 50;
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-            target.style.left = randomX + 'px';
-            target.style.top = randomY + 'px';
-        }
-    </script>
+async function go() {
+    const file = document.getElementById('file').files[0];
+    const name = document.getElementById('name').value || 'My App';
+    
+    if (!file) return show('⚠️ Pehle HTML file select karein', 'err');
+    
+    document.getElementById('go').disabled = true;
+    show('📤 Uploading...', 'info');
+    
+    const fd = new FormData();
+    fd.append('htmlfile', file);
+    fd.append('appName', name);
+    
+    try {
+        const r = await fetch(API, { method: 'POST', body: fd });
+        const d = await r.json();
+        
+        if (!r.ok) throw new Error(d.error || 'Upload failed');
+        
+        let sec = 90;
+        show('✅ Uploaded!<br><br>⏳ APK ban rahi hai...<br><b>' + sec + '</b> seconds wait karein', 'info');
+        
+        const t = setInterval(() => {
+            sec--;
+            if (sec <= 0) {
+                clearInterval(t);
+                show(
+                    '🎉 <b>APK Ready!</b><br><br>' +
+                    'Neeche button dabayen:<br>' +
+                    '<a class="link" href="' + REL + '" target="_blank">⬇️ Open Releases</a>' +
+                    '<div style="margin-top:8px;font-size:12px;color:#8899aa">' +
+                    'File: <b>output.apk</b> download karein</div>',
+                    'ok'
+                );
+                document.getElementById('go').disabled = false;
+                return;
+            }
+            show('✅ Uploaded!<br><br>⏳ APK ban rahi hai...<br><b>' + sec + '</b> seconds wait karein', 'info');
+        }, 1000);
+        
+    } catch (e) {
+        show('❌ Error: ' + e.message, 'err');
+        document.getElementById('go').disabled = false;
+    }
+}
+</script>
 </body>
 </html>
