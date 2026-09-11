@@ -2,15 +2,6 @@ name: Build APK
 
 on:
   workflow_dispatch:
-    inputs:
-      app_name:
-        description: 'App Name'
-        required: true
-        default: 'My App'
-      package_name:
-        description: 'Package Name'
-        required: true
-        default: 'com.example.myapp'
 
 jobs:
   build:
@@ -29,18 +20,14 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Install Android Platform 33
+      - name: Install platform 33
         run: |
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
           sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools"
-          yes | sdkmanager --licenses || true
-      
-      - name: Verify SDK
-        run: |
-          echo "ANDROID_HOME: $ANDROID_HOME"
+          echo "=== Platforms ==="
           ls $ANDROID_HOME/platforms/
-          ls $ANDROID_HOME/build-tools/
       
-      - name: Make build.sh executable
+      - name: Make executable
         run: chmod +x build.sh
       
       - name: Build APK
@@ -51,4 +38,3 @@ jobs:
         with:
           name: app-apk
           path: output.apk
-          retention-days: 30
