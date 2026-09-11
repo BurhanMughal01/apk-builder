@@ -10,6 +10,16 @@ PLATFORM=$SDK/platforms/android-33/android.jar
 
 echo "📦 Build Tools: $BT"
 
+# Check if platform exists, if not install it
+if [ ! -f "$PLATFORM" ]; then
+    echo "📥 Installing Android platform 33..."
+    yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" > /dev/null 2>&1 || \
+    yes | $SDK/tools/bin/sdkmanager "platforms;android-33" > /dev/null 2>&1 || \
+    yes | sdkmanager "platforms;android-33" > /dev/null 2>&1
+fi
+
+echo "✅ Platform ready: $PLATFORM"
+
 # Compile resources
 echo "📦 Compiling resources..."
 $BT/aapt2 compile --dir app/res -o compiled.zip
