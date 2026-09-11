@@ -25,7 +25,7 @@ jobs:
           sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
           test -f $ANDROID_HOME/platforms/android-34/android.jar && echo "✅ SDK ready" || echo "❌ SDK MISSING"
       
-      - name: Compile resources
+      - name: Compile and Link resources
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
@@ -35,8 +35,9 @@ jobs:
             -R compiled.zip --java app/src \
             --min-sdk-version 21 --target-sdk-version 34 \
             --auto-add-overlay
-          echo "=== After link ==="
+          echo "=== APK after aapt2 ==="
           ls -lh app-unsigned.apk
+          unzip -l app-unsigned.apk
       
       - name: Compile Java
         run: |
@@ -44,7 +45,6 @@ jobs:
           javac --release 8 -cp $PLATFORM -d app/build \
             app/src/com/example/myapp/MainActivity.java \
             app/src/com/example/myapp/R.java
-          ls -la app/build/com/example/myapp/
       
       - name: Build DEX
         run: |
@@ -52,20 +52,27 @@ jobs:
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           $BT/d8 --output app/ app/build/com/example/myapp/*.class \
             --lib $PLATFORM --min-api 21
-          echo "=== After DEX ==="
+          echo "=== DEX file ==="
           ls -lh app/classes.dex
       
-      - name: Add files to APK
+      - name: Add files to APK (CORRECT PATHS)
         run: |
-          cd app
           echo "=== Adding classes.dex ==="
-          zip -j app-unsigned.apk classes.dex
+          zip -j app-unsigned.apk app/classes.dex
+          
           echo "=== Adding assets ==="
-          zip -r app-unsigned.apk assets/
-          echo "=== APK after adding files ==="
+          cd app
+          zip -r ../app-unsigned.apk assets/
+          cd ..
+          
+          echo "=== Final APK contents ==="
           ls -lh app-unsigned.apk
           unzip -l app-unsigned.apk
-          cd ..
+          
+          echo "=== Essential files check ==="
+          unzip -l app-unsigned.apk | grep -q "AndroidManifest.xml" && echo "✅ AndroidManifest.xml FOUND" || echo "❌ MISSING"
+          unzip -l app-unsigned.apk | grep -q "classes.dex" && echo "✅ classes.dex FOUND" || echo "❌ MISSING"
+          unzip -l app-unsigned.apk | grep -q "assets/index.html" && echo "✅ index.html FOUND" || echo "❌ MISSING"
       
       - name: Create keystore
         run: |
@@ -79,11 +86,9 @@ jobs:
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
             --key-pass pass:123456 --min-sdk-version 21 \
-            --v1-signing-enabled true --v2-signing-enabled true \
-            --out output.apk app/app-unsigned.apk
+            --out output.apk app-unsigned.apk
           echo "=== Signed APK ==="
           ls -lh output.apk
-          echo "=== Verify signature ==="
           $BT/apksigner verify --verbose output.apk
       
       - name: Upload APK
