@@ -5,12 +5,10 @@
     android:versionName="1.0">
     
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33"/>
-    
     <uses-permission android:name="android.permission.INTERNET"/>
     
     <application 
         android:label="My App" 
-        android:icon="@mipmap/ic_launcher"
         android:debuggable="true">
         
         <activity 
