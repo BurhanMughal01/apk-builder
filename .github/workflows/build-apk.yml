@@ -22,48 +22,49 @@ jobs:
       
       - name: Install Android SDK Components
         run: |
-          echo "=== Installing SDK components ==="
-          sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools"
-          echo "=== Verification ==="
-          ls -la $ANDROID_HOME/platforms/
-          ls -la $ANDROID_HOME/build-tools/
-          test -f $ANDROID_HOME/platforms/android-33/android.jar && echo "✅ android.jar found!" || echo "❌ android.jar MISSING!"
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          test -f $ANDROID_HOME/platforms/android-34/android.jar && echo "✅ SDK ready" || echo "❌ SDK MISSING"
       
       - name: Compile resources
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
-          echo "Build Tools: $BT"
+          PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           $BT/aapt2 compile --dir app/res -o compiled.zip
-      
-      - name: Link resources
-        run: |
-          BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
-          PLATFORM=$ANDROID_HOME/platforms/android-33/android.jar
           $BT/aapt2 link -o app-unsigned.apk -I $PLATFORM \
             --manifest app/AndroidManifest.xml \
             -R compiled.zip --java app/src \
-            --min-sdk-version 21 --target-sdk-version 33 \
+            --min-sdk-version 21 --target-sdk-version 34 \
             --auto-add-overlay
+          echo "=== After link ==="
+          ls -lh app-unsigned.apk
       
       - name: Compile Java
         run: |
-          PLATFORM=$ANDROID_HOME/platforms/android-33/android.jar
+          PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           javac --release 8 -cp $PLATFORM -d app/build \
             app/src/com/example/myapp/MainActivity.java \
             app/src/com/example/myapp/R.java
+          ls -la app/build/com/example/myapp/
       
       - name: Build DEX
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
-          PLATFORM=$ANDROID_HOME/platforms/android-33/android.jar
+          PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           $BT/d8 --output app/ app/build/com/example/myapp/*.class \
             --lib $PLATFORM --min-api 21
+          echo "=== After DEX ==="
+          ls -lh app/classes.dex
       
       - name: Add files to APK
         run: |
           cd app
+          echo "=== Adding classes.dex ==="
           zip -j app-unsigned.apk classes.dex
+          echo "=== Adding assets ==="
           zip -r app-unsigned.apk assets/
+          echo "=== APK after adding files ==="
+          ls -lh app-unsigned.apk
+          unzip -l app-unsigned.apk
           cd ..
       
       - name: Create keystore
@@ -78,20 +79,12 @@ jobs:
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
             --key-pass pass:123456 --min-sdk-version 21 \
+            --v1-signing-enabled true --v2-signing-enabled true \
             --out output.apk app/app-unsigned.apk
-      
-      - name: Verify APK contents
-        run: |
-          echo "=== APK size ==="
+          echo "=== Signed APK ==="
           ls -lh output.apk
-          echo ""
-          echo "=== APK contents ==="
-          unzip -l output.apk
-          echo ""
-          echo "=== Essential files check ==="
-          unzip -l output.apk | grep -q "classes.dex" && echo "✅ classes.dex FOUND" || echo "❌ classes.dex MISSING"
-          unzip -l output.apk | grep -q "assets/index.html" && echo "✅ index.html FOUND" || echo "❌ index.html MISSING"
-          unzip -l output.apk | grep -q "AndroidManifest.xml" && echo "✅ AndroidManifest.xml FOUND" || echo "❌ AndroidManifest.xml MISSING"
+          echo "=== Verify signature ==="
+          $BT/apksigner verify --verbose output.apk
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
