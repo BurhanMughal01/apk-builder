@@ -79,7 +79,19 @@ jobs:
           $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
             --key-pass pass:123456 --min-sdk-version 21 \
             --out output.apk app/app-unsigned.apk
+      
+      - name: Verify APK contents
+        run: |
+          echo "=== APK size ==="
           ls -lh output.apk
+          echo ""
+          echo "=== APK contents ==="
+          unzip -l output.apk
+          echo ""
+          echo "=== Essential files check ==="
+          unzip -l output.apk | grep -q "classes.dex" && echo "✅ classes.dex FOUND" || echo "❌ classes.dex MISSING"
+          unzip -l output.apk | grep -q "assets/index.html" && echo "✅ index.html FOUND" || echo "❌ index.html MISSING"
+          unzip -l output.apk | grep -q "AndroidManifest.xml" && echo "✅ AndroidManifest.xml FOUND" || echo "❌ AndroidManifest.xml MISSING"
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
