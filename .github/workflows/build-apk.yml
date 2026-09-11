@@ -20,21 +20,23 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Install platform 33
+      - name: Install Platform and Build Tools
         run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools"
-          echo "=== Platforms ==="
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools" || true
+          echo "=== Checking installation ==="
           ls $ANDROID_HOME/platforms/
+          ls $ANDROID_HOME/build-tools/
       
-      - name: Make executable
+      - name: Make build.sh executable
         run: chmod +x build.sh
       
       - name: Build APK
-        run: ./build.sh
+        run: bash build.sh
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-apk
           path: output.apk
+          retention-days: 30
