@@ -98,13 +98,18 @@ async function build() {
 
         if (!res.ok) throw new Error(data.error || 'Upload failed');
 
-        show('⏳ <strong>Building your APK...</strong><br>This takes about 5 minutes.<br><span class="spinner"></span>Please wait...', 'info');
+        show('⏳ <strong>Building your APK...</strong><br>This takes about 1-2 minutes.<br><span class="spinner"></span>Please wait...', 'info');
 
-        // Poll for release
+        // Poll for release - check every 10 seconds
         const startTime = Date.now();
-        const startBuild = Math.floor(startTime / 1000);
+        const startBuild = Math.floor(startTime / 1000) - 30; // 30 sec buffer
+        let attempts = 0;
+        const maxAttempts = 60; // 10 minutes max
+
         const interval = setInterval(async () => {
-            if ((Date.now() - startTime) / 1000 > 600) {
+            attempts++;
+            
+            if (attempts > maxAttempts) {
                 clearInterval(interval);
                 show('⏱️ Timeout. Check GitHub manually.', 'error');
                 document.getElementById('go').disabled = false;
@@ -115,12 +120,13 @@ async function build() {
                 const r = await fetch('https://api.github.com/repos/BurhanMughal01/apk-builder/releases/latest');
                 if (r.ok) {
                     const rel = await r.json();
-                    const created = Math.floor(new Date(rel.created_at).getTime() / 1000);
-                    if (created >= startBuild - 60) {
+                    const created = Math.floor(new Date(rel.published_at).getTime() / 1000);
+                    
+                    if (created >= startBuild) {
                         const apk = rel.assets?.find(a => a.name.endsWith('.apk'));
                         if (apk) {
                             clearInterval(interval);
-                            show('🎉 <strong>APK Ready!</strong>', 'success');
+                            show('🎉 <strong>APK Ready!</strong><br>Click below to download.', 'success');
                             const btn = document.createElement('a');
                             btn.href = apk.browser_download_url;
                             btn.className = 'download';
@@ -131,7 +137,9 @@ async function build() {
                         }
                     }
                 }
-            } catch (e) {}
+            } catch (e) {
+                // Keep polling on error
+            }
         }, 10000);
 
     } catch (err) {
