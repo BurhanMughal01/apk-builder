@@ -3,22 +3,26 @@ set -e
 
 echo "🔨 Starting APK build..."
 
-# SDK paths
 SDK=$ANDROID_HOME
 BT=$(ls -d $SDK/build-tools/* | tail -1)
-PLATFORM=$SDK/platforms/android-33/android.jar
 
-echo "📦 Build Tools: $BT"
+# Auto-detect platform
+PLATFORM=""
+for p in $SDK/platforms/android-34 $SDK/platforms/android-33 $SDK/platforms/android-35 $SDK/platforms/android-32 $SDK/platforms/android-31; do
+    if [ -f "$p/android.jar" ]; then
+        PLATFORM=$p/android.jar
+        break
+    fi
+done
 
-# Check if platform exists, if not install it
-if [ ! -f "$PLATFORM" ]; then
-    echo "📥 Installing Android platform 33..."
-    yes | $SDK/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" > /dev/null 2>&1 || \
-    yes | $SDK/tools/bin/sdkmanager "platforms;android-33" > /dev/null 2>&1 || \
-    yes | sdkmanager "platforms;android-33" > /dev/null 2>&1
+if [ -z "$PLATFORM" ]; then
+    echo "❌ No platform found! Installing android-34..."
+    yes | sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" > /dev/null 2>&1 || true
+    PLATFORM=$SDK/platforms/android-34/android.jar
 fi
 
-echo "✅ Platform ready: $PLATFORM"
+echo "✅ Build Tools: $BT"
+echo "✅ Platform: $PLATFORM"
 
 # Compile resources
 echo "📦 Compiling resources..."
