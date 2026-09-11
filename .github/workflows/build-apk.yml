@@ -77,7 +77,8 @@ jobs:
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
-            --key-pass pass:123456 --out output.apk app/app-unsigned.apk
+            --key-pass pass:123456 --min-sdk-version 21 \
+            --out output.apk app/app-unsigned.apk
           ls -lh output.apk
       
       - name: Upload APK
