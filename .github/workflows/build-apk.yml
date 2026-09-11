@@ -60,7 +60,6 @@ jobs:
           cd app
           zip -r ../app-unsigned.apk assets/
           cd ..
-          echo "=== APK contents ==="
           unzip -l app-unsigned.apk
       
       - name: Create keystore
@@ -80,25 +79,20 @@ jobs:
           ls -lh output.apk
       
       - name: Get timestamp
-        id: timestamp
-        run: echo "ts=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+        id: ts
+        run: echo "time=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
       
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: build-${{ steps.timestamp.outputs.ts }}
-          name: APK Build ${{ steps.timestamp.outputs.ts }}
-          body: |
-            ✅ Your APK is ready!
-            
-            Download: output.apk
+          tag_name: build-${{ steps.ts.outputs.time }}
+          name: APK Build ${{ steps.ts.outputs.time }}
           files: output.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Upload APK as Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-apk
           path: output.apk
-          retention-days: 30
