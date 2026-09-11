@@ -20,13 +20,12 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Install Platform and Build Tools
+      - name: Pre-install Android Platform
         run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools" || true
-          echo "=== Checking installation ==="
-          ls $ANDROID_HOME/platforms/
-          ls $ANDROID_HOME/build-tools/
+          echo "Installing SDK components..."
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          echo "=== After install ==="
+          ls -la $ANDROID_HOME/platforms/
       
       - name: Make build.sh executable
         run: chmod +x build.sh
