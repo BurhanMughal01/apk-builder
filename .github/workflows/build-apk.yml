@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Java
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -20,18 +20,65 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Pre-install Android Platform
+      - name: Install Android SDK Components
         run: |
-          echo "Installing SDK components..."
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
-          echo "=== After install ==="
+          echo "=== Installing SDK components ==="
+          sdkmanager "platforms;android-33" "build-tools;33.0.2" "platform-tools"
+          echo "=== Verification ==="
           ls -la $ANDROID_HOME/platforms/
+          ls -la $ANDROID_HOME/build-tools/
+          test -f $ANDROID_HOME/platforms/android-33/android.jar && echo "✅ android.jar found!" || echo "❌ android.jar MISSING!"
       
-      - name: Make build.sh executable
-        run: chmod +x build.sh
+      - name: Compile resources
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+          echo "Build Tools: $BT"
+          $BT/aapt2 compile --dir app/res -o compiled.zip
       
-      - name: Build APK
-        run: bash build.sh
+      - name: Link resources
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+          PLATFORM=$ANDROID_HOME/platforms/android-33/android.jar
+          $BT/aapt2 link -o app-unsigned.apk -I $PLATFORM \
+            --manifest app/AndroidManifest.xml \
+            -R compiled.zip --java app/src \
+            --min-sdk-version 21 --target-sdk-version 33 \
+            --auto-add-overlay
+      
+      - name: Compile Java
+        run: |
+          PLATFORM=$ANDROID_HOME/platforms/android-33/android.jar
+          javac --release 8 -cp $PLATFORM -d app/build \
+            app/src/com/example/myapp/MainActivity.java \
+            app/src/com/example/myapp/R.java
+      
+      - name: Build DEX
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+          PLATFORM=$ANDROID_HOME/platforms/android-33/android.jar
+          $BT/d8 --output app/ app/build/com/example/myapp/*.class \
+            --lib $PLATFORM --min-api 21
+      
+      - name: Add files to APK
+        run: |
+          cd app
+          zip -j app-unsigned.apk classes.dex
+          zip -r app-unsigned.apk assets/
+          cd ..
+      
+      - name: Create keystore
+        run: |
+          keytool -genkeypair -v -keystore key.jks -alias mykey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass 123456 -keypass 123456 \
+            -dname "CN=App, O=Org, C=PK" 2>/dev/null || true
+      
+      - name: Sign APK
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+          $BT/apksigner sign --ks key.jks --ks-pass pass:123456 \
+            --key-pass pass:123456 --out output.apk app/app-unsigned.apk
+          ls -lh output.apk
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
