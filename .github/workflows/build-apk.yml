@@ -29,6 +29,14 @@ jobs:
         run: |
           sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
       
+      - name: Read App Name
+        id: appname
+        run: |
+          NAME=$(grep -oP '(?<=<string name="app_name">).*?(?=</string>)' app/res/values/strings.xml | head -1)
+          if [ -z "$NAME" ]; then NAME="My App"; fi
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "App Name: $NAME"
+      
       - name: Compile and Link resources
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
@@ -86,13 +94,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: build-${{ steps.ts.outputs.time }}
-          name: APK Build ${{ steps.ts.outputs.time }}
+          name: "${{ steps.appname.outputs.name }} - ${{ steps.ts.outputs.time }}"
           files: output.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-apk
-          path: output.apk 
