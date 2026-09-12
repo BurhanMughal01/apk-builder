@@ -190,10 +190,18 @@ jobs:
           </div>'''
           
           with open('app/assets/index.html','r',encoding='utf-8') as f: html=f.read()
+          
+          preload_css = '<style>html,body{background:#0a0a1a !important;margin:0;padding:0;}</style>'
+          m2 = re.search(r'<head[^>]*>', html, re.IGNORECASE)
+          if m2:
+              idx2 = m2.end()
+              html = html[:idx2] + preload_css + html[idx2:]
+          
           m=re.search(r'<body[^>]*>',html,re.IGNORECASE)
           if m:
             idx=m.end();html=html[:idx]+splash+html[idx:]
           else:html=splash+html
+          
           with open('app/assets/index.html','w',encoding='utf-8') as f: f.write(html)
           print('Splash: '+style+', color='+cfg['color']+', icon='+icon)
           PYEOF
