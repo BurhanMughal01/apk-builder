@@ -1,5 +1,161 @@
 <!DOCTYPE html>
-<html>
-<head><title>Test</title></head>
-<body><h1>Hello World</h1></body>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<title>Tasbeeh Counter</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif;
+    background: linear-gradient(145deg,#0f172a,#172554,#064e3b);
+    color: #fff; display: flex; justify-content: center;
+  }
+  .app { width: min(100%, 520px); padding: 22px 18px 30px; text-align: center; }
+  h1 { margin: 8px 0 4px; font-size: 30px; }
+  .sub { color: #cbd5e1; margin-bottom: 20px; }
+  .card {
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 24px; padding: 20px; backdrop-filter: blur(12px);
+  }
+  label { display:block; text-align:left; color:#cbd5e1; font-size:13px; margin: 0 0 7px 4px; }
+  select, input {
+    width:100%; border:0; outline:0; border-radius:14px; padding:13px;
+    background:#f8fafc; color:#0f172a; font-size:16px; margin-bottom:14px;
+  }
+  .count { font-size:92px; line-height:1; font-weight:800; margin:24px 0 8px; }
+  .target { color:#cbd5e1; margin-bottom:18px; }
+  .progress { height:10px; background:rgba(255,255,255,.15); border-radius:20px; overflow:hidden; }
+  .bar { height:100%; width:0%; background:#34d399; transition:width .15s; }
+  .tap {
+    width:min(72vw,290px); height:min(72vw,290px); max-height:290px;
+    border-radius:50%; border:0; margin:25px auto 18px; display:block;
+    background:linear-gradient(145deg,#10b981,#059669); color:white;
+    box-shadow:0 12px 35px rgba(16,185,129,.28), inset 0 2px 0 rgba(255,255,255,.18);
+    font-size:26px; font-weight:800; cursor:pointer; user-select:none;
+  }
+  .tap:active { transform:scale(.96); }
+  .buttons { display:flex; gap:10px; }
+  button.small {
+    flex:1; border:0; border-radius:13px; padding:13px; font-weight:700;
+    font-size:15px; cursor:pointer;
+  }
+  .reset { background:#ef4444; color:#fff; }
+  .minus { background:#e2e8f0; color:#0f172a; }
+  .status { min-height:22px; margin-top:14px; color:#86efac; font-weight:600; }
+  .footer { color:#94a3b8; font-size:12px; margin-top:18px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>📿 Tasbeeh Counter</h1>
+  <div class="sub">Tap the circle to count your dhikr</div>
+
+  <div class="card">
+    <label for="dhikr">Dhikr</label>
+    <select id="dhikr">
+      <option>SubhanAllah</option>
+      <option>Alhamdulillah</option>
+      <option>Allahu Akbar</option>
+      <option>La ilaha illallah</option>
+      <option>Astaghfirullah</option>
+      <option>Salawat</option>
+      <option>Custom</option>
+    </select>
+
+    <div id="customWrap" style="display:none">
+      <label for="custom">Custom dhikr</label>
+      <input id="custom" placeholder="Enter dhikr name">
+    </div>
+
+    <label for="target">Target</label>
+    <select id="target">
+      <option value="33">33</option>
+      <option value="99" selected>99</option>
+      <option value="100">100</option>
+      <option value="1000">1000</option>
+      <option value="custom">Custom</option>
+    </select>
+    <div id="targetCustomWrap" style="display:none">
+      <input id="targetCustom" type="number" min="1" placeholder="Enter target">
+    </div>
+
+    <div class="count" id="count">0</div>
+    <div class="target" id="targetText">Target: 99</div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+
+    <button class="tap" id="tap">TAP</button>
+
+    <div class="buttons">
+      <button class="small minus" id="minus">− 1</button>
+      <button class="small reset" id="reset">Reset</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="footer">Your count is saved automatically on this device.</div>
+</div>
+
+<script>
+const countEl=document.getElementById('count');
+const targetEl=document.getElementById('target');
+const targetText=document.getElementById('targetText');
+const bar=document.getElementById('bar');
+const statusEl=document.getElementById('status');
+const dhikr=document.getElementById('dhikr');
+const customWrap=document.getElementById('customWrap');
+const targetCustomWrap=document.getElementById('targetCustomWrap');
+
+let count=Number(localStorage.getItem('tasbeehCount')||0);
+let target=Number(localStorage.getItem('tasbeehTarget')||99);
+let name=localStorage.getItem('tasbeehName')||'SubhanAllah';
+
+dhikr.value=['SubhanAllah','Alhamdulillah','Allahu Akbar','La ilaha illallah','Astaghfirullah','Salawat','Custom'].includes(name)?name:'Custom';
+if(dhikr.value==='Custom'){customWrap.style.display='block';document.getElementById('custom').value=name;}
+
+function getTarget(){
+  if(targetEl.value==='custom') return Math.max(1,Number(document.getElementById('targetCustom').value)||1);
+  return Number(targetEl.value);
+}
+function render(){
+  count=Math.max(0,count);
+  target=Math.max(1,target);
+  countEl.textContent=count;
+  targetText.textContent=`Target: ${target}`;
+  bar.style.width=Math.min(100,(count/target)*100)+'%';
+  localStorage.setItem('tasbeehCount',count);
+  localStorage.setItem('tasbeehTarget',target);
+  localStorage.setItem('tasbeehName',name);
+}
+function vibrate(){ if(navigator.vibrate) navigator.vibrate(15); }
+
+document.getElementById('tap').onclick=()=>{
+  count++; vibrate();
+  if(count===target){statusEl.textContent='✨ Target completed!'; if(navigator.vibrate) navigator.vibrate([40,40,80]);}
+  else statusEl.textContent='';
+  render();
+};
+document.getElementById('minus').onclick=()=>{count=Math.max(0,count-1);statusEl.textContent='';render();};
+document.getElementById('reset').onclick=()=>{
+  if(confirm('Reset the counter to 0?')){count=0;statusEl.textContent='';render();}
+};
+dhikr.onchange=()=>{
+  customWrap.style.display=dhikr.value==='Custom'?'block':'none';
+  name=dhikr.value==='Custom'?(document.getElementById('custom').value||'Custom'):dhikr.value;
+  render();
+};
+document.getElementById('custom').oninput=e=>{name=e.target.value||'Custom';render();};
+targetEl.onchange=()=>{
+  targetCustomWrap.style.display=targetEl.value==='custom'?'block':'none';
+  target=getTarget(); render();
+};
+document.getElementById('targetCustom').oninput=()=>{target=getTarget();render();};
+
+if(target===33||target===99||target===100||target===1000) targetEl.value=String(target);
+else {targetEl.value='custom';targetCustomWrap.style.display='block';document.getElementById('targetCustom').value=target;}
+render();
+</script>
+</body>
 </html>
+<!-- BUILD-1789240104426-xcrwhg -->
