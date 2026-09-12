@@ -1,162 +1,114 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Dodge Game</title>
+    <title>Reflex Tap Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #1a1a1a;
+            background-color: #121212;
             color: #fff;
             margin: 0;
-            padding: 10px;
+            padding: 20px;
             user-select: none;
         }
-        h2 { margin: 5px; color: #ff9800; }
-        .credit {
-            font-size: 15px;
-            color: #4caf50;
-            margin-bottom: 12px;
-            font-weight: bold;
-            background: #252525;
-            padding: 8px;
-            border-radius: 6px;
-            display: inline-block;
-        }
-        #game-container {
-            position: relative;
-            width: 280px;
-            height: 400px;
-            background-color: #333;
-            border: 4px solid #fff;
+        h1 { margin-bottom: 5px; color: #4CAF50; }
+        .stats { font-size: 18px; margin: 15px 0; }
+        #game-board {
+            width: 300px;
+            height: 300px;
+            border: 3px solid #4CAF50;
+            border-radius: 15px;
             margin: 0 auto;
+            position: relative;
+            background-color: #1e1e1e;
             overflow: hidden;
-            border-radius: 10px;
+            touch-action: manipulation;
         }
-        #player-car {
-            position: absolute;
-            bottom: 10px;
-            left: 115px;
+        #target {
             width: 50px;
-            height: 70px;
-            background-color: #2196F3;
-            border-radius: 8px;
-            border: 2px solid #fff;
-        }
-        #enemy-car {
+            height: 50px;
+            background-color: #ff4081;
+            border-radius: 50%;
             position: absolute;
-            top: -80px;
-            left: 30px;
-            width: 50px;
-            height: 70px;
-            background-color: #f44336;
-            border-radius: 8px;
-            border: 2px solid #fff;
-        }
-        .controls {
-            margin-top: 15px;
+            display: none;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff4081;
         }
         .btn {
-            background-color: #ff9800;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 18px;
-            margin: 5px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 25px;
             cursor: pointer;
+            margin-top: 20px;
             font-weight: bold;
         }
-        .btn-start {
-            background-color: #4CAF50;
-            width: 280px;
-            margin-top: 10px;
-        }
+        .btn:disabled { background-color: #555; }
     </style>
 </head>
 <body>
 
-    <h2>کار ڈاج گیم</h2>
-    <div class="credit">یہ گیم Burhan Ahmad Mughal کے پرامپٹ سے بنی ہے</div>
-    
-    <div style="margin-bottom: 8px; font-size: 18px;">اسکور: <b id="score">0</b></div>
+    <h1>Reflex Tap</h1>
+    <p>Tap the pink target as many times as you can in 100 seconds!</p>
 
-    <div id="game-container">
-        <div id="player-car"></div>
-        <div id="enemy-car"></div>
+    <div class="stats">
+        <span>Score: <b id="score">0</b></span> | 
+        <span>Time Left: <b id="time">100</b>s</span>
     </div>
 
-    <div class="controls">
-        <button class="btn" onclick="moveLeft()">◀ بائیں</button>
-        <button class="btn" onclick="moveRight()">دائیں ▶</button>
+    <div id="game-board">
+        <div id="target" onclick="hitTarget()"></div>
     </div>
-    
-    <button id="start-btn" class="btn btn-start" onclick="startGame()">گیم شروع کریں</button>
+
+    <button id="start-btn" class="btn" onclick="startGame()">Start Game</button>
 
     <script>
-        let playerX = 115;
-        let enemyY = -80;
-        let enemyX = 30;
         let score = 0;
-        let gameInterval = null;
-        let isPlaying = false;
-
-        const player = document.getElementById('player-car');
-        const enemy = document.getElementById('enemy-car');
-        const scoreDisplay = document.getElementById('score');
-
-        function moveLeft() {
-            if (playerX > 20 && isPlaying) {
-                playerX -= 80;
-                player.style.left = playerX + 'px';
-            }
-        }
-
-        function moveRight() {
-            if (playerX < 185 && isPlaying) {
-                playerX += 80;
-                player.style.left = playerX + 'px';
-            }
-        }
+        let timeLeft = 100;
+        let timer = null;
+        const target = document.getElementById('target');
+        const board = document.getElementById('game-board');
 
         function startGame() {
-            if (isPlaying) return;
-            isPlaying = true;
             score = 0;
-            enemyY = -80;
-            playerX = 115;
-            player.style.left = playerX + 'px';
-            scoreDisplay.innerText = score;
-            resetEnemy();
+            timeLeft = 100;
+            document.getElementById('score').innerText = score;
+            document.getElementById('time').innerText = timeLeft;
+            document.getElementById('start-btn').disabled = true;
 
-            gameInterval = setInterval(updateGame, 20);
+            moveTarget();
+            target.style.display = 'block';
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    target.style.display = 'none';
+                    document.getElementById('start-btn').disabled = false;
+                    alert('Game Over! Your final score is: ' + score);
+                }
+            }, 1000);
         }
 
-        function resetEnemy() {
-            enemyY = -80;
-            const positions = [35, 115, 195];
-            enemyX = positions[Math.floor(Math.random() * positions.length)];
-            enemy.style.left = enemyX + 'px';
+        function hitTarget() {
+            score++;
+            document.getElementById('score').innerText = score;
+            moveTarget();
         }
 
-        function updateGame() {
-            enemyY += 6;
-            enemy.style.top = enemyY + 'px';
-
-            if (enemyY > 400) {
-                score++;
-                scoreDisplay.innerText = score;
-                resetEnemy();
-            }
-
-            // Collision Detection
-            if (enemyY > 310 && enemyY < 380 && Math.abs(playerX - enemyX) < 40) {
-                clearInterval(gameInterval);
-                isPlaying = false;
-                alert('گیم ختم ہو گیا! آپ کا اسکور: ' + score);
-            }
+        function moveTarget() {
+            const maxX = board.clientWidth - 50;
+            const maxY = board.clientHeight - 50;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            target.style.left = randomX + 'px';
+            target.style.top = randomY + 'px';
         }
     </script>
 </body>
