@@ -1,147 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTML to APK Converter</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML to APK</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.box{background:#1a1a2e;border-radius:20px;padding:36px 28px;max-width:480px;width:100%;box-shadow:0 0 60px rgba(243,156,18,.15);border:1px solid rgba(243,156,18,.2)}
-h1{color:#f39c12;font-size:26px;text-align:center;margin-bottom:8px}
-.sub{color:#8899aa;text-align:center;font-size:14px;margin-bottom:26px}
-.field{margin-bottom:16px}
-label{display:block;color:#8899aa;font-size:13px;margin-bottom:6px}
-input[type=text]{width:100%;padding:13px;background:#0a0a1a;border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-size:15px;outline:none;font-family:inherit}
-input[type=text]:focus{border-color:#f39c12}
-.file-lbl{display:block;padding:28px 20px;border:2px dashed rgba(255,255,255,.15);border-radius:12px;text-align:center;cursor:pointer;transition:.2s}
-.file-lbl:hover{border-color:#f39c12;background:rgba(243,156,18,.05)}
-.file-lbl input{display:none}
-.file-lbl .ic{font-size:38px;margin-bottom:8px}
-.file-lbl .tx{color:#8899aa;font-size:14px}
-.fname{color:#2ecc71;font-size:13px;margin-top:8px;display:none}
-.btn{width:100%;padding:15px;background:linear-gradient(135deg,#f39c12,#e67e22);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.status{margin-top:16px;padding:16px;border-radius:10px;font-size:14px;text-align:center;display:none;line-height:1.7}
-.status.show{display:block}
-.status.info{background:rgba(52,152,219,.15);color:#5dade2;border:1px solid rgba(52,152,219,.3)}
-.status.success{background:rgba(46,204,113,.15);color:#2ecc71;border:1px solid rgba(46,204,113,.3)}
-.status.error{background:rgba(231,76,60,.15);color:#e74c3c;border:1px solid rgba(231,76,60,.3)}
-.link-btn{display:block;margin-top:12px;padding:14px;background:#2ecc71;color:#fff;text-decoration:none;border-radius:10px;text-align:center;font-weight:700;font-size:15px}
-.link-btn.orange{background:#f39c12}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes sp{to{transform:rotate(360deg)}}
-.credit{text-align:center;color:#444;font-size:11px;margin-top:16px}
+body{font-family:Arial,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.box{background:#1a1a2e;border-radius:20px;padding:30px;max-width:420px;width:100%;border:1px solid rgba(243,156,18,.2)}
+h1{color:#f39c12;text-align:center;margin-bottom:8px;font-size:24px}
+p{color:#8899aa;text-align:center;font-size:13px;margin-bottom:20px}
+label{display:block;color:#8899aa;font-size:13px;margin-bottom:6px;margin-top:14px}
+input[type=text]{width:100%;padding:12px;background:#0a0a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:15px}
+.file{padding:24px;border:2px dashed #444;border-radius:10px;text-align:center;cursor:pointer;color:#8899aa;display:block}
+.file input{display:none}
+.fname{color:#2ecc71;font-size:13px;margin-top:8px;display:none;text-align:center}
+button{width:100%;padding:15px;background:#f39c12;border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:700;margin-top:14px;cursor:pointer}
+button:disabled{opacity:.5}
+.msg{margin-top:16px;padding:16px;border-radius:10px;text-align:center;font-size:14px;display:none;line-height:1.7}
+.msg.show{display:block}
+.info{background:rgba(52,152,219,.15);color:#5dade2;border:1px solid rgba(52,152,219,.3)}
+.ok{background:rgba(46,204,113,.15);color:#2ecc71;border:1px solid rgba(46,204,113,.3)}
+.err{background:rgba(231,76,60,.15);color:#e74c3c;border:1px solid rgba(231,76,60,.3)}
+a.big{display:block;margin-top:14px;padding:16px;background:#2ecc71;color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:16px;text-align:center}
+a.sec{background:#f39c12;margin-top:8px;font-size:14px;padding:12px}
+.counter{font-size:28px;font-weight:800;color:#f39c12;display:block;margin:10px 0}
 </style>
 </head>
 <body>
 <div class="box">
 <h1>🚀 HTML to APK</h1>
-<p class="sub">Convert your HTML into an Android APK — Free & Fast</p>
+<p>Apni HTML ko Android app mein badlein</p>
 
-<div class="field">
-<label>App Name</label>
-<input type="text" id="appname" placeholder="My App" value="My App" />
-</div>
+<label>App ka Naam</label>
+<input type="text" id="name" value="My App" placeholder="e.g. Snake Game">
 
-<div class="field">
 <label>HTML File</label>
-<label class="file-lbl" for="file">
-<div class="ic">📁</div>
-<div class="tx">Click to upload index.html</div>
-<input type="file" id="file" accept=".html,.htm" />
-<div class="fname" id="fname"></div>
+<label class="file" for="file">
+📁 Click karke HTML select karein
+<input type="file" id="file" accept=".html,.htm">
 </label>
-</div>
+<div class="fname" id="fname"></div>
 
-<button class="btn" id="go" onclick="build()">🚀 Build My APK</button>
+<button id="go" onclick="build()">🚀 Build APK</button>
 
-<div class="status" id="status"></div>
-<div class="credit">Built by Burhan Ahmad Mughal</div>
+<div class="msg" id="msg"></div>
 </div>
 
 <script>
-const API_URL = 'https://apk-builder-api.buisch2314.workers.dev';
-const RELEASES_URL = 'https://github.com/BurhanMughal01/apk-builder/releases/latest';
+const API = 'https://apk-builder-api.buisch2314.workers.dev';
+const RELEASES = 'https://github.com/BurhanMughal01/apk-builder/releases';
 
-document.getElementById('file').addEventListener('change', e => {
-    const f = e.target.files[0];
-    const fn = document.getElementById('fname');
-    if (f) { fn.textContent = '✅ ' + f.name; fn.style.display = 'block'; }
-});
+document.getElementById('file').onchange = e => {
+    const f = document.getElementById('fname');
+    f.textContent = '✅ ' + e.target.files[0].name;
+    f.style.display = 'block';
+};
 
-function show(msg, type) {
-    const s = document.getElementById('status');
-    s.className = 'status show ' + type;
-    s.innerHTML = msg;
+function show(html, type) {
+    const m = document.getElementById('msg');
+    m.className = 'msg show ' + type;
+    m.innerHTML = html;
 }
 
 async function build() {
-    const appname = document.getElementById('appname').value.trim() || 'My App';
     const file = document.getElementById('file').files[0];
+    const appName = document.getElementById('name').value.trim() || 'My App';
 
-    if (!file) return show('⚠️ Please select an HTML file', 'error');
+    if (!file) return show('⚠️ Pehle HTML file select karein', 'err');
 
     document.getElementById('go').disabled = true;
-    show('📤 Uploading your HTML...', 'info');
+    show('📤 Upload ho rahi hai...', 'info');
 
-    const formData = new FormData();
-    formData.append('htmlfile', file);
-    formData.append('appName', appname);
+    const fd = new FormData();
+    fd.append('htmlfile', file);
+    fd.append('appName', appName);
 
     try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: formData
-        });
+        const r = await fetch(API, { method: 'POST', body: fd });
+        const d = await r.json();
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        if (!r.ok) throw new Error(d.error || 'Upload failed');
 
-        // 90 سیکنڈ کا کاؤنٹر
         let sec = 90;
-        show('✅ <strong>Uploaded successfully!</strong><br><br>' +
-             '⏳ APK is building on GitHub...<br>' +
-             '<span class="spinner"></span>Please wait <b>' + sec + '</b> seconds', 'info');
+        show(
+            '✅ <b>Upload ho gayi!</b><br><br>' +
+            '⏳ APK ban rahi hai...<br>' +
+            '<span class="counter">' + sec + '</span>' +
+            'second',
+            'info'
+        );
 
         const timer = setInterval(() => {
             sec--;
             if (sec <= 0) {
                 clearInterval(timer);
-                
-                // کامیابی — ڈاؤن لوڈ لنک دکھائیں
-                document.getElementById('status').innerHTML = 
-                    '🎉 <strong>Your APK is ready!</strong><br><br>' +
-                    'Click below to download:<br>';
-                
+
+                show(
+                    '🎉 <b>APK Ready!</b><br><br>' +
+                    'Neeche <b>Open Releases</b> button dabayein<br>' +
+                    'Aur <b>sab se nayi</b> APK download karein.<br><br>' +
+                    '<b>App Name:</b> ' + appName,
+                    'ok'
+                );
+
                 const btn = document.createElement('a');
-                btn.href = RELEASES_URL;
-                btn.className = 'link-btn';
-                btn.textContent = '⬇️ Open GitHub Releases';
+                btn.href = RELEASES;
+                btn.className = 'big';
+                btn.textContent = '⬇️ Open Releases';
                 btn.target = '_blank';
-                document.getElementById('status').appendChild(btn);
-                
-                const info = document.createElement('div');
-                info.style.marginTop = '10px';
-                info.style.fontSize = '12px';
-                info.style.color = '#8899aa';
-                info.innerHTML = 'Latest APK file: <b>output.apk</b>';
-                document.getElementById('status').appendChild(info);
-                
-                document.getElementById('status').className = 'status show success';
+                document.getElementById('msg').appendChild(btn);
+
+                const tip = document.createElement('div');
+                tip.style.marginTop = '10px';
+                tip.style.fontSize = '12px';
+                tip.style.color = '#8899aa';
+                tip.innerHTML = 'Tip: Sab se upar wali release download karein';
+                document.getElementById('msg').appendChild(tip);
+
                 document.getElementById('go').disabled = false;
                 return;
             }
-            
-            // کاؤنٹر اپڈیٹ کریں
-            document.getElementById('status').innerHTML = 
-                '✅ <strong>Uploaded successfully!</strong><br><br>' +
-                '⏳ APK is building on GitHub...<br>' +
-                '<span class="spinner"></span>Please wait <b>' + sec + '</b> seconds';
+            show(
+                '✅ <b>Upload ho gayi!</b><br><br>' +
+                '⏳ APK ban rahi hai...<br>' +
+                '<span class="counter">' + sec + '</span>' +
+                'second',
+                'info'
+            );
         }, 1000);
 
-    } catch (err) {
-        show('❌ Error: ' + err.message, 'error');
+    } catch (e) {
+        show('❌ Error: ' + e.message, 'err');
         document.getElementById('go').disabled = false;
     }
 }
