@@ -13,10 +13,10 @@ jobs:
       contents: write
     
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -25,9 +25,8 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Install Android SDK Components
-        run: |
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+      - name: Install SDK
+        run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
       
       - name: Read App Name
         id: appname
@@ -35,9 +34,73 @@ jobs:
           NAME=$(grep -oP '(?<=<string name="app_name">).*?(?=</string>)' app/res/values/strings.xml | head -1)
           if [ -z "$NAME" ]; then NAME="My App"; fi
           echo "name=$NAME" >> $GITHUB_OUTPUT
-          echo "App Name: $NAME"
       
-      - name: Compile and Link resources
+      - name: Read Package Name
+        id: pkg
+        run: |
+          if [ -f package_name.txt ]; then
+            PKG=$(cat package_name.txt | tr -d '[:space:]')
+          else
+            PKG="com.burhan.myapp2"
+          fi
+          if [ -z "$PKG" ]; then PKG="com.burhan.myapp2"; fi
+          echo "name=$PKG" >> $GITHUB_OUTPUT
+          P=$(echo $PKG | tr '.' '/')
+          echo "path=$P" >> $GITHUB_OUTPUT
+      
+      - name: Update Package in Manifest
+        run: |
+          PKG="${{ steps.pkg.outputs.name }}"
+          sed -i "s|package=\"[^\"]*\"|package=\"$PKG\"|" app/AndroidManifest.xml
+          cat app/AndroidManifest.xml | head -5
+      
+      - name: Move Java Files to Package Folder
+        run: |
+          PKG_PATH="${{ steps.pkg.outputs.path }}"
+          mkdir -p app/src/$PKG_PATH
+          if [ -d app/src/com/burhan/myapp2 ]; then
+            cp -f app/src/com/burhan/myapp2/*.java app/src/$PKG_PATH/ 2>/dev/null || true
+          fi
+          for f in app/src/$PKG_PATH/*.java; do
+            if [ -f "$f" ]; then
+              sed -i "s|^package .*;|package ${{ steps.pkg.outputs.name }};|" "$f"
+            fi
+          done
+          echo "=== Java files ==="
+          find app/src -name "*.java"
+      
+      - name: Remove icon if missing
+        run: |
+          if [ ! -f app/res/mipmap-hdpi/ic_launcher.png ]; then
+            sed -i 's|android:icon="@mipmap/ic_launcher"||g' app/AndroidManifest.xml
+          fi
+      
+      - name: Add Splash Screen
+        run: |
+          python3 << 'PYEOF'
+          import os
+          name = os.environ.get('APP_NAME', 'App')
+          with open('app/assets/index.html', 'r', encoding='utf-8') as f:
+              html = f.read()
+          splash = '''<div id="__splash" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#f39c12,#e67e22);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;color:#fff;font-family:Arial,sans-serif;">
+          <h1 style="font-size:28px;margin-bottom:24px;">''' + name + '''</h1>
+          <div style="width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:__sp 0.8s linear infinite;"></div>
+          <style>@keyframes __sp{to{transform:rotate(360deg)}}</style>
+          <script>setTimeout(function(){var s=document.getElementById("__splash");if(s){s.style.transition="opacity 0.5s";s.style.opacity="0";setTimeout(function(){s.remove()},500)}},2000);</script>
+          </div>'''
+          if '</body>' in html.lower():
+              idx = html.lower().rfind('</body>')
+              html = html[:idx] + splash + html[idx:]
+          else:
+              html += splash
+          with open('app/assets/index.html', 'w', encoding='utf-8') as f:
+              f.write(html)
+          print('Splash added')
+          PYEOF
+        env:
+          APP_NAME: ${{ steps.appname.outputs.name }}
+      
+      - name: Compile Resources
         run: |
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
@@ -50,27 +113,26 @@ jobs:
       
       - name: Compile Java
         run: |
+          PKG_PATH="${{ steps.pkg.outputs.path }}"
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
           javac --release 8 -cp $PLATFORM -d app/build \
-            app/src/com/burhan/myapp2/MainActivity.java \
-            app/src/com/burhan/myapp2/R.java
+            app/src/$PKG_PATH/MainActivity.java \
+            app/src/$PKG_PATH/R.java
       
       - name: Build DEX
         run: |
+          PKG_PATH="${{ steps.pkg.outputs.path }}"
           BT=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
           PLATFORM=$ANDROID_HOME/platforms/android-34/android.jar
-          $BT/d8 --output app/ app/build/com/burhan/myapp2/*.class \
+          $BT/d8 --output app/ app/build/$PKG_PATH/*.class \
             --lib $PLATFORM --min-api 21
       
-      - name: Add files to APK
+      - name: Add Files to APK
         run: |
           zip -j app-unsigned.apk app/classes.dex
-          cd app
-          zip -r ../app-unsigned.apk assets/
-          cd ..
-          unzip -l app-unsigned.apk
+          cd app && zip -r ../app-unsigned.apk assets/ && cd ..
       
-      - name: Create keystore
+      - name: Create Keystore
         run: |
           keytool -genkeypair -v -keystore key.jks -alias mykey \
             -keyalg RSA -keysize 2048 -validity 10000 \
@@ -84,9 +146,8 @@ jobs:
             --key-pass pass:123456 --min-sdk-version 21 \
             --v1-signing-enabled true --v2-signing-enabled true \
             --out output.apk app-unsigned.apk
-          ls -lh output.apk
       
-      - name: Get timestamp
+      - name: Get Timestamp
         id: ts
         run: echo "time=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
       
