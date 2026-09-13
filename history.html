@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build History — APKForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.filter-btn{padding:8px 16px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.filter-btn:hover{background:var(--surface-2);border-color:var(--border-2)}
+.filter-btn.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(99,102,241,.35)}
+.search-box{position:relative;flex:1;min-width:200px}
+.search-box input{width:100%;padding:11px 14px 11px 42px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:all .2s}
+.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.search-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-mute);font-size:15px}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:12px;transition:all .25s}
+.history-item:hover{border-color:var(--primary);background:var(--surface-2);transform:translateY(-2px)}
+.hi-icon{width:52px;height:52px;border-radius:14px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 14px rgba(99,102,241,.3)}
+.hi-info{flex:1;min-width:0}
+.hi-name{font-size:15.5px;font-weight:800;color:var(--text);margin-bottom:4px;word-break:break-word}
+.hi-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:11.5px;color:var(--text-mute)}
+.hi-tag{padding:2px 8px;background:var(--surface-2);border-radius:100px;font-weight:700}
+.hi-tag.mode{background:rgba(99,102,241,.12);color:#a5b4fc}
+.hi-actions{display:flex;gap:8px;flex-shrink:0}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-mute)}
+.empty-ic{font-size:64px;margin-bottom:16px;opacity:.5}
+.empty-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:8px}
+.empty-sub{font-size:14px;max-width:400px;margin:0 auto 24px;line-height:1.7}
+@media(max-width:520px){
+  .history-item{flex-direction:column;align-items:flex-start}
+  .hi-icon{width:44px;height:44px;font-size:18px}
+  .hi-actions{width:100%}
+  .hi-actions .btn{flex:1}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">⚡</div>
+      <span class="brand-name">APKForge</span>
+      <span class="brand-pill">FREE</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="build.html">Build</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="history.html" class="active">History</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
+      <li><a href="#" class="icon-btn" id="userBtn" onclick="logout();return false;">👤</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <span class="page-badge">History</span>
+  <h1 class="page-title">Your <span class="grad">Build History</span></h1>
+  <p class="page-sub">All your past APK builds saved locally on this device</p>
+</div>
+
+<!-- CONTENT -->
+<section class="section" style="padding-top:20px">
+  <div class="container-sm">
+    <div class="filter-bar">
+      <div class="search-box">
+        <span class="search-ic">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search by app name..." oninput="renderHistory()">
+      </div>
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-filter="html" onclick="setFilter('html',this)">📄 HTML</button>
+      <button class="filter-btn" data-filter="url" onclick="setFilter('url',this)">🔗 URL</button>
+      <button class="filter-btn" data-filter="template" onclick="setFilter('template',this)">📦 Template</button>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:13px;color:var(--text-mute)">Showing <b id="countDisplay" style="color:var(--text)">0</b> builds</div>
+      <button class="btn btn-ghost btn-sm" onclick="clearHistory()" id="clearBtn" style="display:none">🗑️ Clear All</button>
+    </div>
+
+    <div id="historyList"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><div class="brand-mark">⚡</div><span class="brand-name">APKForge</span></a>
+        <p>Turn anything into a professional Android APK.</p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><a href="build.html">Build APK</a><a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>
+      <div class="footer-col"><h4>Resources</h4><a href="history.html">History</a><a href="faq.html">FAQ</a><a href="about.html">About</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="contact.html">Contact</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 APKForge · Built by Burhan Ahmad Mughal</span>
+      <span>Made with ⚡ in Pakistan</span>
+    </div>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+<script>
+let currentFilter = 'all';
+const RELEASES = 'https://github.com/BurhanMughal01/apk-builder/releases/latest';
+
+function setFilter(f, el){
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderHistory();
+}
+
+function timeAgo(t){
+  const diff = Date.now() - t;
+  const m = Math.floor(diff / 60000);
+  if(m < 1) return 'just now';
+  if(m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if(h < 24) return h + 'h ago';
+  const d = Math.floor(h / 24);
+  if(d < 30) return d + 'd ago';
+  const mo = Math.floor(d / 30);
+  return mo + 'mo ago';
+}
+
+function renderHistory(){
+  const history = getHistory();
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  
+  let list = history;
+  if(currentFilter !== 'all') list = list.filter(h => (h.mode||'html') === currentFilter);
+  if(search) list = list.filter(h => h.name.toLowerCase().includes(search));
+  
+  const container = document.getElementById('historyList');
+  const countEl = document.getElementById('countDisplay');
+  const clearBtn = document.getElementById('clearBtn');
+  
+  countEl.textContent = list.length;
+  clearBtn.style.display = history.length ? 'block' : 'none';
+  
+  if(!list.length){
+    if(!history.length){
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-ic">📭</div>
+          <div class="empty-title">No builds yet</div>
+          <div class="empty-sub">Once you build your first app, it will appear here. Your history is stored locally in this browser.</div>
+          <a href="build.html" class="btn btn-primary">⚡ Build Your First App</a>
+        </div>`;
+    } else {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-ic">🔍</div>
+          <div class="empty-title">No matching builds</div>
+          <div class="empty-sub">Try a different search or filter.</div>
+        </div>`;
+    }
+    return;
+  }
+  
+  container.innerHTML = list.map((item, i) => {
+    const modeIcon = item.mode === 'url' ? '🔗' : item.mode === 'template' ? '📦' : '📄';
+    const modeName = item.mode === 'url' ? 'URL' : item.mode === 'template' ? 'Template' : 'HTML';
+    return `
+      <div class="history-item">
+        <div class="hi-icon">${modeIcon}</div>
+        <div class="hi-info">
+          <div class="hi-name">${item.name}</div>
+          <div class="hi-meta">
+            <span class="hi-tag">v${item.version||'1.0'}</span>
+            <span class="hi-tag mode">${modeName}</span>
+            <span class="hi-tag">${timeAgo(item.time)}</span>
+          </div>
+        </div>
+        <div class="hi-actions">
+          <a href="${RELEASES}" target="_blank" class="btn btn-primary btn-sm">⬇️ Download</a>
+          <button class="btn btn-ghost btn-sm" onclick="deleteBuild(${i})" title="Delete">🗑️</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function deleteBuild(index){
+  if(!confirm('Delete this build from history?')) return;
+  const history = getHistory();
+  // Find the item matching the filtered index
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  let list = history;
+  if(currentFilter !== 'all') list = list.filter(h => (h.mode||'html') === currentFilter);
+  if(search) list = list.filter(h => h.name.toLowerCase().includes(search));
+  
+  const item = list[index];
+  const realIndex = history.findIndex(h => h.time === item.time && h.name === item.name);
+  if(realIndex >= 0){
+    history.splice(realIndex, 1);
+    localStorage.setItem('apkHistory', JSON.stringify(history));
+    showToast('✓ Build deleted', 'success');
+    renderHistory();
+  }
+}
+
+renderHistory();
+</script>
+</body>
+</html>
