@@ -657,5 +657,27 @@ function showSuccess(appName,version){
 
 function closeModal(){
   document.getElementById('successModal').classList.remove('show');
+  document.getElementById('buildProgress').classList.remove('show');
+  document.getElementById('nav4').style.display='flex';
+  document.getElementById('go').disabled=false;
+  ['bstep1','bstep2','bstep3','bstep4'].forEach(id=>{const el=document.getElementById(id);el.classList.remove('active','done');el.querySelector('.bp-ic').textContent=id.replace('bstep','');});
+  goStep(1);
+}
+
+function showQR(){
+  const c=document.getElementById('qrContainer');c.innerHTML='';
+  const img=document.createElement('img');
+  img.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(RELEASES);
+  img.style.display='block';img.style.borderRadius='8px';
+  c.appendChild(img);
+  document.getElementById('qrModal').classList.add('show');
+}
+
+function copyLink(){navigator.clipboard.writeText(RELEASES).then(()=>showToast('✓ Link copied!','success'));}
+
+renderSwatches();renderIcons();renderTemplates();renderPreview();
+</script>
+</body>
+</html>
  
     
