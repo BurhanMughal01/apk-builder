@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Features — APKForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">⚡</div>
+      <span class="brand-name">APKForge</span>
+      <span class="brand-pill">FREE</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="build.html">Build</a></li>
+      <li><a href="features.html" class="active">Features</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
+      <li><a href="login.html" class="icon-btn" id="userBtn">👤</a></li>
+      <li><a href="build.html" class="nav-btn">Start Free →</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <span class="page-badge">Features</span>
+  <h1 class="page-title">Everything You Need<br><span class="grad">To Ship Real Apps</span></h1>
+  <p class="page-sub">Powerful, professional features for creators, developers, and businesses — all free.</p>
+</div>
+
+<!-- MAIN FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="grid-3">
+      <div class="feat-card"><div class="feat-card-ic">📄</div><h3>HTML to APK</h3><p>Upload any HTML file and get a real Android APK. Full CSS, JavaScript, and image support.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">🔗</div><h3>URL to APK</h3><p>Paste any website URL. We download and bundle it into a native app for offline use.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">📦</div><h3>10 Templates</h3><p>Calculator, Todo, Snake, Tasbeeh, Quran, Prayer Times, Converter, Notes, BMI, Quiz.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">🎨</div><h3>12 Splash Styles</h3><p>Gradient, Particles, Neon, Glass, Aurora, Waves, Matrix, Stars, Cosmic and more.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">🌈</div><h3>20 Color Themes</h3><p>From Indigo to Midnight. Preview instantly with our live splash preview.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">⚡</div><h3>16 Splash Icons</h3><p>Rocket, Lightning, Game, Phone, Star, Diamond, Fire, Sparkle, Crown, and more.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">👁️</div><h3>Live Preview</h3><p>See your splash screen change in real-time before building. No surprises.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">⚙️</div><h3>Advanced Options</h3><p>Set app version, orientation (portrait/landscape/auto), fullscreen, custom package.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">🖼️</div><h3>Custom App Icon</h3><p>Upload your own 512×512 PNG or JPG icon. Or use our default.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">📱</div><h3>Native WebView</h3><p>Real Android WebView with full JavaScript, localStorage, and offline support.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">🔒</div><h3>Signed APK</h3><p>v1 and v2 signing schemes. Ready to install on any Android device without warning.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">📜</div><h3>Build History</h3><p>All your past builds saved locally. Re-download or reference them anytime.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">📱</div><h3>QR Code</h3><p>Auto-generated QR code for every APK. Share with anyone by scanning.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">💬</div><h3>Easy Sharing</h3><p>Share to WhatsApp, Telegram, Email, or copy the link with one click.</p></div>
+      <div class="feat-card"><div class="feat-card-ic">🕌</div><h3>Halal Business</h3><p>Ethical apps only. No gambling, adult content, dating, music, or interest-based finance.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-4">
+      <span class="page-badge">Process</span>
+      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">From idea to app in 4 steps</h2>
+      <p class="page-sub">Our step-by-step wizard makes it foolproof.</p>
+    </div>
+    <div class="grid-4" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px">
+      <div class="card text-center">
+        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">1</div>
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;color:var(--text)">Choose Method</h3>
+        <p style="color:var(--text-dim);font-size:14px">HTML, URL, or Template</p>
+      </div>
+      <div class="card text-center">
+        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">2</div>
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;color:var(--text)">App Details</h3>
+        <p style="color:var(--text-dim);font-size:14px">Name, icon, advanced options</p>
+      </div>
+      <div class="card text-center">
+        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">3</div>
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;color:var(--text)">Splash Screen</h3>
+        <p style="color:var(--text-dim);font-size:14px">Style, color, icon, live preview</p>
+      </div>
+      <div class="card text-center">
+        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">4</div>
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;color:var(--text)">Build & Share</h3>
+        <p style="color:var(--text-dim);font-size:14px">Auto-build & QR share</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-4">
+      <span class="page-badge">Technology</span>
+      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">Built on proven tech</h2>
+      <p class="page-sub">Enterprise-grade infrastructure for reliability.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card text-center"><div style="font-size:38px;margin-bottom:12px">☁️</div><h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">Cloudflare Workers</h3><p style="color:var(--text-dim);font-size:13.5px">Global edge network for fast uploads</p></div>
+      <div class="card text-center"><div style="font-size:38px;margin-bottom:12px">🚀</div><h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">GitHub Actions</h3><p style="color:var(--text-dim);font-size:13.5px">Enterprise build pipeline</p></div>
+      <div class="card text-center"><div style="font-size:38px;margin-bottom:12px">📱</div><h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">Android SDK 34</h3><p style="color:var(--text-dim);font-size:13.5px">Latest Android platform</p></div>
+      <div class="card text-center"><div style="font-size:38px;margin-bottom:12px">▲</div><h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">Vercel</h3><p style="color:var(--text-dim);font-size:13.5px">Fast global website hosting</p></div>
+      <div class="card text-center"><div style="font-size:38px;margin-bottom:12px">🔐</div><h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">APK Signer</h3><p style="color:var(--text-dim);font-size:13.5px">v1+v2 signing for security</p></div>
+      <div class="card text-center"><div style="font-size:38px;margin-bottom:12px">📦</div><h3 style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">AAPT2 & D8</h3><p style="color:var(--text-dim);font-size:13.5px">Official Android build tools</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="card-glow" style="padding:60px 30px;text-align:center;border-radius:28px">
+      <h2 class="page-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:14px">Try it yourself</h2>
+      <p class="page-sub" style="margin-bottom:28px">Build your first app in under 2 minutes.</p>
+      <a href="build.html" class="btn btn-primary btn-lg">⚡ Start Building Free →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand"><div class="brand-mark">⚡</div><span class="brand-name">APKForge</span></a>
+        <p>Turn anything into a professional Android APK.</p>
+      </div>
+      <div class="footer-col"><h4>Product</h4><a href="build.html">Build APK</a><a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>
+      <div class="footer-col"><h4>Resources</h4><a href="history.html">History</a><a href="faq.html">FAQ</a><a href="about.html">About</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="contact.html">Contact</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 APKForge · Built by Burhan Ahmad Mughal</span>
+      <span>Made with ⚡ in Pakistan</span>
+    </div>
+  </div>
+</footer>
+
+<script src="nav.js"></script>
+</body>
+</html>
