@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login — APKForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 40px;position:relative;z-index:1}
+.auth-card{max-width:440px;width:100%;background:var(--bg-2);border-radius:24px;padding:40px 32px;border:1px solid var(--border-2);box-shadow:0 40px 100px -30px rgba(0,0,0,.9),0 0 100px -40px rgba(99,102,241,.4);position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--primary-2),transparent)}
+.auth-logo{text-align:center;margin-bottom:24px}
+.auth-logo-mark{width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#fff;box-shadow:0 8px 24px rgba(99,102,241,.5);margin-bottom:16px}
+.auth-title{font-size:24px;font-weight:900;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
+.auth-sub{color:var(--text-dim);font-size:14px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:24px;background:var(--surface);padding:5px;border-radius:12px;border:1px solid var(--border)}
+.auth-tab{padding:10px;border:none;background:transparent;color:var(--text-dim);font-size:13.5px;font-weight:700;cursor:pointer;border-radius:9px;transition:all .25s;font-family:inherit}
+.auth-tab.active{background:var(--grad);color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.4)}
+.auth-panel{display:none}
+.auth-panel.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text-mute);font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.social-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.social-btn{padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.social-btn:hover{background:var(--surface-2);border-color:var(--border-2);transform:translateY(-1px)}
+.auth-footer{text-align:center;margin-top:20px;font-size:13px;color:var(--text-mute)}
+.auth-footer a{color:var(--primary-2);text-decoration:none;font-weight:700}
+.auth-footer a:hover{text-decoration:underline}
+.checkbox-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim);margin-top:4px}
+.checkbox-row input{width:16px;height:16px;accent-color:var(--primary)}
+</style>
+</head>
+<body>
+
+<div class="bg-layer">
+  <div class="bg-mesh"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">⚡</div>
+      <span class="brand-name">APKForge</span>
+      <span class="brand-pill">FREE</span>
+    </a>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="build.html">Build</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- AUTH -->
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-mark">⚡</div>
+      <div class="auth-title" id="authTitle">Welcome Back</div>
+      <div class="auth-sub" id="authSub">Sign in to continue building</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">Login</button>
+      <button class="auth-tab" id="tabSignup" onclick="switchAuth('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="auth-panel active" id="panelLogin">
+      <form onsubmit="handleLogin(event)">
+        <div class="field">
+          <div class="field-label"><span>📧 Email</span></div>
+          <input type="email" class="input" id="loginEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <div class="field-label"><span>🔒 Password</span></div>
+          <input type="password" class="input" id="loginPass" placeholder="••••••••" required>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="remember" checked>
+          <label for="remember">Remember me</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px">Sign In →</button>
+      </form>
+    </div>
+
+    <!-- SIGNUP PANEL -->
+    <div class="auth-panel" id="panelSignup">
+      <form onsubmit="handleSignup(event)">
+        <div class="field">
+          <div class="field-label"><span>👤 Full Name</span></div>
+          <input type="text" class="input" id="signupName" placeholder="Burhan Ahmad" required>
+        </div>
+        <div class="field">
+          <div class="field-label"><span>📧 Email</span></div>
+          <input type="email" class="input" id="signupEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <div class="field-label"><span>🔒 Password</span></div>
+          <input type="password" class="input" id="signupPass" placeholder="Min 6 characters" minlength="6" required>
+        </div>
+        <div class="checkbox-row" style="margin-top:12px">
+          <input type="checkbox" id="agree" required>
+          <label for="agree">I agree to the <a href="#" style="color:var(--primary-2)">Terms</a> and <a href="#" style="color:var(--primary-2)">Privacy Policy</a></label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px">Create Account →</button>
+      </form>
+    </div>
+
+    <div class="divider">Or continue with</div>
+    <div class="social-row">
+      <button class="social-btn" onclick="socialLogin('Google')">🔍 Google</button>
+      <button class="social-btn" onclick="socialLogin('GitHub')">🐙 GitHub</button>
+    </div>
+
+    <div class="auth-footer">
+      <span id="switchText">Don't have an account? <a href="#" onclick="switchAuth('signup');return false;">Sign up</a></span>
+    </div>
+  </div>
+</div>
+
+<script src="nav.js"></script>
+<script>
+function switchAuth(mode){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.auth-panel').forEach(p=>p.classList.remove('active'));
+  if(mode==='login'){
+    document.getElementById('tabLogin').classList.add('active');
+    document.getElementById('panelLogin').classList.add('active');
+    document.getElementById('authTitle').textContent='Welcome Back';
+    document.getElementById('authSub').textContent='Sign in to continue building';
+    document.getElementById('switchText').innerHTML='Don\'t have an account? <a href="#" onclick="switchAuth(\'signup\');return false;">Sign up</a>';
+  } else {
+    document.getElementById('tabSignup').classList.add('active');
+    document.getElementById('panelSignup').classList.add('active');
+    document.getElementById('authTitle').textContent='Create Account';
+    document.getElementById('authSub').textContent='Join thousands of app creators';
+    document.getElementById('switchText').innerHTML='Already have an account? <a href="#" onclick="switchAuth(\'login\');return false;">Sign in</a>';
+  }
+}
+
+function handleLogin(e){
+  e.preventDefault();
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  if(!email||!pass){showToast('Please fill all fields','error');return;}
+  
+  // Simple demo auth - in real app, verify with backend
+  const users = JSON.parse(localStorage.getItem('apkUsers') || '[]');
+  const user = users.find(u => u.email === email && u.pass === pass);
+  
+  if(!user){
+    // First time - create demo user
+    const demoUser = { name: email.split('@')[0], email, pass, joined: Date.now() };
+    users.push(demoUser);
+    localStorage.setItem('apkUsers', JSON.stringify(users));
+    setUser(demoUser);
+  } else {
+    setUser(user);
+  }
+  
+  showToast('✓ Login successful!', 'success');
+  setTimeout(()=>location.href='dashboard.html', 800);
+}
+
+function handleSignup(e){
+  e.preventDefault();
+  const name=document.getElementById('signupName').value.trim();
+  const email=document.getElementById('signupEmail').value.trim();
+  const pass=document.getElementById('signupPass').value;
+  
+  if(!name||!email||!pass){showToast('Please fill all fields','error');return;}
+  if(pass.length<6){showToast('Password must be at least 6 characters','error');return;}
+  
+  const users = JSON.parse(localStorage.getItem('apkUsers') || '[]');
+  if(users.find(u => u.email === email)){
+    showToast('Email already exists','error');return;
+  }
+  
+  const newUser = { name, email, pass, joined: Date.now() };
+  users.push(newUser);
+  localStorage.setItem('apkUsers', JSON.stringify(users));
+  setUser(newUser);
+  
+  showToast('🎉 Account created!', 'success');
+  setTimeout(()=>location.href='dashboard.html', 800);
+}
+
+function socialLogin(provider){
+  showToast(`${provider} login coming soon!`, 'success');
+  // Demo: create fake user
+  const demoUser = { name: provider+' User', email: 'demo@'+provider.toLowerCase()+'.com', joined: Date.now() };
+  setUser(demoUser);
+  setTimeout(()=>location.href='dashboard.html', 800);
+}
+</script>
+</body>
+</html>
