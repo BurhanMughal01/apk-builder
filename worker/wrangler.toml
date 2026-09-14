@@ -1,0 +1,20 @@
+name = "apk-builder-api"
+main = "index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[durable_objects.bindings]]
+name = "BUILD_QUEUE"
+class_name = "BuildQueue"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["BuildQueue"]
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "PASTE_KV_ID_HERE"
+
+[[kv_namespaces]]
+binding = "LOGS"
+id = "PASTE_KV_ID_HERE"

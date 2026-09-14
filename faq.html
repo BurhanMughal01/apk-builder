@@ -1,197 +1,91 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FAQ — APKForge</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<style>
-.faq-search-wrap{max-width:600px;margin:0 auto 30px;position:relative}
-.faq-search{width:100%;padding:16px 20px 16px 50px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text);font-size:15px;font-family:inherit;outline:none;transition:all .2s;box-shadow:0 8px 24px -10px rgba(0,0,0,.5)}
-.faq-search:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(99,102,241,.12),0 8px 24px -10px rgba(0,0,0,.5)}
-.faq-search-ic{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--text-mute);font-size:18px}
-.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
-.cat-btn{padding:9px 18px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
-.cat-btn:hover{background:var(--surface-2);border-color:var(--border-2)}
-.cat-btn.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(99,102,241,.35)}
-.faq-group{margin-bottom:34px}
-.faq-group-title{font-size:12px;color:var(--primary-2);font-weight:800;text-transform:uppercase;letter-spacing:.15em;margin-bottom:14px;padding:0 4px}
-.no-results{text-align:center;padding:50px 20px;color:var(--text-mute)}
-.no-results-ic{font-size:56px;margin-bottom:14px;opacity:.5}
-.help-cta{background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.3);border-radius:24px;padding:44px 30px;text-align:center;margin-top:50px;position:relative;overflow:hidden}
-.help-cta::before{content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.3),transparent 70%);filter:blur(40px);pointer-events:none}
-.help-cta h3{font-size:22px;font-weight:900;color:var(--text);margin-bottom:10px;position:relative;z-index:1}
-.help-cta p{color:var(--text-dim);font-size:15px;margin-bottom:22px;position:relative;z-index:1}
-.help-cta .btn{position:relative;z-index:1}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — APKForge</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg-layer">
-  <div class="bg-mesh"></div>
-  <div class="bg-grid"></div>
-</div>
-
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand">
-      <div class="brand-mark">⚡</div>
-      <span class="brand-name">APKForge</span>
-      <span class="brand-pill">FREE</span>
-    </a>
-    <button class="nav-toggle" onclick="toggleNav()">☰</button>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="build.html">Build</a></li>
-      <li><a href="features.html">Features</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-      <li><a href="faq.html" class="active">FAQ</a></li>
-      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
-      <li><a href="login.html" class="icon-btn" id="userBtn">👤</a></li>
-      <li><a href="build.html" class="nav-btn">Start Free →</a></li>
-    </ul>
-  </div>
-</nav>
-
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <span class="page-badge">FAQ</span>
-  <h1 class="page-title">Frequently Asked <span class="grad">Questions</span></h1>
-  <p class="page-sub">Everything you need to know about APKForge</p>
-</div>
-
-<!-- SEARCH -->
-<section class="section" style="padding-top:20px">
-  <div class="container-sm">
-    <div class="faq-search-wrap">
-      <span class="faq-search-ic">🔍</span>
-      <input type="text" class="faq-search" id="faqSearch" placeholder="Search questions..." oninput="filterFaqs()">
+  <section class="hero" style="padding:140px 0 40px">
+    <div class="container" style="text-align:center">
+      <h1>Frequently asked <span class="gradient-text">questions</span></h1>
+      <p class="hero-desc" style="margin:0 auto">Everything you need to know about APKForge.</p>
     </div>
+  </section>
 
-    <div class="cat-tabs">
-      <button class="cat-btn active" onclick="setCategory('all',this)">All</button>
-      <button class="cat-btn" onclick="setCategory('general',this)">General</button>
-      <button class="cat-btn" onclick="setCategory('build',this)">Building</button>
-      <button class="cat-btn" onclick="setCategory('tech',this)">Technical</button>
-      <button class="cat-btn" onclick="setCategory('pricing',this)">Pricing</button>
-    </div>
-
-    <div id="faqContainer"></div>
-
-    <!-- Help CTA -->
-    <div class="help-cta">
-      <h3>Still need help?</h3>
-      <p>Can't find the answer you're looking for? Our team is here to help.</p>
-      <a href="contact.html" class="btn btn-primary">📧 Contact Support</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="brand"><div class="brand-mark">⚡</div><span class="brand-name">APKForge</span></a>
-        <p>Turn anything into a professional Android APK.</p>
+  <section class="section">
+    <div class="container-narrow container">
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">Is APKForge really free?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes — the Free plan includes 3 builds per month with all templates and splash styles. No credit card required.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do I need coding skills?</button>
+          <div class="faq-a"><div class="faq-a-inner">No. Just upload your HTML file or paste any URL. We handle all the Android compilation for you.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How long does a build take?</button>
+          <div class="faq-a"><div class="faq-a-inner">Typically 60-90 seconds. You'll get an email when it's ready.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Are the APKs signed?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes — every APK is signed with v1 + v2 signature using a stable keystore, so updates install cleanly.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can I publish to Play Store?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes. Our signed APKs are Play Store compliant (subject to Google's policies).</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What if my build fails?</button>
+          <div class="faq-a"><div class="faq-a-inner">You'll get a detailed error message. Fix and retry — failed builds don't count against your quota.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do you store my HTML?</button>
+          <div class="faq-a"><div class="faq-a-inner">Your HTML is bundled into the APK and deleted after 30 days. We never share it.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can I use my own keystore?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes on Pro+ plans. Email us to upload a custom keystore.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What Android versions are supported?</button>
+          <div class="faq-a"><div class="faq-a-inner">APK minSdk 21 (Android 5.0) — works on 99%+ of devices.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can I remove APKForge branding?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes on Unlimited plan — white-label APKs with no attribution.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Is there a build limit?</button>
+          <div class="faq-a"><div class="faq-a-inner">Free: 3/month. Basic: 20/month. Pro: 100/month. Unlimited: no limit.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can I use my own domain?</button>
+          <div class="faq-a"><div class="faq-a-inner">For the webview URL, yes. Just paste your custom domain URL when building.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How do I update my app?</button>
+          <div class="faq-a"><div class="faq-a-inner">Build a new version with the same package name. Install over the old one — no uninstall needed.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do you offer refunds?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes — 7-day money-back guarantee on all paid plans. No questions asked.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Is there an API?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes on Unlimited plan. Full REST API for automating builds.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Can I build multiple apps?</button>
+          <div class="faq-a"><div class="faq-a-inner">Absolutely — build as many as your plan allows, each with unique package name.</div></div>
+        </div>
       </div>
-      <div class="footer-col"><h4>Product</h4><a href="build.html">Build APK</a><a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>
-      <div class="footer-col"><h4>Resources</h4><a href="history.html">History</a><a href="faq.html">FAQ</a><a href="about.html">About</a></div>
-      <div class="footer-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="contact.html">Contact</a></div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 APKForge · Built by Burhan Ahmad Mughal</span>
-      <span>Made with ⚡ in Pakistan</span>
-    </div>
-  </div>
-</footer>
+  </section>
 
-<script src="nav.js"></script>
-<script>
-const FAQS = [
-  // General
-  {cat:'general', q:'Is APKForge really free?', a:'Yes, 100% free for personal use. Unlimited APK builds, no credit card, no hidden fees, no signup required. Business plans are available for commercial features.'},
-  {cat:'general', q:'Do I need to create an account?', a:'No! You can start building immediately without signup. Creating a free account lets you track your build history and access the dashboard.'},
-  {cat:'general', q:'What content is not allowed?', a:'We only support Halal, ethical apps. No gambling, adult content, dating, music, interest-based finance, or any content prohibited in Islam.'},
-  {cat:'general', q:'Can I use APKForge for commercial apps?', a:'Yes, personal use includes commercial apps. For advanced features like white-labeling, priority queue, and removal of branding, upgrade to Business.'},
-  
-  // Building
-  {cat:'build', q:'How long does it take to build an APK?', a:'Typically 60-90 seconds. Repeat builds with the same HTML are faster thanks to caching. Complex apps may take up to 2-3 minutes.'},
-  {cat:'build', q:'Can I use any website URL?', a:'Most websites work, but sites with strict login requirements, heavy JavaScript frameworks, or CORS policies may not work perfectly. We recommend testing first.'},
-  {cat:'build', q:'What templates are available?', a:'We offer 10 ready-made templates: Calculator, Todo List, Snake Game, Tasbeeh Counter, Quran Reader, Prayer Times, Unit Converter, Notes App, BMI Calculator, and Quiz Game.'},
-  {cat:'build', q:'Can I update my app later?', a:'Yes! Just rebuild with new files and share the updated APK. If you use the same package name, users can update over the previous version.'},
-  {cat:'build', q:'What is a splash screen?', a:'The splash screen is the loading screen shown when your app opens. We offer 10 styles with 20 colors, 16 icons, and live preview customization.'},
-  
-  // Technical
-  {cat:'tech', q:'Will my app work offline?', a:'Yes! Your HTML, URL content, or template is bundled inside the APK. The app works completely offline without internet.'},
-  {cat:'tech', q:'Is JavaScript supported?', a:'Full JavaScript support with DOM manipulation, localStorage, fetch API, and all modern Web APIs. Anything that works in Chrome works in your app.'},
-  {cat:'tech', q:'What Android versions are supported?', a:'Your apps support Android 5.0 (API 21) and above, covering 99%+ of active Android devices.'},
-  {cat:'tech', q:'Is the APK signed?', a:'Yes! Every APK is signed with v1 and v2 signing schemes using a valid keystore. Ready to install on any Android device without warnings.'},
-  {cat:'tech', q:'Why does Google Play Protect warn about my APK?', a:'This is normal for apps installed outside the Play Store. Click "Install Anyway" to proceed. The warning is just a security precaution.'},
-  {cat:'tech', q:'Can I upload my own app icon?', a:'Yes! Upload a 512×512 PNG or JPG icon. It will be used as your app\'s launcher icon on the home screen.'},
-  
-  // Pricing
-  {cat:'pricing', q:'What is the difference between Personal and Business?', a:'Business adds custom splash logo upload, priority build queue, removal of APKForge branding, bulk builds, and 24-hour email support.'},
-  {cat:'pricing', q:'Can I cancel my Business subscription?', a:'Yes, cancel anytime. No long-term contracts. Your apps will continue to work, you just lose the premium features.'},
-  {cat:'pricing', q:'Is there a free trial for Business?', a:'Yes! 14-day free trial on the Business plan. No credit card required to start.'},
-  {cat:'pricing', q:'What payment methods do you accept?', a:'For Pakistan: JazzCash, EasyPaisa, and bank transfer. For international: card payments via Stripe and PayPal.'},
-  {cat:'pricing', q:'Do you offer refunds?', a:'Yes, 30-day money-back guarantee on Business and Enterprise plans. No questions asked.'}
-];
-
-let currentCat = 'all';
-
-function setCategory(cat, el){
-  currentCat = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  filterFaqs();
-}
-
-function filterFaqs(){
-  const search = (document.getElementById('faqSearch').value || '').toLowerCase().trim();
-  let list = FAQS;
-  if(currentCat !== 'all') list = list.filter(f => f.cat === currentCat);
-  if(search) list = list.filter(f => f.q.toLowerCase().includes(search) || f.a.toLowerCase().includes(search));
-  
-  const container = document.getElementById('faqContainer');
-  if(!list.length){
-    container.innerHTML = `
-      <div class="no-results">
-        <div class="no-results-ic">🔍</div>
-        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px">No matching questions</div>
-        <div style="font-size:14px">Try a different search or category.</div>
-      </div>`;
-    return;
-  }
-  
-  // Group by category if showing all
-  if(currentCat === 'all' && !search){
-    const groups = {general:'General', build:'Building', tech:'Technical', pricing:'Pricing'};
-    let html = '';
-    Object.keys(groups).forEach(cat => {
-      const items = list.filter(f => f.cat === cat);
-      if(!items.length) return;
-      html += `<div class="faq-group"><div class="faq-group-title">${groups[cat]}</div><div class="faq-list">`;
-      html += items.map(f => `
-        <div class="faq">
-          <div class="faq-q">${f.q}</div>
-          <div class="faq-a">${f.a}</div>
-        </div>`).join('');
-      html += '</div></div>';
-    });
-    container.innerHTML = html;
-  } else {
-    container.innerHTML = `<div class="faq-list">${list.map(f => `
-      <div class="faq">
-        <div class="faq-q">${f.q}</div>
-        <div class="faq-a">${f.a}</div>
-      </div>`).join('')}</div>`;
-  }
-}
-
-filterFaqs();
-</script>
+  <script src="nav.js"></script>
 </body>
 </html>

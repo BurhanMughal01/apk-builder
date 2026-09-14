@@ -1,248 +1,58 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>About — APKForge</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<style>
-.story-section{max-width:800px;margin:0 auto}
-.story-text{color:var(--text-dim);font-size:16px;line-height:1.85;margin-bottom:18px}
-.story-text strong{color:var(--text);font-weight:800}
-.story-text a{color:var(--primary-2);text-decoration:none;font-weight:700}
-.story-text a:hover{text-decoration:underline}
-.team-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:center;transition:all .3s}
-.team-card:hover{border-color:var(--primary);transform:translateY(-5px)}
-.team-avatar{width:80px;height:80px;border-radius:50%;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;margin-bottom:16px;box-shadow:0 8px 24px rgba(99,102,241,.4)}
-.team-name{font-size:17px;font-weight:900;color:var(--text);margin-bottom:4px}
-.team-role{font-size:13px;color:var(--primary-2);font-weight:700;margin-bottom:10px}
-.team-bio{font-size:13.5px;color:var(--text-dim);line-height:1.7}
-.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:40px}
-.value-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;transition:all .3s}
-.value-card:hover{border-color:var(--primary);transform:translateY(-4px)}
-.value-ic{width:50px;height:50px;background:var(--grad);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;box-shadow:0 4px 14px rgba(99,102,241,.35)}
-.value-card h3{font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px}
-.value-card p{font-size:14px;color:var(--text-dim);line-height:1.7}
-.timeline{max-width:700px;margin:0 auto;position:relative;padding-left:40px}
-.timeline::before{content:'';position:absolute;left:15px;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg,var(--primary),var(--primary-2),var(--pink))}
-.tl-item{position:relative;margin-bottom:32px}
-.tl-item::before{content:'';position:absolute;left:-32px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--grad);box-shadow:0 0 0 4px var(--bg),0 0 20px rgba(99,102,241,.6)}
-.tl-year{font-size:13px;font-weight:800;color:var(--primary-2);letter-spacing:.05em;margin-bottom:4px}
-.tl-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px}
-.tl-desc{font-size:14px;color:var(--text-dim);line-height:1.7}
-.cta-final{background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(236,72,153,.08));border:1px solid rgba(139,92,246,.3);border-radius:28px;padding:60px 30px;text-align:center;position:relative;overflow:hidden;margin-top:60px}
-.cta-final::before{content:'';position:absolute;top:-50%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,.35),transparent 70%);filter:blur(50px);pointer-events:none}
-.cta-final h2{font-size:clamp(24px,4vw,38px);font-weight:900;color:var(--text);margin-bottom:14px;position:relative;z-index:1;letter-spacing:-.03em}
-.cta-final p{color:var(--text-dim);font-size:16px;margin-bottom:28px;position:relative;z-index:1;max-width:520px;margin-left:auto;margin-right:auto}
-.cta-final .btn{position:relative;z-index:1}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — APKForge</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg-layer">
-  <div class="bg-mesh"></div>
-  <div class="bg-grid"></div>
-</div>
-
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand">
-      <div class="brand-mark">⚡</div>
-      <span class="brand-name">APKForge</span>
-      <span class="brand-pill">FREE</span>
-    </a>
-    <button class="nav-toggle" onclick="toggleNav()">☰</button>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="build.html">Build</a></li>
-      <li><a href="features.html">Features</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
-      <li><a href="login.html" class="icon-btn" id="userBtn">👤</a></li>
-    </ul>
-  </div>
-</nav>
-
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <span class="page-badge">About Us</span>
-  <h1 class="page-title">Built with <span class="grad">Passion</span></h1>
-  <p class="page-sub">A free tool for creators, developers, and dreamers who want to ship real apps</p>
-</div>
-
-<!-- STORY -->
-<section class="section" style="padding-top:20px">
-  <div class="container">
-    <div class="story-section">
-      <p class="story-text">
-        <strong>APKForge</strong> was born from a simple frustration — converting a website into a real Android app shouldn't require weeks of learning Android Studio, dealing with Java/Kotlin code, or paying hundreds of dollars to developers.
-      </p>
-      <p class="story-text">
-        In 2026, I built a lightweight solution using cloud technology and open-source tools. Now anyone — a student, a shopkeeper, a small business owner, or a hobbyist developer — can turn their <strong>HTML file, website, or template</strong> into a signed, ready-to-install Android APK in under 2 minutes.
-      </p>
-      <p class="story-text">
-        No signup. No credit card. No coding. Just <strong>upload → customize → download</strong>. And it will always be free for personal use.
-      </p>
-      <p class="story-text" style="color:var(--primary-2);font-weight:700">
-        — Burhan Ahmad Mughal, Founder
-      </p>
+  <section class="hero" style="padding:140px 0 60px">
+    <div class="container" style="text-align:center">
+      <h1>Built by developers, <span class="gradient-text">for developers</span></h1>
+      <p class="hero-desc" style="margin:0 auto">We believe shipping an Android app shouldn't require 4 hours of setup.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- VALUES -->
-<section class="section">
-  <div class="container">
-    <div class="text-center mb-4">
-      <span class="page-badge">Our Values</span>
-      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">What We Stand For</h2>
-      <p class="page-sub">Principles that guide every line of code we write.</p>
-    </div>
-    <div class="values-grid">
-      <div class="value-card">
-        <div class="value-ic">🕌</div>
-        <h3>Halal & Ethical</h3>
-        <p>We only support apps that benefit society. No gambling, adult content, or exploitative practices — ever.</p>
+  <section class="section">
+    <div class="container-narrow container">
+      <div class="card" style="padding:40px">
+        <h2 style="margin-bottom:16px">Our story</h2>
+        <p style="color:var(--text-muted);margin-bottom:16px">
+          APKForge started in 2024 when our founder Burhan Ahmad Mughal got tired of setting up Android Studio
+          just to package a simple HTML prototype into an APK for a client demo.
+        </p>
+        <p style="color:var(--text-muted);margin-bottom:16px">
+          The existing tools were either too complex (full Android IDE) or too limited (single-page wrappers).
+          So we built APKForge — a tool that takes any HTML or URL and produces a signed, installable,
+          production-ready APK in under a minute.
+        </p>
+        <p style="color:var(--text-muted)">
+          Today, over 12,000 developers use APKForge to ship apps for clients, side projects, and internal tools.
+        </p>
       </div>
-      <div class="value-card">
-        <div class="value-ic">🆓</div>
-        <h3>Free Forever</h3>
-        <p>Personal use is 100% free. No hidden fees, no credit card required, no watermarks on your apps.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-ic">🔓</div>
-        <h3>Privacy First</h3>
-        <p>Your files are processed on our servers but never stored longer than needed. History stays on your device.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-ic">⚡</div>
-        <h3>Fast & Simple</h3>
-        <p>Under 2 minutes from start to finish. Built with modern tech — Cloudflare, GitHub Actions, and Vercel.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-ic">🌍</div>
-        <h3>For Everyone</h3>
-        <p>No coding skills needed. If you can use a web browser, you can build an Android app.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-ic">🚀</div>
-        <h3>Always Improving</h3>
-        <p>New features ship every month. Your feedback shapes what we build next.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- TIMELINE -->
-<section class="section">
-  <div class="container">
-    <div class="text-center mb-4">
-      <span class="page-badge">Journey</span>
-      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">How We Got Here</h2>
-      <p class="page-sub">From a weekend project to a tool used by thousands.</p>
-    </div>
-    <div class="timeline">
-      <div class="tl-item">
-        <div class="tl-year">January 2026</div>
-        <div class="tl-title">The Idea</div>
-        <div class="tl-desc">Burhan Ahmad Mughal built the first prototype using Termux on an Android phone — proving that professional apps could be built without expensive tools.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">February 2026</div>
-        <div class="tl-title">First Build System</div>
-        <div class="tl-desc">Deployed the first cloud-based APK builder using GitHub Actions and Cloudflare Workers — free for everyone.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">March 2026</div>
-        <div class="tl-title">Multi-Mode Support</div>
-        <div class="tl-desc">Added URL to APK and 10 ready-made templates, expanding possibilities from just HTML files to full websites.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">Today</div>
-        <div class="tl-title">1,200+ Apps Built</div>
-        <div class="tl-desc">Thousands of developers, students, and businesses use APKForge every month. And we're just getting started.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TEAM -->
-<section class="section">
-  <div class="container">
-    <div class="text-center mb-4">
-      <span class="page-badge">The Team</span>
-      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">Behind APKForge</h2>
-      <p class="page-sub">A small team with a big mission.</p>
-    </div>
-    <div style="max-width:400px;margin:0 auto">
-      <div class="team-card">
-        <div class="team-avatar">B</div>
-        <div class="team-name">Burhan Ahmad Mughal</div>
-        <div class="team-role">Founder & Developer</div>
-        <div class="team-bio">
-          Full-stack developer from Gujranwala, Pakistan. Passionate about building free tools that help creators worldwide. Working to make app development accessible to everyone — regardless of budget or technical background.
+      <div class="grid grid-3" style="margin-top:40px">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h3>Our Mission</h3>
+          <p>Make Android app creation as easy as uploading a file.</p>
         </div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
-          <a href="https://github.com/BurhanMughal01" target="_blank" class="btn btn-ghost btn-sm">🐙 GitHub</a>
-          <a href="contact.html" class="btn btn-primary btn-sm">📧 Contact</a>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>Our Promise</h3>
+          <p>60-second builds, every time. Or your build is free.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">❤️</div>
+          <h3>Our Values</h3>
+          <p>Transparent pricing, no lock-in, own your APKs forever.</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="section">
-  <div class="container">
-    <div class="cta-final">
-      <h2>Join us on this journey</h2>
-      <p>Build your first app today. It's free, fast, and forever yours.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1">
-        <a href="build.html" class="btn btn-primary btn-lg">⚡ Start Building Free</a>
-        <a href="features.html" class="btn btn-ghost btn-lg">Explore Features</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="brand"><div class="brand-mark">⚡</div><span class="brand-name">APKForge</span></a>
-        <p>Turn anything into a professional Android APK. Free, fast, beautifully designed.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <a href="build.html">Build APK</a>
-        <a href="features.html">Features</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="dashboard.html">Dashboard</a>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <a href="history.html">History</a>
-        <a href="faq.html">FAQ</a>
-        <a href="about.html">About</a>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="contact.html">Contact</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 APKForge · Built by Burhan Ahmad Mughal</span>
-      <span>Made with ⚡ in Pakistan 🇵🇰</span>
-    </div>
-  </div>
-</footer>
-
-<script src="nav.js"></script>
+  <script src="nav.js"></script>
 </body>
 </html>

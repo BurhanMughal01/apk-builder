@@ -1,213 +1,101 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pricing — APKForge</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<style>
-.compare-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:20px;overflow:hidden;border:1px solid var(--border);margin-top:30px}
-.compare-table th,.compare-table td{padding:16px 20px;text-align:left;font-size:14px;border-bottom:1px solid var(--border)}
-.compare-table th{background:var(--surface-2);font-weight:800;color:var(--text);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
-.compare-table td{color:var(--text-dim)}
-.compare-table td:first-child{font-weight:700;color:var(--text)}
-.compare-table tr:last-child td{border-bottom:none}
-.compare-table .check{color:var(--success);font-size:18px;font-weight:900}
-.compare-table .cross{color:var(--text-mute);font-size:16px}
-.compare-table .mid{background:rgba(139,92,246,.05)}
-.compare-table .mid-head{background:rgba(139,92,246,.1);color:var(--primary-2)!important}
-.compare-table td.mid{background:rgba(139,92,246,.03)}
-@media(max-width:640px){.compare-table{font-size:12px}.compare-table th,.compare-table td{padding:12px 10px;font-size:12px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — APKForge</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg-layer">
-  <div class="bg-mesh"></div>
-  <div class="bg-grid"></div>
-</div>
+  <section class="hero" style="padding:140px 0 60px">
+    <div class="container" style="text-align:center">
+      <h1>Simple, <span class="gradient-text">honest pricing</span></h1>
+      <p class="hero-desc" style="margin:0 auto">Start free. Upgrade when you scale. No hidden fees, no surprises.</p>
+    </div>
+  </section>
 
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand">
-      <div class="brand-mark">⚡</div>
-      <span class="brand-name">APKForge</span>
-      <span class="brand-pill">FREE</span>
-    </a>
-    <button class="nav-toggle" onclick="toggleNav()">☰</button>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="build.html">Build</a></li>
-      <li><a href="features.html">Features</a></li>
-      <li><a href="pricing.html" class="active">Pricing</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
-      <li><a href="login.html" class="icon-btn" id="userBtn">👤</a></li>
-      <li><a href="build.html" class="nav-btn">Start Free →</a></li>
-    </ul>
-  </div>
-</nav>
+  <section class="section">
+    <div class="container">
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Free</div>
+          <div class="price-desc">Perfect for trying out</div>
+          <div class="price-amount">Rs. 0<span>/mo</span></div>
+          <ul class="price-features">
+            <li>3 builds per month</li>
+            <li>All 10 templates</li>
+            <li>12 splash styles</li>
+            <li>Standard queue</li>
+          </ul>
+          <a href="build.html" class="btn btn-outline btn-block">Start Free</a>
+        </div>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <span class="page-badge">Pricing</span>
-  <h1 class="page-title">Simple, Honest <span class="grad">Pricing</span></h1>
-  <p class="page-sub">Free forever for personal use. No credit card required.</p>
-</div>
+        <div class="price-card">
+          <div class="price-name">Basic</div>
+          <div class="price-desc">For hobbyists</div>
+          <div class="price-amount">Rs. 500<span>/mo</span></div>
+          <ul class="price-features">
+            <li>20 builds per month</li>
+            <li>Custom app icon</li>
+            <li>Email support</li>
+          </ul>
+          <a href="#" class="btn btn-outline btn-block">Choose Basic</a>
+        </div>
 
-<!-- PRICING -->
-<section class="section" style="padding-top:20px">
-  <div class="container">
-    <div class="pricing">
-      <div class="price">
-        <h3>Personal</h3>
-        <div class="price-amt"><span class="cur">$</span>0<span class="per">/forever</span></div>
-        <p style="color:var(--text-mute);font-size:13px;margin-top:4px">Perfect for individuals</p>
-        <ul class="price-list">
-          <li>Unlimited APK builds</li>
-          <li>All 12 splash styles</li>
-          <li>20 colors + 16 icons</li>
-          <li>HTML, URL, Template modes</li>
-          <li>Custom app name & icon</li>
-          <li>Advanced options</li>
-          <li>Build history</li>
-          <li>QR codes & sharing</li>
-        </ul>
-        <a href="build.html" class="price-btn">Start Free</a>
-      </div>
+        <div class="price-card featured">
+          <div class="price-name">Pro</div>
+          <div class="price-desc">For serious builders</div>
+          <div class="price-amount">Rs. 1,500<span>/mo</span></div>
+          <ul class="price-features">
+            <li>100 builds per month</li>
+            <li>Everything in Basic</li>
+            <li>Priority queue</li>
+            <li>Email notifications</li>
+            <li>Analytics dashboard</li>
+          </ul>
+          <a href="#" class="btn btn-primary btn-block">Get Pro</a>
+        </div>
 
-      <div class="price pop">
-        <div class="price-pop">POPULAR</div>
-        <h3>Business</h3>
-        <div class="price-amt"><span class="cur">$</span>15<span class="per">/month</span></div>
-        <p style="color:var(--text-mute);font-size:13px;margin-top:4px">For professionals & small teams</p>
-        <ul class="price-list">
-          <li>Everything in Personal</li>
-          <li>Custom splash logo upload</li>
-          <li>Priority build queue</li>
-          <li>Remove APKForge branding</li>
-          <li>Bulk builds (up to 50/day)</li>
-          <li>Email support (24h)</li>
-          <li>Custom package names</li>
-          <li>Analytics dashboard</li>
-        </ul>
-        <a href="build.html" class="price-btn">Start Business Trial</a>
-      </div>
-
-      <div class="price">
-        <h3>Enterprise</h3>
-        <div class="price-amt"><span class="per">Custom</span></div>
-        <p style="color:var(--text-mute);font-size:13px;margin-top:4px">For large organizations</p>
-        <ul class="price-list">
-          <li>Everything in Business</li>
-          <li>White-label solution</li>
-          <li>API access</li>
-          <li>Unlimited bulk builds</li>
-          <li>Dedicated support</li>
-          <li>SLA guarantee</li>
-          <li>Custom integration</li>
-          <li>On-premise option</li>
-        </ul>
-        <a href="contact.html" class="price-btn">Contact Sales</a>
+        <div class="price-card">
+          <div class="price-name">Unlimited</div>
+          <div class="price-desc">For agencies & teams</div>
+          <div class="price-amount">Rs. 3,000<span>/mo</span></div>
+          <ul class="price-features">
+            <li>Unlimited builds</li>
+            <li>Everything in Pro</li>
+            <li>White-label APKs</li>
+            <li>API access</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="#" class="btn btn-outline btn-block">Go Unlimited</a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- COMPARISON TABLE -->
-<section class="section">
-  <div class="container">
-    <div class="text-center mb-4">
-      <span class="page-badge">Compare</span>
-      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">Feature Comparison</h2>
-      <p class="page-sub">See exactly what's included in each plan.</p>
-    </div>
-
-    <div style="overflow-x:auto">
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th>Personal</th>
-            <th class="mid-head">Business</th>
-            <th>Enterprise</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Unlimited APK builds</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>12 splash styles</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>20 colors + 16 icons</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>HTML / URL / Template modes</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Custom app name & icon</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Advanced options</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Build history</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>QR codes & sharing</td><td><span class="check">✓</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Custom splash logo</td><td><span class="cross">✗</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Priority queue</td><td><span class="cross">✗</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Remove branding</td><td><span class="cross">✗</span></td><td class="mid"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>Bulk builds</td><td><span class="cross">✗</span></td><td class="mid">Up to 50/day</td><td>Unlimited</td></tr>
-          <tr><td>Email support</td><td>Community</td><td class="mid">24h</td><td>Dedicated</td></tr>
-          <tr><td>White-label</td><td><span class="cross">✗</span></td><td class="mid"><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>API access</td><td><span class="cross">✗</span></td><td class="mid"><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
-          <tr><td>SLA guarantee</td><td><span class="cross">✗</span></td><td class="mid"><span class="cross">✗</span></td><td><span class="check">✓</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ PREVIEW -->
-<section class="section">
-  <div class="container-sm">
-    <div class="text-center mb-4">
-      <span class="page-badge">Pricing FAQ</span>
-      <h2 class="page-title" style="font-size:clamp(26px,4vw,38px)">Common questions</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq"><div class="faq-q">Do I need a credit card?</div><div class="faq-a">No! Personal plan is 100% free forever. No credit card, no signup required.</div></div>
-      <div class="faq"><div class="faq-q">What's the difference between Personal and Business?</div><div class="faq-a">Business adds custom splash logo, priority queue, no branding, bulk builds, and email support.</div></div>
-      <div class="faq"><div class="faq-q">Can I cancel anytime?</div><div class="faq-a">Yes, cancel your Business or Enterprise plan anytime. No long-term contracts.</div></div>
-      <div class="faq"><div class="faq-q">Is there a free trial for Business?</div><div class="faq-a">Yes! 14-day free trial on Business. No credit card required to start.</div></div>
-      <div class="faq"><div class="faq-q">What payment methods do you accept?</div><div class="faq-a">For Business and Enterprise: JazzCash, EasyPaisa, bank transfer, and card payments.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="section">
-  <div class="container">
-    <div class="card-glow" style="padding:60px 30px;text-align:center;border-radius:28px">
-      <h2 class="page-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:14px">Start building today</h2>
-      <p class="page-sub" style="margin-bottom:28px">Free forever. Upgrade whenever you're ready.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <a href="build.html" class="btn btn-primary btn-lg">⚡ Start Free</a>
-        <a href="contact.html" class="btn btn-ghost btn-lg">Contact Sales</a>
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Frequently asked</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">Can I cancel anytime?</button>
+          <div class="faq-a"><div class="faq-a-inner">Yes, cancel with one click. No questions asked.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do unused builds roll over?</button>
+          <div class="faq-a"><div class="faq-a-inner">Builds reset monthly. Unused builds don't roll over.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">What payment methods do you accept?</button>
+          <div class="faq-a"><div class="faq-a-inner">Credit cards, debit cards, and JazzCash/Easypaisa for Pakistan.</div></div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="brand"><div class="brand-mark">⚡</div><span class="brand-name">APKForge</span></a>
-        <p>Turn anything into a professional Android APK.</p>
-      </div>
-      <div class="footer-col"><h4>Product</h4><a href="build.html">Build APK</a><a href="features.html">Features</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>
-      <div class="footer-col"><h4>Resources</h4><a href="history.html">History</a><a href="faq.html">FAQ</a><a href="about.html">About</a></div>
-      <div class="footer-col"><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="contact.html">Contact</a></div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 APKForge · Built by Burhan Ahmad Mughal</span>
-      <span>Made with ⚡ in Pakistan</span>
-    </div>
-  </div>
-</footer>
-
-<script src="nav.js"></script>
+  <script src="nav.js"></script>
 </body>
 </html>

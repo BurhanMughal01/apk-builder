@@ -1,181 +1,287 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>APKForge — Turn Anything Into An Android App</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APKForge — Convert HTML/URL to Android APK in 60 Seconds</title>
+  <meta name="description" content="Turn any website or HTML into a professional Android APK. Free, fast, no coding. Custom splash screens, icons, and more.">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="bg-layer">
-  <div class="bg-mesh"></div>
-  <div class="bg-grid"></div>
-</div>
-
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand">
-      <div class="brand-mark">⚡</div>
-      <span class="brand-name">APKForge</span>
-      <span class="brand-pill">FREE</span>
-    </a>
-    <button class="nav-toggle" onclick="toggleNav()">☰</button>
-    <ul class="nav-menu" id="navMenu">
-      <li><a href="build.html">Build</a></li>
-      <li><a href="features.html">Features</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-      <li><a href="faq.html">FAQ</a></li>
-      <li><button class="theme-btn" onclick="toggleTheme()">🌙</button></li>
-      <li><a href="login.html" class="icon-btn" id="userBtn">👤</a></li>
-      <li><a href="build.html" class="nav-btn">Start Free →</a></li>
-    </ul>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge"><span class="dot"></span>Now supporting 3 build modes · HTML, URL, Templates</div>
-  <h1>Turn Anything Into<br><span class="grad">An Android App</span></h1>
-  <p class="hero-sub">Upload HTML, paste a website URL, or pick a template. Get a signed, ready-to-install APK with a custom splash screen — in under 2 minutes.</p>
-  <div class="hero-actions">
-    <a href="build.html" class="btn btn-primary btn-lg">⚡ Start Building Free</a>
-    <a href="features.html" class="btn btn-ghost btn-lg">Explore Features</a>
-  </div>
-</section>
-
-<!-- STATS -->
-<section class="section" style="padding-top:20px">
-  <div class="container">
-    <div class="grid-4" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px">
-      <div class="stat-box"><div class="stat-num">1,200+</div><div class="stat-lbl">APKs Built</div></div>
-      <div class="stat-box"><div class="stat-num">800+</div><div class="stat-lbl">Happy Users</div></div>
-      <div class="stat-box"><div class="stat-num">45s</div><div class="stat-lbl">Avg Build Time</div></div>
-      <div class="stat-box"><div class="stat-num">100%</div><div class="stat-lbl">Free Forever</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- QUICK FEATURES PREVIEW -->
-<section class="section">
-  <div class="container">
-    <div class="text-center mb-4">
-      <span class="page-badge">Why APKForge</span>
-      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">Everything you need</h2>
-      <p class="page-sub">Powerful features, simple interface, zero coding required.</p>
-    </div>
-    <div class="grid-3">
-      <a href="build.html" class="feat-card" style="text-decoration:none;color:inherit">
-        <div class="feat-card-ic">📄</div>
-        <h3>HTML to APK</h3>
-        <p>Upload your HTML file and get a real Android APK in minutes.</p>
-      </a>
-      <a href="build.html" class="feat-card" style="text-decoration:none;color:inherit">
-        <div class="feat-card-ic">🔗</div>
-        <h3>URL to APK</h3>
-        <p>Paste any website link — turn it into a native app instantly.</p>
-      </a>
-      <a href="build.html" class="feat-card" style="text-decoration:none;color:inherit">
-        <div class="feat-card-ic">📦</div>
-        <h3>10 Templates</h3>
-        <p>Calculator, Snake, Tasbeeh, Quran, Quiz and more — ready to use.</p>
-      </a>
-      <a href="features.html" class="feat-card" style="text-decoration:none;color:inherit">
-        <div class="feat-card-ic">🎨</div>
-        <h3>12 Splash Styles</h3>
-        <p>20 colors, 16 icons, and live preview for professional look.</p>
-      </a>
-      <a href="features.html" class="feat-card" style="text-decoration:none;color:inherit">
-        <div class="feat-card-ic">📱</div>
-        <h3>Native WebView</h3>
-        <p>Full JavaScript, offline support, and localStorage built-in.</p>
-      </a>
-      <a href="features.html" class="feat-card" style="text-decoration:none;color:inherit">
-        <div class="feat-card-ic">🔒</div>
-        <h3>Signed & Secure</h3>
-        <p>v1+v2 signing — ready to install on any Android device.</p>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS PREVIEW -->
-<section class="section">
-  <div class="container">
-    <div class="text-center mb-4">
-      <span class="page-badge">Process</span>
-      <h2 class="page-title" style="font-size:clamp(28px,4.5vw,44px)">From idea to app in 3 steps</h2>
-    </div>
-    <div class="grid-3">
-      <div class="card text-center">
-        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">1</div>
-        <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:var(--text)">Choose & Customize</h3>
-        <p style="color:var(--text-dim);font-size:14.5px">Pick HTML, URL, or template. Customize your splash screen.</p>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>Trusted by 12,000+ developers</span>
       </div>
-      <div class="card text-center">
-        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">2</div>
-        <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:var(--text)">Auto Build</h3>
-        <p style="color:var(--text-dim);font-size:14.5px">Our servers compile and sign your APK automatically.</p>
+
+      <h1>
+        Turn any website into a <br>
+        <span class="gradient-text">real Android app</span>
+      </h1>
+
+      <p class="hero-desc">
+        Upload HTML or paste any URL — get a signed, installable Android APK in under 60 seconds.
+        No coding, no Android Studio, no setup required.
+      </p>
+
+      <div class="hero-cta">
+        <a href="build.html" class="btn btn-primary btn-lg">🚀 Build Free APK</a>
+        <a href="#how-it-works" class="btn btn-outline btn-lg">▶ See how it works</a>
       </div>
-      <div class="card text-center">
-        <div style="width:56px;height:56px;background:var(--grad);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(99,102,241,.4)">3</div>
-        <h3 style="font-size:17px;font-weight:800;margin-bottom:8px;color:var(--text)">Download & Share</h3>
-        <p style="color:var(--text-dim);font-size:14.5px">Get your APK instantly. Install or share with a QR code.</p>
+
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-value">12K+</div>
+          <div class="hero-stat-label">APKs Built</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">58s</div>
+          <div class="hero-stat-label">Avg Build Time</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">99.2%</div>
+          <div class="hero-stat-label">Success Rate</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">4.9★</div>
+          <div class="hero-stat-label">User Rating</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="section">
-  <div class="container">
-    <div class="card-glow" style="padding:60px 30px;text-align:center;border-radius:28px;position:relative;overflow:hidden">
-      <h2 class="page-title" style="font-size:clamp(26px,4vw,38px);margin-bottom:14px">Ready to build your app?</h2>
-      <p class="page-sub" style="margin-bottom:28px">Free forever. No signup required. Start in 10 seconds.</p>
-      <a href="build.html" class="btn btn-primary btn-lg">⚡ Start Building Free →</a>
-    </div>
-  </div>
-</section>
+  <!-- FEATURES -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Everything you need to ship</h2>
+        <p class="section-subtitle">
+          Professional-grade features without the complexity. Built for indie devs, agencies, and no-coders.
+        </p>
+      </div>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="brand"><div class="brand-mark">⚡</div><span class="brand-name">APKForge</span></a>
-        <p>Turn anything into a professional Android APK. Free, fast, beautifully designed.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <a href="build.html">Build APK</a>
-        <a href="features.html">Features</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="dashboard.html">Dashboard</a>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <a href="history.html">Build History</a>
-        <a href="faq.html">FAQ</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="https://github.com/BurhanMughal01">GitHub</a>
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>60-Second Builds</h3>
+          <p>Powered by GitHub Actions with parallel compilation. Most APKs ship in under a minute.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <h3>12 Splash Styles</h3>
+          <p>Gradient, neon, particles, glass, aurora, cosmic — pick a style, see it live, ship it.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <h3>Signed & Ready</h3>
+          <p>Every APK is v1 + v2 signed with a stable keystore. Updates install cleanly on top.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>Works Offline</h3>
+          <p>Your HTML is bundled into the APK — no internet needed after install.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h3>10 Templates</h3>
+          <p>Calculator, Todo, Snake, Tasbeeh, Quran, Prayer Times, BMI, Quiz — ready to ship.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📊</div>
+          <h3>Build Analytics</h3>
+          <p>Track every build, success rate, download count — all in your dashboard.</p>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 APKForge · Built by Burhan Ahmad Mughal</span>
-      <span>Made with ⚡ in Pakistan</span>
-    </div>
-  </div>
-</footer>
+  </section>
 
-<script src="nav.js"></script>
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">From idea to APK in 3 steps</h2>
+        <p class="section-subtitle">No Android Studio. No Gradle. No SDK setup. Just paste and build.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Upload or Paste</h3>
+          <p>Drop your HTML file, paste a URL, or pick a ready template.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Customize</h3>
+          <p>Choose splash style, colors, icon, orientation. Live preview included.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Build & Download</h3>
+          <p>Click Build. Get your signed APK in 60 seconds. Share via QR or link.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATES -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Start with a template</h2>
+        <p class="section-subtitle">10 production-ready apps. Customize colors, content, and ship in minutes.</p>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="template-card" onclick="location.href='build.html?template=calculator'">
+          <div class="template-emoji">🧮</div>
+          <h4>Calculator</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=todo'">
+          <div class="template-emoji">✅</div>
+          <h4>Todo List</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=snake'">
+          <div class="template-emoji">🐍</div>
+          <h4>Snake Game</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=tasbeeh'">
+          <div class="template-emoji">📿</div>
+          <h4>Tasbeeh</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=quran'">
+          <div class="template-emoji">📖</div>
+          <h4>Quran</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=prayer'">
+          <div class="template-emoji">🕌</div>
+          <h4>Prayer Times</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=converter'">
+          <div class="template-emoji">🔄</div>
+          <h4>Converter</h4>
+        </div>
+        <div class="template-card" onclick="location.href='build.html?template=notes'">
+          <div class="template-emoji">📝</div>
+          <h4>Notes</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING PREVIEW -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Simple, honest pricing</h2>
+        <p class="section-subtitle">Start free. Upgrade when you scale. No hidden fees.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Free</div>
+          <div class="price-desc">Perfect for trying out</div>
+          <div class="price-amount">Rs. 0<span>/mo</span></div>
+          <ul class="price-features">
+            <li>3 builds per month</li>
+            <li>All 10 templates</li>
+            <li>12 splash styles</li>
+            <li>Standard support</li>
+          </ul>
+          <a href="build.html" class="btn btn-outline btn-block">Start Free</a>
+        </div>
+
+        <div class="price-card featured">
+          <div class="price-name">Pro</div>
+          <div class="price-desc">For serious builders</div>
+          <div class="price-amount">Rs. 1,500<span>/mo</span></div>
+          <ul class="price-features">
+            <li>100 builds per month</li>
+            <li>Custom app icon</li>
+            <li>Priority queue</li>
+            <li>Email notifications</li>
+            <li>Build analytics</li>
+          </ul>
+          <a href="pricing.html" class="btn btn-primary btn-block">Get Pro</a>
+        </div>
+
+        <div class="price-card">
+          <div class="price-name">Unlimited</div>
+          <div class="price-desc">For agencies</div>
+          <div class="price-amount">Rs. 3,000<span>/mo</span></div>
+          <ul class="price-features">
+            <li>Unlimited builds</li>
+            <li>White-label APKs</li>
+            <li>API access</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="pricing.html" class="btn btn-outline btn-block">Go Unlimited</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Frequently asked</h2>
+        <p class="section-subtitle">Quick answers to the most common questions.</p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q">Is APKForge really free?</button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Yes — the Free plan includes 3 builds per month with all templates and splash styles. No credit card required.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Do I need coding skills?</button>
+          <div class="faq-a"><div class="faq-a-inner">
+            No. Just upload your HTML file or paste any URL. We handle all the Android compilation for you.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">How long does a build take?</button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Typically 60-90 seconds. You'll get an email when it's ready.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">Are the APKs signed?</button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Yes — every APK is signed with v1 + v2 signature using a stable keystore, so updates install cleanly.
+          </div></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:32px">
+        <a href="faq.html" class="btn btn-outline">View all questions →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="card" style="text-align:center;padding:60px 40px;background:var(--grad-primary);color:white;border:none">
+        <h2 style="font-size:clamp(1.75rem,4vw,2.5rem);margin-bottom:16px">
+          Ready to ship your first APK?
+        </h2>
+        <p style="opacity:0.9;margin-bottom:32px;font-size:1.125rem">
+          Join 12,000+ developers shipping faster with APKForge.
+        </p>
+        <a href="build.html" class="btn btn-lg" style="background:white;color:var(--primary)">
+          🚀 Build Free APK
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script src="nav.js"></script>
 </body>
 </html>
