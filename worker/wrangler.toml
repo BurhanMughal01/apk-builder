@@ -9,12 +9,12 @@ class_name = "BuildQueue"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["BuildQueue"]
+new_sqlite_classes = ["BuildQueue"]
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "PASTE_KV_ID_HERE"
+id = "4b50cc0bff95441f9db1a33248786280"
 
 [[kv_namespaces]]
 binding = "LOGS"
-id = "PASTE_KV_ID_HERE"
+id = "5d674bf790424724a6a806d7bef6572b"

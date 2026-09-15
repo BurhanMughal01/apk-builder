@@ -1,0 +1,20 @@
+# Sensitive files - NEVER PUSH
+*.keystore
+keystore.txt
+keystore-oneline.txt
+token.txt
+.wrangler/
+.wrangler
+*.log
+
+# Node
+node_modules/
+npm-debug.log*
+
+# System
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
