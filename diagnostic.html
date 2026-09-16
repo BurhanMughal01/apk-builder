@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>APKForge Diagnostic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:system-ui;padding:16px;background:#111;color:#eee;font-size:14px}
+h2{color:#6366f1;font-size:16px;margin:20px 0 8px}
+pre{background:#1a1a1a;padding:12px;border-radius:8px;overflow-x:auto;font-size:12px;white-space:pre-wrap;word-break:break-all}
+.ok{color:#10b981}.err{color:#ef4444}.warn{color:#f59e0b}
+button{background:#6366f1;color:white;padding:12px 20px;border:none;border-radius:8px;font-size:14px;font-weight:600;margin:8px 4px;cursor:pointer}
+button:active{opacity:0.7}
+</style>
+</head>
+<body>
+<h1 style="color:#6366f1">🔍 Diagnostic Test</h1>
+
+<h2>Test 1: Simple GET (Health)</h2>
+<button onclick="t1()">Run Test 1</button>
+<pre id="r1">Not run</pre>
+
+<h2>Test 2: Simple POST (No custom headers)</h2>
+<button onclick="t2()">Run Test 2</button>
+<pre id="r2">Not run</pre>
+
+<h2>Test 3: POST with API Key Header</h2>
+<button onclick="t3()">Run Test 3</button>
+<pre id="r3">Not run</pre>
+
+<h2>Test 4: POST with Content-Type + API Key</h2>
+<button onclick="t4()">Run Test 4</button>
+<pre id="r4">Not run</pre>
+
+<script>
+const API = 'https://apk-builder-api.buisch2314.workers.dev';
+
+async function run(id, fn) {
+  const el = document.getElementById(id);
+  el.className = '';
+  el.textContent = 'Running... (this may take 15s)';
+
+  const start = Date.now();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const result = await fn(controller.signal);
+    clearTimeout(timeout);
+    el.className = 'ok';
+    el.textContent = '✅ SUCCESS (' + (Date.now()-start) + 'ms)\n\n' + JSON.stringify(result, null, 2);
+  } catch (e) {
+    clearTimeout(timeout);
+    el.className = 'err';
+    const info = {
+      name: e.name,
+      message: e.message,
+      stack: e.stack ? e.stack.split('\n').slice(0, 3).join('\n') : 'no stack',
+      time: (Date.now()-start) + 'ms'
+    };
+    el.textContent = '❌ FAILED\n\n' + JSON.stringify(info, null, 2);
+  }
+}
+
+function t1() {
+  run('r1', async (signal) => {
+    const r = await fetch(API + '/health', { signal });
+    return { status: r.status, body: await r.json() };
+  });
+}
+
+function t2() {
+  run('r2', async (signal) => {
+    const r = await fetch(API + '/build', {
+      method: 'POST',
+      signal,
+      body: '{}'
+    });
+    return { status: r.status, body: await r.text() };
+  });
+}
+
+function t3() {
+  run('r3', async (signal) => {
+    const r = await fetch(API + '/build', {
+      method: 'POST',
+      signal,
+      headers: { 'X-API-Key': 'apkforge_super_secret_key_2024_change_me' },
+      body: '{}'
+    });
+    return { status: r.status, body: await r.text() };
+  });
+}
+
+function t4() {
+  run('r4', async (signal) => {
+    const r = await fetch(API + '/build', {
+      method: 'POST',
+      signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': 'apkforge_super_secret_key_2024_change_me'
+      },
+      body: JSON.stringify({
+        buildType: 'template',
+        templateName: 'calculator',
+        appName: 'Diag Test',
+        packageName: 'com.diag.test',
+        splashStyle: 'gradient',
+        splashColor: '#6366f1',
+        splashIcon: 'rocket'
+      })
+    });
+    return { status: r.status, body: await r.text() };
+  });
+}
+</script>
+</body>
+</html>
