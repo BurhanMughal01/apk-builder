@@ -114,5 +114,66 @@ function t4() {
   });
 }
 </script>
+
+<h2>Test 5: POST with URL Parameter Key (No Custom Header)</h2>
+<button onclick="t5()">Run Test 5</button>
+<pre id="r5">Not run</pre>
+
+<h2>Test 6: Full Build with URL Parameter</h2>
+<button onclick="t6()">Run Test 6</button>
+<pre id="r6">Not run</pre>
+
+<script>
+const API_KEY = 'apkforge_super_secret_key_2024_change_me';
+
+async function t5() {
+  const el = document.getElementById('r5');
+  el.className = '';
+  el.textContent = 'Running...';
+
+  try {
+    const r = await fetch(API + '/build?key=' + encodeURIComponent(API_KEY), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    });
+    const body = await r.text();
+    el.className = r.status < 500 ? 'ok' : 'err';
+    el.textContent = 'Status: ' + r.status + '\n\n' + body;
+  } catch (e) {
+    el.className = 'err';
+    el.textContent = '❌ FAILED\n' + e.name + ': ' + e.message;
+  }
+}
+
+async function t6() {
+  const el = document.getElementById('r6');
+  el.className = '';
+  el.textContent = 'Running... (real build request)';
+
+  try {
+    const r = await fetch(API + '/build?key=' + encodeURIComponent(API_KEY), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        buildType: 'template',
+        templateName: 'calculator',
+        appName: 'URL Test',
+        packageName: 'com.url.test',
+        splashStyle: 'gradient',
+        splashColor: '#6366f1',
+        splashIcon: 'rocket'
+      })
+    });
+    const body = await r.json();
+    el.className = 'ok';
+    el.textContent = '✅ SUCCESS\n' + JSON.stringify(body, null, 2);
+  } catch (e) {
+    el.className = 'err';
+    el.textContent = '❌ FAILED\n' + e.name + ': ' + e.message;
+  }
+}
+</script>
+
 </body>
 </html>
