@@ -109,7 +109,7 @@ window.Notifications = {
 };
 
 window.API = {
-  baseUrl: 'https://apk-builder-api.buisch2314.workers.dev',
+  baseUrl: '/api',
   apiKey: 'apkforge_super_secret_key_2024_change_me',
   async call(path, options) {
     options = options || {};
