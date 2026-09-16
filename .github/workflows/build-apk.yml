@@ -80,8 +80,8 @@ jobs:
         run: |
           find app/src -name "*.java" > sources.txt
           find app/gen -name "*.java" >> sources.txt
-          javac -source 17 -target 17 \
-            -bootclasspath $ANDROID_HOME/platforms/android-34/android.jar \
+          javac -source 8 -target 8 -nowarn \
+            -classpath $ANDROID_HOME/platforms/android-34/android.jar \
             -d app/classes @sources.txt
 
       - name: D8 to DEX
