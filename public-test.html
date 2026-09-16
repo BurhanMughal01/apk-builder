@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Worker Test</title>
+<style>
+body{font-family:system-ui;padding:20px;background:#111;color:#eee}
+button{padding:15px 30px;font-size:16px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;margin:10px 0}
+pre{background:#222;padding:15px;border-radius:8px;white-space:pre-wrap;word-break:break-all}
+h1{color:#6366f1}
+.ok{color:#10b981}.err{color:#ef4444}
+</style>
+</head>
+<body>
+<h1>🧪 Worker API Test</h1>
+
+<h3>Test 1: Health Check</h3>
+<button onclick="testHealth()">Test Health</button>
+<pre id="health">Not tested yet</pre>
+
+<h3>Test 2: POST /build</h3>
+<button onclick="testBuild()">Test Build API</button>
+<pre id="build">Not tested yet</pre>
+
+<script>
+async function testHealth() {
+  const el = document.getElementById('health');
+  el.textContent = 'Testing...';
+  try {
+    const r = await fetch('https://apk-builder-api.buisch2314.workers.dev/health');
+    const d = await r.json();
+    el.className = 'ok';
+    el.textContent = '✅ SUCCESS:\n' + JSON.stringify(d, null, 2);
+  } catch(e) {
+    el.className = 'err';
+    el.textContent = '❌ FAILED:\n' + e.message;
+  }
+}
+
+async function testBuild() {
+  const el = document.getElementById('build');
+  el.textContent = 'Sending POST request...';
+  try {
+    const r = await fetch('https://apk-builder-api.buisch2314.workers.dev/build', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': 'apkforge_super_secret_key_2024_change_me'
+      },
+      body: JSON.stringify({
+        buildType: 'template',
+        templateName: 'calculator',
+        appName: 'Test App',
+        packageName: 'com.test.myapp',
+        splashStyle: 'gradient',
+        splashColor: '#6366f1',
+        splashIcon: 'rocket'
+      })
+    });
+    const d = await r.json();
+    if (r.ok) {
+      el.className = 'ok';
+      el.textContent = '✅ SUCCESS (Status ' + r.status + '):\n' + JSON.stringify(d, null, 2);
+    } else {
+      el.className = 'err';
+      el.textContent = '⚠️ HTTP ' + r.status + ':\n' + JSON.stringify(d, null, 2);
+    }
+  } catch(e) {
+    el.className = 'err';
+    el.textContent = '❌ FAILED:\n' + e.message + '\n\nType: ' + e.name;
+  }
+}
+</script>
+</body>
+</html>
