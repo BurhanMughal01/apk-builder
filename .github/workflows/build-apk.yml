@@ -53,16 +53,23 @@ jobs:
           mkdir -p app/res/drawable
           python3 .github/scripts/generate_splash.py || echo "Splash gen skipped"
 
+      - name: Export Android env
+        run: |
+          echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=/usr/local/lib/android/sdk" >> $GITHUB_ENV
+          echo "/usr/local/lib/android/sdk/build-tools/34.0.0" >> $GITHUB_PATH
+          echo "/usr/local/lib/android/sdk/platform-tools" >> $GITHUB_PATH
+
       - name: Compile resources
         run: |
           cd app
-          aapt2 compile --dir res -o compiled_res.zip || aapt2 compile -o compiled_res.zip res/**/*.xml
+          $ANDROID_HOME/build-tools/34.0.0/aapt2 compile --dir res -o compiled_res.zip || $ANDROID_HOME/build-tools/34.0.0/aapt2 compile -o compiled_res.zip res/**/*.xml
           cd ..
 
       - name: Link resources
         run: |
           mkdir -p app/gen
-          aapt2 link -o app-unsigned.apk \
+          $ANDROID_HOME/build-tools/34.0.0/aapt2 link -o app-unsigned.apk \
             -I $ANDROID_HOME/platforms/android-34/android.jar \
             --manifest app/AndroidManifest.xml \
             --java app/gen \
@@ -81,7 +88,7 @@ jobs:
         run: |
           mkdir -p app/dex
           find app/classes -name "*.class" > classes.txt
-          d8 --release --min-api 21 --output app/dex/ @classes.txt
+          $ANDROID_HOME/build-tools/34.0.0/d8 --release --min-api 21 --output app/dex/ @classes.txt
           cd app/dex && zip -r ../../app-unsigned.apk classes.dex && cd ../..
 
       - name: Zipalign
