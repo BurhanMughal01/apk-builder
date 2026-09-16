@@ -6,7 +6,13 @@ import os
 
 # Read payload from Worker
 with open('payload.json') as f:
-    config = json.load(f)
+    _raw = json.load(f)
+
+# Unwrap nested data if present
+if isinstance(_raw, dict) and 'data' in _raw:
+    config = _raw['data']
+else:
+    config = _raw
 
 print(f"Received payload for: {config.get('appName', 'Unknown')}")
 print(f"Build ID: {config.get('id', 'Unknown')}")

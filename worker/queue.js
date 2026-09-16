@@ -72,7 +72,7 @@ export class BuildQueue {
         },
         body: JSON.stringify({
           event_type: 'build_apk',
-          client_payload: job
+          client_payload: { data: job }
         })
       }
     );

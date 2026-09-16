@@ -49,7 +49,7 @@ async function verifySupabaseJWT(token, env) {
 export async function rateLimit(ip, path, env) {
   const now = Math.floor(Date.now() / 1000);
   const window = 3600;
-  const limits = { '/build': 5, '/auth': 20, default: 100 };
+  const limits = { '/build': 50, '/auth': 50, default: 300 };
   const limit = limits[path] || limits.default;
   const key = 'rl:' + ip + ':' + path + ':' + Math.floor(now / window);
 

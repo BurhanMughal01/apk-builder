@@ -1,3 +1,4 @@
+import { log } from "./utils.js";
 export async function handleBuild(request, env, user, ctx) {
   if (request.method !== 'POST') {
     return json({ error: 'Method not allowed' }, 405);
