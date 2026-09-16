@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Calculator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui;background:#0a0a1a;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center;padding:12px}
+.calc{width:100%;max-width:400px;background:#16162e;border-radius:24px;padding:20px}
+.display{background:#0a0a1a;border-radius:16px;padding:20px;margin-bottom:20px;text-align:right;min-height:100px;display:flex;flex-direction:column;justify-content:flex-end}
+.history{font-size:14px;color:#64748b;min-height:20px;margin-bottom:8px}
+.current{font-size:42px;font-weight:700;word-break:break-all}
+.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+button{aspect-ratio:1;border:none;border-radius:16px;font-size:22px;font-weight:600;color:#fff;font-family:inherit}
+button:active{transform:scale(0.95);opacity:0.8}
+.num{background:#2a2a4a}.op{background:#6366f1}.func{background:#ec4899}.clear{background:#ef4444}
+.equals{background:linear-gradient(135deg,#6366f1,#ec4899);grid-column:span 2;aspect-ratio:2.1}
+.zero{grid-column:span 2;aspect-ratio:2.1}
+</style></head><body>
+<div class="calc">
+<div class="display"><div class="history" id="h"></div><div class="current" id="c">0</div></div>
+<div class="buttons">
+<button class="clear" onclick="ac()">AC</button>
+<button class="func" onclick="del()">DEL</button>
+<button class="func" onclick="pct()">%</button>
+<button class="op" onclick="op(\'/\')">/</button>
+<button class="num" onclick="n(\'7\')">7</button>
+<button class="num" onclick="n(\'8\')">8</button>
+<button class="num" onclick="n(\'9\')">9</button>
+<button class="op" onclick="op(\'*\')">x</button>
+<button class="num" onclick="n(\'4\')">4</button>
+<button class="num" onclick="n(\'5\')">5</button>
+<button class="num" onclick="n(\'6\')">6</button>
+<button class="op" onclick="op(\'-\')">-</button>
+<button class="num" onclick="n(\'1\')">1</button>
+<button class="num" onclick="n(\'2\')">2</button>
+<button class="num" onclick="n(\'3\')">3</button>
+<button class="op" onclick="op(\'+\')">+</button>
+<button class="num zero" onclick="n(\'0\')">0</button>
+<button class="num" onclick="n(\'.\')">.</button>
+<button class="equals" onclick="eq()">=</button>
+</div></div>
+<script>
+let c=\'0\',p=\'\',o=null,r=false;
+function u(){document.getElementById(\'c\').textContent=c;document.getElementById(\'h\').textContent=p&&o?p+\' \'+o:\'\'}
+function n(x){if(r){c=\'0\';r=false}if(x===\'.\'&&c.includes(\'.\'))return;c=c===\'0\'&&x!==\'.\'?x:c+x;u()}
+function op(x){if(o&&!r)eq();p=c;o=x;r=true;u()}
+function eq(){if(!o)return;let a=parseFloat(p),b=parseFloat(c),res=0;
+if(o===\'+\')res=a+b;else if(o===\'-\')res=a-b;else if(o===\'*\')res=a*b;else res=b===0?\'Err\':a/b;
+c=String(Math.round(res*1e10)/1e10);p=\'\';o=null;r=true;u()}
+function ac(){c=\'0\';p=\'\';o=null;r=false;u()}
+function del(){c=c.length>1?c.slice(0,-1):\'0\';u()}
+function pct(){c=String(parseFloat(c)/100);u()}
+u();
+</script></body></html>

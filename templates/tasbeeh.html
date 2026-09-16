@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tasbeeh Counter</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0a0a1a,#1a1a3a);color:#fff;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+.header{padding:16px 20px;text-align:center;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(99,102,241,0.2)}
+.header h1{font-size:24px;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;margin-bottom:4px}
+.header p{font-size:12px;color:#94a3b8}
+.dhikr-selector{display:flex;gap:8px;padding:16px;overflow-x:auto;scrollbar-width:none}
+.dhikr-selector::-webkit-scrollbar{display:none}
+.dhikr-btn{flex-shrink:0;padding:8px 16px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:20px;color:#c7d2fe;font-size:13px;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-family:inherit}
+.dhikr-btn.active{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;border-color:transparent;box-shadow:0 4px 15px rgba(99,102,241,0.4)}
+.dhikr-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.dhikr-text{font-size:28px;color:#a5b4fc;text-align:center;margin-bottom:20px;line-height:1.4;font-weight:600;padding:0 20px}
+.counter-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:280px;height:280px;margin:20px 0}
+.counter-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,#6366f1 0%,#ec4899 var(--progress,0%),rgba(99,102,241,0.15) var(--progress,0%));transition:all 0.3s}
+.counter-inner{position:relative;width:250px;height:250px;border-radius:50%;background:linear-gradient(135deg,#16162e,#0a0a1a);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 0 60px rgba(99,102,241,0.3)}
+.counter-inner:active{transform:scale(0.97)}
+.count{font-size:80px;font-weight:800;background:linear-gradient(135deg,#818cf8,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.target{font-size:14px;color:#64748b;margin-top:8px}
+.tap-hint{font-size:12px;color:#475569;margin-top:12px;letter-spacing:2px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px 24px}
+.action-btn{padding:14px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:14px;color:#c7d2fe;font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.2s}
+.action-btn:active{transform:scale(0.95);background:rgba(99,102,241,0.2)}
+.action-btn.reset{background:rgba(239,68,68,0.1);color:#fca5a5;border-color:rgba(239,68,68,0.2)}
+.target-picker{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.target-picker.show{display:flex}
+.picker-box{background:#16162e;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(99,102,241,0.3)}
+.picker-box h3{font-size:18px;margin-bottom:16px;color:#a5b4fc;text-align:center}
+.target-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.target-opt{padding:14px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:12px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+.target-opt:active{background:linear-gradient(135deg,#6366f1,#ec4899)}
+.completed-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(135deg,#10b981,#059669);padding:20px 40px;border-radius:16px;font-size:18px;font-weight:700;z-index:200;transition:transform 0.3s;box-shadow:0 10px 40px rgba(16,185,129,0.5)}
+.completed-toast.show{transform:translate(-50%,-50%) scale(1)}
+</style>
+</head>
+
+<body>
+<div class="header">
+<h1>Tasbeeh Counter</h1>
+<p>Remember Allah always</p>
+</div>
+
+<div class="dhikr-selector" id="dhikrSelector"></div>
+
+<div class="dhikr-display">
+<div class="dhikr-text" id="dhikrText">SubhanAllah</div>
+<div class="counter-wrap">
+<div class="counter-ring" id="ring" style="--progress:0%"></div>
+<div class="counter-inner" id="counterBtn" onclick="increment()">
+<div class="count" id="count">0</div>
+<div class="target" id="target">Target: 33</div>
+<div class="tap-hint">TAP</div>
+</div>
+</div>
+</div>
+
+<div class="actions">
+<button class="action-btn" onclick="openTargetPicker()">Target</button>
+<button class="action-btn reset" onclick="resetCount()">Reset</button>
+<button class="action-btn" onclick="changeDhikr()">Next Dhikr</button>
+</div>
+
+<div class="target-picker" id="targetPicker">
+<div class="picker-box">
+<h3>Select Target</h3>
+<div class="target-grid">
+<div class="target-opt" onclick="setTarget(33)">33</div>
+<div class="target-opt" onclick="setTarget(66)">66</div>
+<div class="target-opt" onclick="setTarget(99)">99</div>
+<div class="target-opt" onclick="setTarget(100)">100</div>
+<div class="target-opt" onclick="setTarget(500)">500</div>
+<div class="target-opt" onclick="setTarget(1000)">1000</div>
+</div>
+<button class="action-btn" style="width:100%" onclick="closeTargetPicker()">Close</button>
+</div>
+</div>
+
+<div class="completed-toast" id="toast">Target Completed!</div>
+
+<script>
+const DHIKR_LIST = [
+  {text: 'SubhanAllah', arabic: 'سُبْحَانَ اللّٰه'},
+  {text: 'Alhamdulillah', arabic: 'اَلْحَمْدُ لِلّٰه'},
+  {text: 'Allahu Akbar', arabic: 'اَللّٰهُ أَكْبَر'},
+  {text: 'La ilaha illallah', arabic: 'لَا إِلٰهَ إِلَّا اللّٰه'},
+  {text: 'Astaghfirullah', arabic: 'أَسْتَغْفِرُ اللّٰه'},
+  {text: 'La hawla wa la quwwata illa billah', arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰه'},
+  {text: 'Durood Shareef', arabic: 'صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّم'},
+  {text: 'SubhanAllahi wa bihamdih', arabic: 'سُبْحَانَ اللّٰهِ وَبِحَمْدِه'}
+];
+
+let currentIndex = 0;
+let count = 0;
+let target = 33;
+
+function init(){
+  loadState();
+  renderSelector();
+  updateDisplay();
+}
+
+function loadState(){
+  try{
+    const saved = localStorage.getItem('tasbeeh_v1');
+    if(saved){
+      const s = JSON.parse(saved);
+      currentIndex = s.idx || 0;
+      count = s.count || 0;
+      target = s.target || 33;
+    }
+  }catch(e){}
+}
+
+function saveState(){
+  try{
+    localStorage.setItem('tasbeeh_v1', JSON.stringify({
+      idx: currentIndex, count: count, target: target
+    }));
+  }catch(e){}
+}
+
+function renderSelector(){
+  const el = document.getElementById('dhikrSelector');
+  el.innerHTML = DHIKR_LIST.map(function(d, i){
+    return '<div class="dhikr-btn' + (i === currentIndex ? ' active' : '') + '" onclick="selectDhikr(' + i + ')">' + d.text + '</div>';
+  }).join('');
+}
+
+function selectDhikr(i){
+  currentIndex = i;
+  renderSelector();
+  updateDisplay();
+  saveState();
+}
+
+function increment(){
+  count++;
+  if(navigator.vibrate) navigator.vibrate(30);
+  updateDisplay();
+  saveState();
+  if(count === target){
+    if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+    showToast();
+  }
+}
+
+function updateDisplay(){
+  document.getElementById('count').textContent = count;
+  document.getElementById('target').textContent = 'Target: ' + target;
+  document.getElementById('dhikrText').textContent = DHIKR_LIST[currentIndex].arabic;
+  const p = Math.min((count / target) * 100, 100);
+  document.getElementById('ring').style.setProperty('--progress', p + '%');
+}
+
+function resetCount(){
+  if(confirm('Reset counter?')){
+    count = 0;
+    updateDisplay();
+    saveState();
+  }
+}
+
+function openTargetPicker(){
+  document.getElementById('targetPicker').classList.add('show');
+}
+
+function closeTargetPicker(){
+  document.getElementById('targetPicker').classList.remove('show');
+}
+
+function setTarget(t){
+  target = t;
+  closeTargetPicker();
+  updateDisplay();
+  saveState();
+}
+
+function showToast(){
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 2000);
+}
+
+function changeDhikr(){
+  currentIndex = (currentIndex + 1) % DHIKR_LIST.length;
+  renderSelector();
+  updateDisplay();
+  saveState();
+}
+
+init();
+</script>
+</body>
+</html>
