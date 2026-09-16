@@ -119,13 +119,25 @@ jobs:
           FILE="apkforge-${BUILD_ID}.apk"
           mv app-release.apk "$FILE"
 
-          curl -X POST "${{ secrets.SUPABASE_URL }}/storage/v1/object/apks/$FILE" \
+          echo "Uploading $FILE ($(du -h $FILE | cut -f1))..."
+
+          RESPONSE=$(curl -sS -w "\nHTTP_CODE:%{http_code}" -X POST "${{ secrets.SUPABASE_URL }}/storage/v1/object/apks/$FILE" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
             -H "Content-Type: application/vnd.android.package-archive" \
-            --data-binary "@$FILE"
+            --data-binary "@$FILE")
+
+          echo "Response: $RESPONSE"
+
+          HTTP_CODE=$(echo "$RESPONSE" | grep -oP "HTTP_CODE:\K[0-9]+")
+          if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "201" ]; then
+            echo "Upload failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
 
           APK_URL="${{ secrets.SUPABASE_URL }}/storage/v1/object/public/apks/$FILE"
           echo "APK_URL=$APK_URL" >> $GITHUB_ENV
+          echo "Uploaded: $APK_URL"
 
       - name: Update build record success
         run: |
