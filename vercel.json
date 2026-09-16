@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://apk-builder-api.buisch2314.workers.dev/:path*"
+    }
+  ]
+}
