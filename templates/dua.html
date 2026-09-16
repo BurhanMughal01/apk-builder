@@ -1,48 +1,1089 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Duas</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<title>Daily Duas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui;background:#0a0a1a;color:#fff;min-height:100vh;padding:16px}
-h1{font-size:22px;text-align:center;margin-bottom:6px;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sub{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:20px}
-.card{background:#16162e;border-radius:16px;padding:20px;margin-bottom:14px;border:1px solid rgba(99,102,241,0.2)}
-.card h3{color:#a5b4fc;font-size:16px;margin-bottom:12px}
-.arabic{font-size:22px;line-height:1.8;color:#e0e7ff;margin-bottom:10px;text-align:right}
-.urdu{font-size:14px;color:#94a3b8;margin-bottom:8px;text-align:right}
-.ref{font-size:11px;color:#64748b;text-align:left;font-style:italic}
-</style></head><body>
-<h1>Daily Duas</h1>
-<p class="sub">Masnoon Duain</p>
+:root{
+  --bg:#0a0a1a;--bg-card:#16162e;--bg-elev:#1e1e3a;--bg-input:#0f0f24;
+  --text:#f1f5f9;--text-muted:#94a3b8;--text-subtle:#64748b;
+  --primary:#6366f1;--accent:#ec4899;
+  --primary-grad:linear-gradient(135deg,#6366f1,#ec4899);
+  --border:rgba(99,102,241,0.15);--border-hover:rgba(99,102,241,0.35);
+  --gold:#fbbf24;--green:#10b981;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.2);
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.5);
+  --nav-h:64px;--header-h:60px;
+  --font-arabic:26px;
+  --font-urdu:15px;
+  --font-en:14px;
+}
+[data-theme="light"]{
+  --bg:#f8fafc;--bg-card:#ffffff;--bg-elev:#f1f5f9;--bg-input:#ffffff;
+  --text:#0f172a;--text-muted:#475569;--text-subtle:#94a3b8;
+  --border:#e2e8f0;--border-hover:#cbd5e1;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.05);
+  --shadow:0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);
+  transition:background .3s,color .3s;
+  overscroll-behavior:none;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+svg{display:block}
 
-<div class="card"><h3>Morning Dua</h3>
-<div class="arabic">اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ</div>
-<div class="urdu">اے اللہ! تیری مدد سے ہم نے صبح کی...</div>
-<div class="ref">Tirmidhi</div></div>
+/* ===== HEADER ===== */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:rgba(10,10,26,0.85);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:12px;z-index:50;
+}
+[data-theme="light"] .header{background:rgba(248,250,252,0.9)}
+.header-title{flex:1;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.header-title .logo{
+  width:32px;height:32px;border-radius:10px;background:var(--primary-grad);
+  display:grid;place-items:center;font-size:16px;
+  box-shadow:0 4px 12px rgba(99,102,241,0.4);
+}
+.icon-btn{
+  width:40px;height:40px;border-radius:12px;
+  display:grid;place-items:center;transition:all .2s;
+  color:var(--text-muted);
+}
+.icon-btn:hover,.icon-btn:active{background:var(--bg-card);color:var(--text)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-<div class="card"><h3>Evening Dua</h3>
-<div class="arabic">اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ</div>
-<div class="urdu">اے اللہ! تیری مدد سے ہم نے شام کی...</div>
-<div class="ref">Tirmidhi</div></div>
+/* ===== SEARCH ===== */
+.search-wrap{
+  position:sticky;top:0;padding:12px 16px;background:var(--bg);
+  z-index:20;
+}
+.search-box{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;transition:all .2s;
+}
+.search-box:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.15)}
+.search-box svg{width:18px;height:18px;stroke:var(--text-subtle);fill:none;stroke-width:2}
+.search-box input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--text);font-size:14px;font-family:inherit;
+}
+.search-box input::placeholder{color:var(--text-subtle)}
 
-<div class="card"><h3>Before Eating</h3>
-<div class="arabic">بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ</div>
-<div class="urdu">اللہ کے نام سے اور اللہ کی برکت پر</div>
-<div class="ref">Abu Dawud</div></div>
+/* ===== MAIN ===== */
+.main{
+  position:fixed;top:var(--header-h);bottom:var(--nav-h);
+  left:0;right:0;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+.main::-webkit-scrollbar{width:0}
+.view{display:none;padding:16px;padding-top:0}
+.view.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-<div class="card"><h3>After Eating</h3>
-<div class="arabic">الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ</div>
-<div class="urdu">تمام تعریف اللہ کے لیے جس نے کھلایا پلایا اور مسلمان بنایا</div>
-<div class="ref">Tirmidhi</div></div>
+/* ===== CATEGORY CHIPS ===== */
+.cats{
+  display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto;
+  scrollbar-width:none;
+}
+.cats::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;padding:8px 16px;border-radius:20px;
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-muted);font-size:13px;font-weight:500;
+  transition:all .2s;white-space:nowrap;
+}
+.chip.active{
+  background:var(--primary-grad);color:#fff;border-color:transparent;
+  box-shadow:0 4px 12px rgba(99,102,241,0.4);
+}
+.chip:active{transform:scale(0.95)}
 
-<div class="card"><h3>Before Sleeping</h3>
-<div class="arabic">بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا</div>
-<div class="urdu">اے اللہ! تیرے نام سے مرتا اور جیتا ہوں</div>
-<div class="ref">Bukhari</div></div>
+/* ===== DUA CARD ===== */
+.dua-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;padding:18px;margin-bottom:12px;
+  transition:all .25s;position:relative;
+  animation:fadeIn .3s ease;
+}
+.dua-card:active{transform:scale(0.98);border-color:var(--border-hover)}
+.card-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;
+}
+.card-title{
+  font-size:15px;font-weight:600;color:var(--text);
+  display:flex;align-items:center;gap:8px;flex:1;
+}
+.cat-badge{
+  font-size:10px;padding:3px 8px;border-radius:6px;
+  background:rgba(99,102,241,0.15);color:#a5b4fc;
+  font-weight:600;text-transform:uppercase;letter-spacing:0.5px;
+}
+.fav-btn{
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;flex-shrink:0;
+  transition:all .2s;color:var(--text-subtle);
+}
+.fav-btn:active{transform:scale(0.9)}
+.fav-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.fav-btn.active svg{fill:var(--gold);stroke:var(--gold)}
+.fav-btn.active{color:var(--gold)}
+.dua-arabic{
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:var(--font-arabic);
+  line-height:1.9;color:var(--text);
+  text-align:right;direction:rtl;
+  margin-bottom:12px;
+}
+.dua-translit{
+  font-size:13px;color:#a5b4fc;font-style:italic;
+  text-align:right;direction:rtl;margin-bottom:8px;
+}
+.dua-urdu{
+  font-size:var(--font-urdu);color:var(--text-muted);
+  text-align:right;direction:rtl;margin-bottom:10px;line-height:1.7;
+}
+.dua-trans{
+  font-size:var(--font-en);color:var(--text-muted);
+  margin-bottom:12px;line-height:1.6;
+}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:12px;border-top:1px solid var(--border);
+  gap:10px;
+}
+.ref{
+  font-size:11px;color:var(--text-subtle);font-style:italic;
+}
+.card-actions{display:flex;gap:6px}
+.mini-btn{
+  width:32px;height:32px;border-radius:10px;
+  display:grid;place-items:center;
+  background:rgba(99,102,241,0.1);color:#a5b4fc;
+  transition:all .2s;
+}
+.mini-btn:active{transform:scale(0.9);background:rgba(99,102,241,0.2)}
+.mini-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-<div class="card"><h3>Upon Waking</h3>
-<div class="arabic">الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ</div>
-<div class="urdu">تمام تعریف اللہ کے لیے جس نے مارنے کے بعد زندہ کیا</div>
-<div class="ref">Bukhari</div></div>
-</body></html>
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(22,22,46,0.95);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(3,1fr);
+  z-index:50;padding-bottom:env(safe-area-inset-bottom);
+}
+[data-theme="light"] .bottom-nav{background:rgba(255,255,255,0.95)}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;color:var(--text-subtle);font-size:10px;font-weight:500;
+  transition:all .2s;padding:8px;position:relative;
+}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:all .2s}
+.nav-item.active{color:var(--primary)}
+.nav-item.active svg{stroke:url(#navGrad);filter:drop-shadow(0 0 8px rgba(99,102,241,0.5))}
+.nav-item:active{transform:scale(0.95)}
+
+/* ===== EXPAND MODAL ===== */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:100;display:none;align-items:flex-end;
+  opacity:0;transition:opacity .3s;
+}
+.modal.show{display:flex;opacity:1}
+.modal-sheet{
+  background:var(--bg-card);width:100%;max-height:90vh;
+  border-radius:24px 24px 0 0;overflow-y:auto;
+  padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .3s cubic-bezier(0.32,0.72,0,1);
+  position:relative;
+}
+.modal.show .modal-sheet{transform:translateY(0)}
+.modal-sheet::-webkit-scrollbar{width:0}
+.drag-handle{
+  width:40px;height:4px;background:var(--border-hover);
+  border-radius:2px;margin:0 auto 16px;
+}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg-elev);display:grid;place-items:center;
+  color:var(--text-muted);
+}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;padding-right:40px}
+.modal-arabic{
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:32px;line-height:2;text-align:right;direction:rtl;
+  color:var(--text);margin-bottom:16px;padding:20px;
+  background:var(--bg-elev);border-radius:16px;
+  border-right:4px solid var(--primary);
+}
+.modal-section{margin-bottom:16px}
+.modal-label{
+  font-size:11px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--primary);font-weight:700;margin-bottom:6px;
+}
+.modal-translit{
+  font-size:16px;color:#a5b4fc;font-style:italic;
+  text-align:right;direction:rtl;line-height:1.7;
+}
+.modal-urdu{
+  font-size:17px;color:var(--text-muted);
+  text-align:right;direction:rtl;line-height:1.8;
+}
+.modal-trans{
+  font-size:15px;color:var(--text-muted);line-height:1.7;
+}
+.modal-ref{
+  font-size:12px;color:var(--text-subtle);font-style:italic;
+  padding-top:12px;border-top:1px solid var(--border);
+}
+.modal-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;
+}
+.modal-btn{
+  padding:14px;border-radius:12px;
+  background:var(--bg-elev);color:var(--text);
+  font-size:14px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;
+}
+.modal-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.modal-btn:active{transform:scale(0.97)}
+.modal-btn.primary{background:var(--primary-grad);color:#fff}
+.modal-btn.active-fav{background:rgba(251,191,36,0.2);color:var(--gold)}
+
+/* ===== SETTINGS ===== */
+.settings-group{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;margin-bottom:14px;overflow:hidden;
+}
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px;gap:12px;
+  border-bottom:1px solid var(--border);
+}
+.setting-row:last-child{border-bottom:none}
+.setting-info{flex:1;display:flex;align-items:center;gap:12px}
+.setting-info svg{width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.setting-label{font-size:14px;font-weight:500}
+.setting-sub{font-size:11px;color:var(--text-subtle);margin-top:2px}
+.theme-toggle{
+  width:52px;height:30px;border-radius:15px;
+  background:var(--bg-elev);position:relative;
+  transition:background .3s;flex-shrink:0;
+}
+.theme-toggle::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--primary-grad);
+  transition:transform .3s;box-shadow:0 2px 8px rgba(99,102,241,0.4);
+}
+.theme-toggle.on::after{transform:translateX(22px)}
+
+/* Font size control */
+.font-controls{
+  display:flex;gap:4px;background:var(--bg-elev);
+  border-radius:10px;padding:3px;
+}
+.font-btn{
+  width:36px;height:32px;border-radius:8px;
+  display:grid;place-items:center;
+  font-weight:700;color:var(--text-muted);
+  transition:all .2s;
+}
+.font-btn.active{background:var(--primary-grad);color:#fff}
+.font-btn[data-size="small"]{font-size:12px}
+.font-btn[data-size="medium"]{font-size:14px}
+.font-btn[data-size="large"]{font-size:16px}
+
+.about-text{
+  padding:16px;font-size:12px;color:var(--text-subtle);
+  text-align:center;line-height:1.8;
+}
+.about-text strong{color:var(--primary);font-weight:700}
+
+/* ===== EMPTY ===== */
+.empty{
+  text-align:center;padding:60px 20px;color:var(--text-subtle);
+}
+.empty svg{width:64px;height:64px;stroke:var(--border-hover);fill:none;stroke-width:1.5;margin:0 auto 16px}
+.empty h3{font-size:16px;color:var(--text-muted);margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg-elev);color:var(--text);
+  padding:12px 20px;border-radius:12px;
+  font-size:13px;font-weight:500;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+  opacity:0;transition:all .3s;pointer-events:none;z-index:200;
+  display:flex;align-items:center;gap:8px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:2.5}
+
+/* Category header */
+.section-title{
+  font-size:13px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text-subtle);font-weight:700;
+  padding:16px 0 10px;
+}
+</style>
+</head>
+
+<body data-theme="dark">
+
+<!-- SVG Gradient Defs -->
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#6366f1"/>
+<stop offset="100%" stop-color="#ec4899"/>
+</linearGradient>
+</defs>
+</svg>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">
+    <div class="logo">🤲</div>
+    <span id="headerTitle">Daily Duas</span>
+  </div>
+  <button class="icon-btn" onclick="toggleSearch()" aria-label="Search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+  </button>
+</header>
+
+<!-- MAIN -->
+<main class="main" id="mainArea">
+
+  <!-- ===== HOME VIEW ===== -->
+  <div class="view active" id="view-home">
+    <div class="search-wrap" id="searchWrap" style="display:none">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search duas..." oninput="handleSearch(this.value)">
+        <button onclick="clearSearch()" style="color:var(--text-subtle);display:none" id="clearBtn">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="cats" id="catChips"></div>
+
+    <div id="duaList"></div>
+  </div>
+
+  <!-- ===== FAVORITES VIEW ===== -->
+  <div class="view" id="view-fav">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:4px">Favorites</h2>
+    <p style="font-size:13px;color:var(--text-subtle);margin-bottom:16px">Your saved duas</p>
+    <div id="favList"></div>
+  </div>
+
+  <!-- ===== SETTINGS VIEW ===== -->
+  <div class="view" id="view-settings">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Settings</h2>
+
+    <div class="settings-group">
+      <div class="setting-row">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <div>
+            <div class="setting-label">Theme</div>
+            <div class="setting-sub">Dark or light mode</div>
+          </div>
+        </div>
+        <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()"></div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+          <div>
+            <div class="setting-label">Font Size</div>
+            <div class="setting-sub">Arabic text size</div>
+          </div>
+        </div>
+        <div class="font-controls">
+          <button class="font-btn" data-size="small" onclick="setFontSize('small')">A</button>
+          <button class="font-btn active" data-size="medium" onclick="setFontSize('medium')">A</button>
+          <button class="font-btn" data-size="large" onclick="setFontSize('large')">A</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="setting-row" onclick="showAbout()">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            <div class="setting-label">About</div>
+            <div class="setting-sub">Version 1.0.0</div>
+          </div>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--text-subtle);fill:none;stroke-width:2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <div class="about-text">
+      Made with ❤️ for the Ummah<br>
+      <strong>APKForge</strong>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="home" onclick="switchView('home')">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="nav-item" data-view="fav" onclick="switchView('fav')">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <span>Favorites</span>
+  </button>
+  <button class="nav-item" data-view="settings" onclick="switchView('settings')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<!-- EXPAND MODAL -->
+<div class="modal" id="modal" onclick="closeModal(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="drag-handle"></div>
+    <button class="modal-close" onclick="closeModal()">
+      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <h3 class="modal-title" id="modalTitle"></h3>
+    <div class="modal-arabic" id="modalArabic"></div>
+    <div class="modal-section">
+      <div class="modal-label">Transliteration</div>
+      <div class="modal-translit" id="modalTranslit"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-label">Urdu Translation</div>
+      <div class="modal-urdu" id="modalUrdu"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-label">English Translation</div>
+      <div class="modal-trans" id="modalTrans"></div>
+    </div>
+    <div class="modal-ref" id="modalRef"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="modalFavBtn" onclick="toggleFavFromModal()">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        <span id="modalFavText">Favorite</span>
+      </button>
+      <button class="modal-btn primary" onclick="copyCurrent()">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastText">Copied!</span>
+</div>
+
+<script>
+/* ===== DUAS DATA ===== */
+const CATEGORIES = [
+  {id:'all', name:'All', icon:'📚'},
+  {id:'morning', name:'Morning', icon:'🌅'},
+  {id:'evening', name:'Evening', icon:'🌆'},
+  {id:'food', name:'Food', icon:'🍽️'},
+  {id:'travel', name:'Travel', icon:'✈️'},
+  {id:'sleep', name:'Sleep', icon:'🌙'},
+  {id:'protection', name:'Protection', icon:'🛡️'},
+  {id:'health', name:'Health', icon:'💚'},
+  {id:'knowledge', name:'Knowledge', icon:'📖'},
+  {id:'general', name:'General', icon:'✨'}
+];
+
+const DUAS = [
+  {id:1, cat:'morning', title:'Morning Remembrance',
+   arabic:'اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ',
+   translit:'Allahumma bika asbahna, wa bika amsayna, wa bika nahya, wa bika namutu, wa ilaykan-nushur',
+   urdu:'اے اللہ! تیری مدد سے ہم نے صبح کی اور تیری مدد سے ہم نے شام کی، تیرے ہی سبب ہم جیتے ہیں اور تیرے ہی سبب مرتے ہیں، اور تیری ہی طرف لوٹنا ہے۔',
+   trans:'O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the final return.',
+   ref:'Tirmidhi 3391'},
+
+  {id:2, cat:'evening', title:'Evening Remembrance',
+   arabic:'اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ',
+   translit:'Allahumma bika amsayna, wa bika asbahna, wa bika nahya, wa bika namutu, wa ilaykal-masir',
+   urdu:'اے اللہ! تیری مدد سے ہم نے شام کی اور تیری مدد سے ہم نے صبح کی، تیرے ہی سبب ہم جیتے اور مرتے ہیں، اور تیری ہی طرف لوٹنا ہے۔',
+   trans:'O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the final destination.',
+   ref:'Tirmidhi 3391'},
+
+  {id:3, cat:'morning', title:'Sayyidul Istighfar',
+   arabic:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+   translit:'Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana abduka, wa ana ala ahdika wa wa\'dika mastata\'tu, a\'udhu bika min sharri ma sana\'tu, abu\'u laka bi ni\'matika alayya, wa abu\'u bi dhanbi faghfir li fa innahu la yaghfirudh-dhunuba illa anta',
+   urdu:'اے اللہ! تو میرا رب ہے، تیرے سوا کوئی معبود نہیں، تو نے مجھے پیدا کیا، میں تیرا بندہ ہوں، میں اپنی طاقت کے مطابق تیرے عہد پر قائم ہوں، میں اپنے کیے ہوئے برے کاموں سے تیری پناہ مانگتا ہوں، میں تیری نعمتوں کا اعتراف کرتا ہوں اور اپنے گناہوں کا بھی، تو مجھے بخش دے، بے شک تیرے سوا کوئی گناہ نہیں بخش سکتا۔',
+   trans:'O Allah, You are my Lord, there is no deity except You. You created me and I am Your servant, and I abide by Your covenant and promise as best I can. I seek refuge in You from the evil I have done. I acknowledge Your favors upon me, and I acknowledge my sin, so forgive me, for none forgives sins but You.',
+   ref:'Bukhari 6306'},
+
+  {id:4, cat:'food', title:'Before Eating',
+   arabic:'بِسْمِ اللَّهِ وَعَلَىٰ بَرَكَةِ اللَّهِ',
+   translit:'Bismillahi wa ala barakatillah',
+   urdu:'اللہ کے نام سے اور اللہ کی برکت پر (کھانا شروع کرتا ہوں)۔',
+   trans:'In the name of Allah and with the blessings of Allah.',
+   ref:'Abu Dawud 3767'},
+
+  {id:5, cat:'food', title:'After Eating',
+   arabic:'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ',
+   translit:'Alhamdulillahil-ladhi at\'amana wa saqana wa ja\'alana muslimin',
+   urdu:'تمام تعریف اللہ کے لیے ہے جس نے ہمیں کھلایا، پلایا اور مسلمان بنایا۔',
+   trans:'All praise is for Allah who fed us, gave us drink, and made us Muslims.',
+   ref:'Tirmidhi 3457'},
+
+  {id:6, cat:'food', title:'Before Wudu',
+   arabic:'بِسْمِ اللَّهِ',
+   translit:'Bismillah',
+   urdu:'اللہ کے نام سے (وضو شروع کرتا ہوں)۔',
+   trans:'In the name of Allah.',
+   ref:'Abu Dawud 101'},
+
+  {id:7, cat:'food', title:'After Wudu',
+   arabic:'أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ',
+   translit:'Ash-hadu an la ilaha illallahu wa ash-hadu anna Muhammadan abduhu wa rasuluh',
+   urdu:'میں گواہی دیتا ہوں کہ اللہ کے سوا کوئی معبود نہیں اور محمد ﷺ اس کے بندے اور رسول ہیں۔',
+   trans:'I bear witness that there is no deity except Allah, and I bear witness that Muhammad is His servant and Messenger.',
+   ref:'Muslim 234'},
+
+  {id:8, cat:'sleep', title:'Before Sleeping',
+   arabic:'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
+   translit:'Bismika Allahumma amutu wa ahya',
+   urdu:'اے اللہ! تیرے نام سے میں مرتا ہوں اور جیتا ہوں۔',
+   trans:'In Your name, O Allah, I die and I live.',
+   ref:'Bukhari 6324'},
+
+  {id:9, cat:'sleep', title:'Upon Waking Up',
+   arabic:'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
+   translit:'Alhamdulillahil-ladhi ahyana ba\'da ma amatana wa ilayhin-nushur',
+   urdu:'تمام تعریف اللہ کے لیے ہے جس نے ہمیں مارنے کے بعد زندہ کیا اور اسی کی طرف لوٹنا ہے۔',
+   trans:'All praise is for Allah who gave us life after death, and to Him is the return.',
+   ref:'Bukhari 6312'},
+
+  {id:10, cat:'sleep', title:'Before Sleeping (Ayat)',
+   arabic:'بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ، فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ',
+   translit:'Bismika Rabbi wada\'tu janbi wa bika arfa\'uhu, fa in amsakta nafsi farhamha, wa in arsaltaha fahfazha bima tahfazu bihi ibadakas-salihin',
+   urdu:'اے میرے رب! تیرے نام سے میں نے اپنا پہلو بچھایا اور تیری ہی مدد سے اٹھاؤں گا، اگر تو میری جان روک لے تو اس پر رحم فرما، اور اگر چھوڑ دے تو اسے اپنے نیک بندوں کی طرح محفوظ رکھ۔',
+   trans:'In Your name my Lord, I lay down my side and by You I raise it. If You take my soul, have mercy on it; if You return it, protect it as You protect Your righteous servants.',
+   ref:'Bukhari 6320'},
+
+  {id:11, cat:'travel', title:'Before Travel',
+   arabic:'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنْقَلِبُونَ',
+   translit:'Subhanal-ladhi sakhkhara lana hadha wa ma kunna lahu muqrinin, wa inna ila Rabbina lamunqalibun',
+   urdu:'پاک ہے وہ ذات جس نے اس سواری کو ہمارے تابع کیا، ورنہ ہم اسے قابو میں نہیں لا سکتے تھے، اور بے شک ہم اپنے رب کی طرف لوٹنے والے ہیں۔',
+   trans:'Glory to Him who has subjected this to us, and we could not have done so ourselves. And indeed, to our Lord we will surely return.',
+   ref:'Muslim 1342'},
+
+  {id:12, cat:'travel', title:'Entering a Town',
+   arabic:'اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا وَخَيْرَ أَهْلِهَا وَخَيْرَ مَا فِيهَا، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ أَهْلِهَا وَشَرِّ مَا فِيهَا',
+   translit:'Allahumma inni as\'aluka khayraha wa khayra ahliha wa khayra ma fiha, wa a\'udhu bika min sharriha wa sharri ahliha wa sharri ma fiha',
+   urdu:'اے اللہ! میں تجھ سے اس شہر کی بھلائی، اس کے باشندوں کی بھلائی اور اس میں موجود چیزوں کی بھلائی مانگتا ہوں، اور اس کی برائی، اس کے باشندوں کی برائی اور اس میں موجود چیزوں کی برائی سے تیری پناہ مانگتا ہوں۔',
+   trans:'O Allah, I ask You for the good of this town, the good of its people, and the good within it. I seek refuge in You from its evil, the evil of its people, and the evil within it.',
+   ref:'Hakim, Ibn Sunni'},
+
+  {id:13, cat:'travel', title:'Returning from Travel',
+   arabic:'آيِبُونَ تَائِبُونَ عَابِدُونَ لِرَبِّنَا حَامِدُونَ',
+   translit:'Ayibuna, ta\'ibuna, abiduna, li Rabbina hamidun',
+   urdu:'ہم واپس آنے والے، توبہ کرنے والے، عبادت کرنے والے اور اپنے رب کی تعریف کرنے والے ہیں۔',
+   trans:'We return, repenting, worshipping, and praising our Lord.',
+   ref:'Muslim 1344'},
+
+  {id:14, cat:'protection', title:'Protection from Evil',
+   arabic:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',
+   translit:'A\'udhu bi kalimatillahit-tammati min sharri ma khalaq',
+   urdu:'میں اللہ کے کامل کلمات کی پناہ مانگتا ہوں ہر اس چیز کی برائی سے جو اس نے پیدا کی۔',
+   trans:'I seek refuge in the perfect words of Allah from the evil of what He has created.',
+   ref:'Muslim 2708'},
+
+  {id:15, cat:'protection', title:'Protection Morning/Evening',
+   arabic:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+   translit:'Bismillahil-ladhi la yadurru ma\'asmihi shay\'un fil-ardi wa la fis-sama\'i wa huwas-Sami\'ul-Alim',
+   urdu:'اللہ کے نام سے، جس کے نام کے ساتھ زمین و آسمان کی کوئی چیز نقصان نہیں پہنچا سکتی، اور وہ سب سننے والا جاننے والا ہے۔',
+   trans:'In the name of Allah, with whose name nothing on earth or in heaven can cause harm, and He is the All-Hearing, All-Knowing.',
+   ref:'Tirmidhi 3388'},
+
+  {id:16, cat:'protection', title:'Against Anxiety & Sadness',
+   arabic:'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ',
+   translit:'Allahumma inni a\'udhu bika minal-hammi wal-hazan, wal-\'ajzi wal-kasal, wal-bukhli wal-jubn, wa dala\'id-dayni wa ghalabatir-rijal',
+   urdu:'اے اللہ! میں تیری پناہ مانگتا ہوں فکر اور غم سے، کمزوری اور سستی سے، کنجوسی اور بزدلی سے، قرض کے بوجھ اور لوگوں کے غلبے سے۔',
+   trans:'O Allah, I seek refuge in You from anxiety and sorrow, weakness and laziness, miserliness and cowardice, the burden of debt, and being overpowered by men.',
+   ref:'Bukhari 6369'},
+
+  {id:17, cat:'protection', title:'Against Illness',
+   arabic:'أَسْأَلُ اللَّهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ',
+   translit:'As\'alullahal-\'Azima Rabbal-\'Arshil-\'Azimi an yashfiyak',
+   urdu:'میں اللہ عظیم سے، جو عرش عظیم کا رب ہے، سوال کرتا ہوں کہ وہ تمہیں شفا دے۔',
+   trans:'I ask Allah the Almighty, Lord of the Mighty Throne, to heal you.',
+   ref:'Tirmidhi 2083 (7 times)'},
+
+  {id:18, cat:'health', title:'Seeking Cure',
+   arabic:'اللَّهُمَّ رَبَّ النَّاسِ، أَذْهِبِ الْبَاسَ، اشْفِ أَنْتَ الشَّافِي، لَا شَافِيَ إِلَّا أَنْتَ',
+   translit:'Allahumma Rabban-nas, adh-hibil-ba\'s, ishfi antash-Shafi, la shafiya illa ant',
+   urdu:'اے اللہ! لوگوں کے رب! تکلیف دور فرما، شفا دے، تو ہی شفا دینے والا ہے، تیرے سوا کوئی شفا نہیں دے سکتا۔',
+   trans:'O Allah, Lord of the people, remove the hardship, cure, You are the Healer, there is no cure except Yours.',
+   ref:'Bukhari 5675'},
+
+  {id:19, cat:'health', title:'For Pain',
+   arabic:'بِسْمِ اللَّهِ (٣ مرات) أَعُوذُ بِاللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ (٧ مرات)',
+   translit:'Bismillah (3x) - A\'udhu billahi wa qudratihi min sharri ma ajidu wa uhadhir (7x)',
+   urdu:'اللہ کے نام سے (3 بار) - میں اللہ اور اس کی قدرت کی پناہ مانگتا ہوں اس برائی سے جو میں محسوس کرتا ہوں اور جس سے ڈرتا ہوں (7 بار)',
+   trans:'In the name of Allah (3x) - I seek refuge in Allah and His power from the evil that I feel and fear (7x)',
+   ref:'Muslim 2202'},
+
+  {id:20, cat:'knowledge', title:'For Knowledge',
+   arabic:'رَبِّ زِدْنِي عِلْمًا',
+   translit:'Rabbi zidni ilma',
+   urdu:'اے میرے رب! میرے علم میں اضافہ فرما۔',
+   trans:'My Lord, increase me in knowledge.',
+   ref:'Quran 20:114'},
+
+  {id:21, cat:'knowledge', title:'Before Studying',
+   arabic:'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا',
+   translit:'Allahumma inni as\'aluka \'ilman nafi\'an, wa rizqan tayyiban, wa \'amalan mutaqabbalan',
+   urdu:'اے اللہ! میں تجھ سے نفع بخش علم، پاکیزہ رزق اور قبول ہونے والا عمل مانگتا ہوں۔',
+   trans:'O Allah, I ask You for beneficial knowledge, good provision, and accepted deeds.',
+   ref:'Ibn Majah 925'},
+
+  {id:22, cat:'general', title:'Dua for Forgiveness',
+   arabic:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+   translit:'Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina \'adhaban-nar',
+   urdu:'اے ہمارے رب! ہمیں دنیا میں بھی بھلائی دے اور آخرت میں بھی بھلائی دے اور ہمیں آگ کے عذاب سے بچا۔',
+   trans:'Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire.',
+   ref:'Quran 2:201'},
+
+  {id:23, cat:'general', title:'Dua for Parents',
+   arabic:'رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا',
+   translit:'Rabbir-hamhuma kama rabbayani saghira',
+   urdu:'اے میرے رب! میرے والدین پر رحم فرما جیسے انہوں نے بچپن میں مجھے پالا۔',
+   trans:'My Lord, have mercy upon them as they brought me up when I was small.',
+   ref:'Quran 17:24'},
+
+  {id:24, cat:'general', title:'Dua for Guidance',
+   arabic:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
+   translit:'Ihdinas-siratal-mustaqim',
+   urdu:'ہمیں سیدھا راستہ دکھا۔',
+   trans:'Guide us to the straight path.',
+   ref:'Quran 1:6'},
+
+  {id:25, cat:'general', title:'Dua for Goodness',
+   arabic:'اللَّهُمَّ أَعِنِّي عَلَىٰ ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ',
+   translit:'Allahumma a\'inni \'ala dhikrika wa shukrika wa husni \'ibadatik',
+   urdu:'اے اللہ! میری مدد فرما اپنے ذکر، شکر اور اچھی عبادت پر۔',
+   trans:'O Allah, help me to remember You, to thank You, and to worship You well.',
+   ref:'Abu Dawud 1522'},
+
+  {id:26, cat:'general', title:'Seeking Forgiveness',
+   arabic:'أَسْتَغْفِرُ اللَّهَ الَّذِي لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ',
+   translit:'Astaghfirullahal-ladhi la ilaha illa huwal-Hayyul-Qayyumu wa atubu ilayh',
+   urdu:'میں اللہ سے معافی مانگتا ہوں جس کے سوا کوئی معبود نہیں، وہ زندہ اور قائم ہے، اور میں اسی کی طرف رجوع کرتا ہوں۔',
+   trans:'I seek forgiveness from Allah, besides whom there is no deity, the Living, the Sustainer, and I turn to Him in repentance.',
+   ref:'Abu Dawud 1517'},
+
+  {id:27, cat:'general', title:'Salawat on Prophet ﷺ',
+   arabic:'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ',
+   translit:'Allahumma salli \'ala Muhammadin wa \'ala ali Muhammad, kama sallayta \'ala Ibrahima wa \'ala ali Ibrahim, innaka Hamidun Majid',
+   urdu:'اے اللہ! محمد ﷺ اور آل محمد پر رحمت نازل فرما، جیسے تو نے ابراہیم اور آل ابراہیم پر نازل کی، بے شک تو تعریف اور بزرگی والا ہے۔',
+   trans:'O Allah, send blessings upon Muhammad and upon the family of Muhammad, as You sent blessings upon Ibrahim and the family of Ibrahim. Indeed, You are Praiseworthy, Most Glorious.',
+   ref:'Bukhari 3370'},
+
+  {id:28, cat:'protection', title:'Against Shaytan',
+   arabic:'أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ',
+   translit:'A\'udhu billahi minash-shaytanir-rajim',
+   urdu:'میں اللہ کی پناہ مانگتا ہوں شیطان مردود سے۔',
+   trans:'I seek refuge in Allah from the accursed Shaytan.',
+   ref:'Quran 16:98'},
+
+  {id:29, cat:'protection', title:'Entering Home',
+   arabic:'بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَىٰ رَبِّنَا تَوَكَّلْنَا',
+   translit:'Bismillahi walajna, wa bismillahi kharajna, wa \'ala Rabbina tawakkalna',
+   urdu:'اللہ کے نام سے ہم داخل ہوئے، اللہ کے نام سے ہم نکلے، اور اپنے رب پر ہم نے بھروسہ کیا۔',
+   trans:'In the name of Allah we enter, in the name of Allah we leave, and upon our Lord we rely.',
+   ref:'Abu Dawud 5096'},
+
+  {id:30, cat:'protection', title:'Leaving Home',
+   arabic:'بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
+   translit:'Bismillah, tawakkaltu \'alallah, wa la hawla wa la quwwata illa billah',
+   urdu:'اللہ کے نام سے، میں نے اللہ پر بھروسہ کیا، اور اللہ کی توفیق کے بغیر کوئی طاقت اور قوت نہیں۔',
+   trans:'In the name of Allah, I place my trust in Allah, and there is no might nor power except with Allah.',
+   ref:'Tirmidhi 3426'},
+
+  {id:31, cat:'general', title:'Dua for Provision',
+   arabic:'اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ',
+   translit:'Allahummak-fini bi halalika \'an haramik, wa aghnini bi fadlika \'amman siwak',
+   urdu:'اے اللہ! اپنے حلال کے ذریعے مجھے حرام سے بچا، اور اپنے فضل سے مجھے اپنے سوا سب سے بے نیاز کر دے۔',
+   trans:'O Allah, suffice me with Your lawful against Your unlawful, and make me independent of all besides You by Your grace.',
+   ref:'Tirmidhi 3563'},
+
+  {id:32, cat:'general', title:'Dua for Peace',
+   arabic:'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ',
+   translit:'Allahumma antas-Salamu wa minkas-salam, tabarakta ya Dhal-Jalali wal-Ikram',
+   urdu:'اے اللہ! تو ہی سلام ہے اور تجھ سے سلامتی ہے، بابرکت ہے تو اے عظمت اور بزرگی والے۔',
+   trans:'O Allah, You are Peace and from You comes peace. Blessed are You, O Owner of majesty and honor.',
+   ref:'Muslim 592'},
+
+  {id:33, cat:'general', title:'Best Dhikr',
+   arabic:'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
+   translit:'La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa \'ala kulli shay\'in Qadir',
+   urdu:'اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں، اسی کے لیے بادشاہی ہے اور اسی کے لیے تعریف ہے، اور وہ ہر چیز پر قادر ہے۔',
+   trans:'There is no deity except Allah, alone, without partner. To Him belongs sovereignty and praise, and He is over all things competent.',
+   ref:'Bukhari 3293'},
+
+  {id:34, cat:'general', title:'For Good in Both Worlds',
+   arabic:'اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي، وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي',
+   translit:'Allahumma aslih li diniyal-ladhi huwa \'ismatu amri, wa aslih li dunyayal-lati fiha ma\'ashi',
+   urdu:'اے اللہ! میرے دین کو درست فرما جو میرے معاملات کی حفاظت کرنے والا ہے، اور میری دنیا کو درست فرما جس میں میری زندگی ہے۔',
+   trans:'O Allah, rectify my religion which protects my affairs, and rectify my worldly life in which is my livelihood.',
+   ref:'Muslim 2720'},
+
+  {id:35, cat:'general', title:'Seeking Good End',
+   arabic:'اللَّهُمَّ اجْعَلْ خَيْرَ عُمُرِي آخِرَهُ، وَخَيْرَ عَمَلِي خَاتِمَتَهُ',
+   translit:'Allahummaj-\'al khayra \'umuri akhirah, wa khayra \'amali khatimatah',
+   urdu:'اے اللہ! میری عمر کا بہترین حصہ آخری ہو، اور میرے عمل کا بہترین حصہ اس کا خاتمہ ہو۔',
+   trans:'O Allah, make the best part of my life its end, and the best of my deeds their conclusion.',
+   ref:'Tabarani'}
+];
+
+/* ===== STATE ===== */
+let state = {
+  currentCat: 'all',
+  favorites: [],
+  theme: 'dark',
+  fontSize: 'medium',
+  currentDua: null
+};
+
+/* ===== INIT ===== */
+function init(){
+  loadState();
+  applyTheme();
+  applyFontSize();
+  renderCategories();
+  renderDuas();
+  renderFavorites();
+}
+
+function loadState(){
+  try{
+    const s = localStorage.getItem('duas_state_v1');
+    if(s){
+      const saved = JSON.parse(s);
+      state.favorites = saved.favorites || [];
+      state.theme = saved.theme || 'dark';
+      state.fontSize = saved.fontSize || 'medium';
+    }
+  }catch(e){}
+}
+
+function saveState(){
+  try{
+    localStorage.setItem('duas_state_v1', JSON.stringify({
+      favorites: state.favorites,
+      theme: state.theme,
+      fontSize: state.fontSize
+    }));
+  }catch(e){}
+}
+
+/* ===== THEME ===== */
+function applyTheme(){
+  document.body.setAttribute('data-theme', state.theme);
+  document.getElementById('themeToggle').classList.toggle('on', state.theme === 'dark');
+}
+
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
+  saveState();
+}
+
+/* ===== FONT SIZE ===== */
+function applyFontSize(){
+  const sizes = {small:'22px', medium:'26px', large:'32px'};
+  document.documentElement.style.setProperty('--font-arabic', sizes[state.fontSize]);
+  document.querySelectorAll('.font-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === state.fontSize);
+  });
+}
+
+function setFontSize(size){
+  state.fontSize = size;
+  applyFontSize();
+  saveState();
+}
+
+/* ===== CATEGORIES ===== */
+function renderCategories(){
+  const el = document.getElementById('catChips');
+  el.innerHTML = CATEGORIES.map(c =>
+    '<button class="chip' + (c.id === state.currentCat ? ' active' : '') + '" onclick="setCategory(\'' + c.id + '\')">' + c.icon + ' ' + c.name + '</button>'
+  ).join('');
+}
+
+function setCategory(id){
+  state.currentCat = id;
+  renderCategories();
+  renderDuas();
+  document.getElementById('mainArea').scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ===== RENDER DUAS ===== */
+function renderDuas(){
+  const list = document.getElementById('duaList');
+  const filtered = state.currentCat === 'all' 
+    ? DUAS 
+    : DUAS.filter(d => d.cat === state.currentCat);
+  
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="empty"><h3>No duas found</h3><p>Try a different category</p></div>';
+    return;
+  }
+  
+  list.innerHTML = filtered.map(d => renderCard(d)).join('');
+}
+
+function renderCard(d){
+  const isFav = state.favorites.includes(d.id);
+  const cat = CATEGORIES.find(c => c.id === d.cat) || {name:d.cat, icon:''};
+  return '<div class="dua-card" onclick="openDua(' + d.id + ')">' +
+    '<div class="card-head">' +
+      '<div class="card-title">' + escapeHtml(d.title) + '<span class="cat-badge">' + cat.name + '</span></div>' +
+      '<button class="fav-btn' + (isFav ? ' active' : '') + '" onclick="event.stopPropagation();toggleFav(' + d.id + ')">' +
+        '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' +
+      '</button>' +
+    '</div>' +
+    '<div class="dua-arabic">' + d.arabic + '</div>' +
+    '<div class="dua-trans">' + escapeHtml(d.trans) + '</div>' +
+    '<div class="card-foot">' +
+      '<div class="ref">' + escapeHtml(d.ref) + '</div>' +
+      '<div class="card-actions">' +
+        '<button class="mini-btn" onclick="event.stopPropagation();copyDua(' + d.id + ')">' +
+          '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>' +
+        '</button>' +
+        '<button class="mini-btn" onclick="event.stopPropagation();shareDua(' + d.id + ')">' +
+          '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ===== MODAL ===== */
+function openDua(id){
+  const d = DUAS.find(x => x.id === id);
+  if(!d) return;
+  state.currentDua = d;
+  
+  document.getElementById('modalTitle').textContent = d.title;
+  document.getElementById('modalArabic').textContent = d.arabic;
+  document.getElementById('modalTranslit').textContent = d.translit;
+  document.getElementById('modalUrdu').textContent = d.urdu;
+  document.getElementById('modalTrans').textContent = d.trans;
+  document.getElementById('modalRef').textContent = '📚 ' + d.ref;
+  
+  const isFav = state.favorites.includes(d.id);
+  const favBtn = document.getElementById('modalFavBtn');
+  favBtn.classList.toggle('active-fav', isFav);
+  document.getElementById('modalFavText').textContent = isFav ? 'Saved' : 'Favorite';
+  
+  document.getElementById('modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e){
+  if(e && e.target !== e.currentTarget) return;
+  document.getElementById('modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function toggleFavFromModal(){
+  if(state.currentDua){
+    toggleFav(state.currentDua.id);
+    const isFav = state.favorites.includes(state.currentDua.id);
+    document.getElementById('modalFavBtn').classList.toggle('active-fav', isFav);
+    document.getElementById('modalFavText').textContent = isFav ? 'Saved' : 'Favorite';
+  }
+}
+
+/* ===== FAVORITES ===== */
+function toggleFav(id){
+  const idx = state.favorites.indexOf(id);
+  if(idx > -1){
+    state.favorites.splice(idx, 1);
+    showToast('Removed from favorites');
+  } else {
+    state.favorites.push(id);
+    showToast('Added to favorites');
+  }
+  saveState();
+  renderDuas();
+  renderFavorites();
+}
+
+function renderFavorites(){
+  const el = document.getElementById('favList');
+  const favDuas = DUAS.filter(d => state.favorites.includes(d.id));
+  
+  if(favDuas.length === 0){
+    el.innerHTML = '<div class="empty">' +
+      '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' +
+      '<h3>No favorites yet</h3>' +
+      '<p>Tap the heart icon to save duas</p>' +
+    '</div>';
+    return;
+  }
+  
+  el.innerHTML = favDuas.map(d => renderCard(d)).join('');
+}
+
+/* ===== SEARCH ===== */
+function toggleSearch(){
+  const wrap = document.getElementById('searchWrap');
+  const visible = wrap.style.display !== 'none';
+  wrap.style.display = visible ? 'none' : 'block';
+  if(!visible){
+    setTimeout(() => document.getElementById('searchInput').focus(), 100);
+  } else {
+    clearSearch();
+  }
+}
+
+function handleSearch(q){
+  const clearBtn = document.getElementById('clearBtn');
+  clearBtn.style.display = q ? 'block' : 'none';
+  
+  if(!q.trim()){
+    renderDuas();
+    return;
+  }
+  
+  const query = q.toLowerCase();
+  const results = DUAS.filter(d =>
+    d.title.toLowerCase().includes(query) ||
+    d.trans.toLowerCase().includes(query) ||
+    d.urdu.includes(q) ||
+    d.arabic.includes(q)
+  );
+  
+  const list = document.getElementById('duaList');
+  if(results.length === 0){
+    list.innerHTML = '<div class="empty"><h3>No results</h3><p>Try different keywords</p></div>';
+  } else {
+    list.innerHTML = results.map(d => renderCard(d)).join('');
+  }
+}
+
+function clearSearch(){
+  document.getElementById('searchInput').value = '';
+  document.getElementById('clearBtn').style.display = 'none';
+  renderDuas();
+}
+
+/* ===== COPY & SHARE ===== */
+function copyDua(id){
+  const d = DUAS.find(x => x.id === id);
+  if(!d) return;
+  const text = d.arabic + '\n\n' + d.translit + '\n\n' + d.urdu + '\n\n' + d.trans + '\n\n— ' + d.ref;
+  copyText(text);
+}
+
+function copyCurrent(){
+  if(state.currentDua) copyDua(state.currentDua.id);
+}
+
+function copyText(text){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard')).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+  function fallbackCopy(){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Copied'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+
+function shareDua(id){
+  const d = DUAS.find(x => x.id === id);
+  if(!d) return;
+  const text = d.arabic + '\n\n' + d.urdu + '\n\n— ' + d.ref;
+  if(navigator.share){
+    navigator.share({title: d.title, text: text}).catch(()=>{});
+  } else {
+    copyText(text);
+  }
+}
+
+/* ===== VIEWS ===== */
+function switchView(view){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+  
+  const titles = {home:'Daily Duas', fav:'Favorites', settings:'Settings'};
+  document.getElementById('headerTitle').textContent = titles[view] || 'Daily Duas';
+  
+  document.getElementById('searchWrap').style.display = 'none';
+  document.getElementById('mainArea').scrollTo({top:0});
+}
+
+/* ===== HELPERS ===== */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function showAbout(){
+  alert('Daily Duas\n\nVersion 1.0.0\n\nMade with ❤️ by APKForge\n\n33 authentic duas with Arabic, transliteration, Urdu and English translations from authentic sources (Bukhari, Muslim, Tirmidhi, Abu Dawud, Quran).');
+}
+
+/* ===== START ===== */
+init();
+</script>
+</body>
+</html>
