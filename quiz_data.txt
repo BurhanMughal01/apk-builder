@@ -1,0 +1,71 @@
+const CATEGORIES=[
+{id:'quran',name:'Quran',icon:'📖',desc:'Verses & Surahs'},
+{id:'seerah',name:'Seerah',icon:'🕌',desc:'Life of Prophet ﷺ'},
+{id:'fiqh',name:'Fiqh',icon:'⚖️',desc:'Islamic Law'},
+{id:'general',name:'General',icon:'✨',desc:'General Knowledge'}
+];
+const QUESTIONS={
+quran:[
+{q:'How many Surahs are in the Quran?',a:['100','114','120','99'],c:1},
+{q:'What is the longest Surah in the Quran?',a:['Al-Fatihah','Al-Baqarah','Yasin','Al-Kahf'],c:1},
+{q:'Which is the first Surah revealed?',a:['Al-Fatihah','Al-Alaq','Al-Baqarah','An-Nas'],c:1},
+{q:'How many Juz are in the Quran?',a:['20','25','30','40'],c:2},
+{q:'Which Surah is called "The Heart of the Quran"?',a:['Yasin','Al-Fatihah','Al-Kahf','Ar-Rahman'],c:0},
+{q:'Which Surah does not begin with Bismillah?',a:['At-Tawbah','Al-Fatihah','Yasin','Al-Ikhlas'],c:0},
+{q:'How many verses are in Surah Al-Fatihah?',a:['5','6','7','8'],c:2},
+{q:'Which Surah is the shortest in the Quran?',a:['Al-Ikhlas','Al-Kawthar','An-Nas','Al-Falaq'],c:1},
+{q:'Which prophet is mentioned most in the Quran?',a:['Ibrahim','Musa','Isa','Nuh'],c:1},
+{q:'What is Ayat ul Kursi?',a:['2:255','2:256','3:1','1:1'],c:0},
+{q:'How many times is Bismillah mentioned in the Quran?',a:['100','113','114','115'],c:2},
+{q:'Which Surah is recited in every rakah of prayer?',a:['Al-Ikhlas','Al-Fatihah','Yasin','Al-Falaq'],c:1},
+{q:'What is the last Surah of the Quran?',a:['Al-Falaq','An-Nas','Al-Ikhlas','Al-Kawthar'],c:1},
+{q:'Which Surah is named after a woman?',a:['Maryam','An-Nisa','Fatimah','Khadijah'],c:0},
+{q:'What does "Al-Quran" mean?',a:['The Book','The Recitation','The Guidance','The Light'],c:1}
+],
+seerah:[
+{q:'In which year was the Prophet ﷺ born?',a:['570 CE','580 CE','560 CE','590 CE'],c:0},
+{q:'What was the Prophet ﷺ father name?',a:['Abu Talib','Abdullah','Abdul Muttalib','Hashim'],c:1},
+{q:'What was the Prophet ﷺ mother name?',a:['Aminah','Khadijah','Fatimah','Halimah'],c:0},
+{q:'How old was the Prophet ﷺ when he received first revelation?',a:['30','35','40','45'],c:2},
+{q:'In which cave did the first revelation come?',a:['Hira','Thawr','Safa','Uhud'],c:0},
+{q:'Which angel brought the first revelation?',a:['Mikail','Jibril','Israfil','Azrail'],c:1},
+{q:'In which year did the Hijrah take place?',a:['620 CE','622 CE','624 CE','630 CE'],c:1},
+{q:'Who was the first Caliph after the Prophet ﷺ?',a:['Umar','Uthman','Ali','Abu Bakr'],c:3},
+{q:'What was the Prophet ﷺ age when he passed away?',a:['60','62','63','65'],c:2},
+{q:'In which city was the Prophet ﷺ born?',a:['Madinah','Makkah','Taif','Jerusalem'],c:1},
+{q:'Who was the Prophet ﷺ first wife?',a:['Aisha','Khadijah','Hafsa','Zaynab'],c:1},
+{q:'What was the Prophet ﷺ grandfather name?',a:['Abu Talib','Abdul Muttalib','Hashim','Abd Manaf'],c:1},
+{q:'How many years did the Prophet ﷺ preach in Makkah?',a:['10','13','20','23'],c:1},
+{q:'What did the Quraysh boycott the Muslims with?',a:['Trade','Money','Food','All of these'],c:3},
+{q:'Which battle happened in 624 CE?',a:['Uhud','Badr','Khandaq','Khaybar'],c:1}
+],
+fiqh:[
+{q:'How many pillars of Islam are there?',a:['3','4','5','6'],c:2},
+{q:'How many times should a Muslim pray daily?',a:['3','4','5','6'],c:2},
+{q:'What is the minimum Nisab for Zakat?',a:['Value of 87.48g gold','Value of 50g gold','Value of 100g silver','Value of 10 camels'],c:0},
+{q:'How many rakah are in Fajr prayer?',a:['2','3','4','5'],c:0},
+{q:'How many rakah are in Isha prayer?',a:['2','3','4','5'],c:2},
+{q:'What is the rate of Zakat?',a:['1%','2%','2.5%','5%'],c:2},
+{q:'Which month is fasting obligatory?',a:['Rajab','Ramadan','Shawwal','Muharram'],c:1},
+{q:'What is the 1st month of Islamic calendar?',a:['Ramadan','Muharram','Rajab','Shaban'],c:1},
+{q:'How many rakah are in Maghrib prayer?',a:['2','3','4','5'],c:1},
+{q:'What is Witr prayer?',a:['Obligatory','Sunnah','Nafl','Wajib'],c:2},
+{q:'How many pillars of Iman?',a:['3','4','5','6'],c:3},
+{q:'What is the minimum age for Fasting?',a:['Puberty','7 years','10 years','15 years'],c:0},
+{q:'How many rakah are in Dhuhr prayer (Fard)?',a:['2','3','4','5'],c:2},
+{q:'Which is the holiest city in Islam?',a:['Madinah','Makkah','Jerusalem','Taif'],c:1},
+{q:'How many days is Eid ul Fitr?',a:['1','2','3','4'],c:0}
+],
+general:[
+{q:'What is the meaning of "Islam"?',a:['Peace','Submission to Allah','Faith','Prayer'],c:1},
+{q:'What do Muslims say before eating?',a:['Alhamdulillah','Bismillah','SubhanAllah','InshaAllah'],c:1},
+{q:'How many names of Allah are mentioned in Hadith?',a:['33','66','99','100'],c:2},
+{q:'What is the Qibla?',a:['Direction of Makkah','A book','A prayer','A month'],c:0},
+{q:'Which prophet built the Kaaba?',a:['Musa','Ibrahim','Nuh','Isa'],c:1},
+{q:'What is the first month of Hijri year?',a:['Muharram','Safar','Rajab','Ramadan'],c:0},
+{q:'How many Prophets are mentioned in Quran?',a:['20','25','30','40'],c:1},
+{q:'What is Jannah?',a:['Paradise','Hell','Angels','Day of Judgment'],c:0},
+{q:'What is Jahannam?',a:['Paradise','Hell','Angels','Day of Judgment'],c:1},
+{q:'How many angels are named in Quran?',a:['3','4','5','6'],c:1}
+]
+};
