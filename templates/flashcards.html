@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Flashcards</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"><style>
+:root{--bg:#050c1a;--card:#0f1e3d;--elev:#1a2d54;--text:#dbeafe;--muted:#93c5fd;--sub:#3b82f6;--pri:#3b82f6;--purple:#8b5cf6;--green:#10b981;--red:#ef4444;--grad:linear-gradient(135deg,#3b82f6,#8b5cf6);--bdr:rgba(59,130,246,0.25);--glow:0 0 30px rgba(59,130,246,0.4)}
+[data-theme="light"]{--bg:#eff6ff;--card:#fff;--elev:#dbeafe;--text:#1e3a8a;--muted:#1d4ed8;--sub:#93c5fd;--bdr:rgba(30,58,138,0.15)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);background-image:radial-gradient(circle at 20% 10%,rgba(59,130,246,0.1),transparent 40%)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;outline:none}
+.hdr{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(5,12,26,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 12px;gap:8px;z-index:50}
+[data-theme="light"] .hdr{background:rgba(239,246,255,0.95)}
+.ib{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--muted)}
+.ib svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.hdr-t{flex:1;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--grad);display:grid;place-items:center;font-size:18px;box-shadow:var(--glow)}
+.main{position:fixed;top:60px;bottom:0;left:0;right:0;overflow-y:auto;padding:16px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.main::-webkit-scrollbar{width:0}
+.deck-list{display:grid;gap:10px;width:100%;max-width:440px}
+.deck{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;transition:all .2s;cursor:pointer}
+.deck:active{transform:scale(0.98);border-color:var(--pri)}
+.deck-icon{width:48px;height:48px;border-radius:14px;background:var(--grad);display:grid;place-items:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(59,130,246,0.4)}
+.deck-info{flex:1;min-width:0}
+.deck-name{font-size:15px;font-weight:800;margin-bottom:4px}
+.deck-count{font-size:12px;color:var(--sub);font-weight:600}
+.deck-del{width:32px;height:32px;border-radius:10px;background:rgba(239,68,68,0.1);color:#fca5a5;display:grid;place-items:center;flex-shrink:0}
+.deck-del svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.study-view{display:none;width:100%;max-width:440px;flex-direction:column;align-items:center;gap:16px}
+.study-view.active{display:flex}
+.progress-row{width:100%;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--sub);font-weight:700;padding:0 4px}
+.progress-bar{width:100%;height:6px;background:var(--card);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--grad);border-radius:3px;transition:width .3s;box-shadow:0 0 12px rgba(59,130,246,0.6)}
+.flashcard{width:100%;aspect-ratio:1.4;background:linear-gradient(135deg,var(--card),var(--elev));border:2px solid var(--bdr);border-radius:24px;display:flex;align-items:center;justify-content:center;padding:32px;cursor:pointer;transition:all .5s;position:relative;transform-style:preserve-3d;perspective:1000px;box-shadow:var(--glow)}
+.flashcard:active{transform:scale(0.98)}
+.flashcard.flipped{background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(139,92,246,0.1))}
+.card-content{font-size:22px;font-weight:700;text-align:center;line-height:1.5;word-wrap:break-word;max-height:100%;overflow-y:auto}
+.card-content::-webkit-scrollbar{width:0}
+.card-side{position:absolute;top:12px;left:16px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--sub);font-weight:800}
+.card-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--sub);font-weight:700;letter-spacing:1px}
+@keyframes flipIn{0%{transform:rotateY(90deg);opacity:0}100%{transform:rotateY(0);opacity:1}}
+.card-content.animate{animation:flipIn 0.3s ease-out}
+.study-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.btn{padding:18px;border-radius:16px;background:var(--elev);color:var(--text);font-size:15px;font-weight:900;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--bdr);transition:all .2s}
+.btn:active{transform:scale(0.96)}
+.btn.primary{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 6px 20px rgba(59,130,246,0.4)}
+.btn.green{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:transparent;box-shadow:0 6px 20px rgba(16,185,129,0.4)}
+.btn.red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border-color:transparent;box-shadow:0 6px 20px rgba(239,68,68,0.4)}
+.btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.fab{position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(59,130,246,0.5);z-index:100}
+.fab svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.fab.hidden{display:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-end}
+.modal.show{display:flex}
+.sheet{background:var(--card);width:100%;border-radius:24px 24px 0 0;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto}
+.sheet::-webkit-scrollbar{width:0}
+.drag{width:40px;height:4px;background:var(--elev);border-radius:2px;margin:0 auto 16px}
+.sheet h3{font-size:18px;margin-bottom:16px;text-align:center;font-weight:800}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);font-weight:800;margin-bottom:6px}
+.inp{width:100%;padding:14px;background:var(--bg);border:1px solid var(--bdr);border-radius:12px;color:var(--text);font-size:15px;margin-bottom:14px;font-weight:600;resize:none;min-height:60px}
+.inp:focus{border-color:var(--pri)}
+.btn-row{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.btn2{padding:14px;border-radius:12px;background:var(--elev);color:var(--text);font-size:14px;font-weight:700;font-family:inherit;text-align:center;border:1px solid var(--bdr)}
+.btn2.primary{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(59,130,246,0.4)}
+.card-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;max-height:200px;overflow-y:auto}
+.card-list::-webkit-scrollbar{width:0}
+.mini-card{background:var(--elev);border:1px solid var(--bdr);border-radius:10px;padding:10px 12px;font-size:12px;display:flex;align-items:center;gap:8px}
+.mini-card strong{color:var(--pri);flex-shrink:0}
+.tt{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--elev);color:var(--text);padding:12px 22px;border-radius:14px;font-size:13px;font-weight:600;border:1px solid var(--bdr);opacity:0;transition:all .3s;pointer-events:none;z-index:300}
+.tt.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body data-theme="dark">
+<header class="hdr"><div class="hdr-t"><div class="logo">📚</div><span id="hdrTitle">Flashcards</span></div><button class="ib" onclick="toggleTheme()"><svg viewBox="0 0 24 24" id="ti"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button></header>
+
+<main class="main">
+<div id="deckView" style="width:100%;max-width:440px;display:flex;flex-direction:column;gap:14px;align-items:center">
+<div class="deck-list" id="deckList"></div>
+<button class="btn primary" onclick="openNewDeck()" style="width:100%"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Create New Deck</button>
+</div>
+
+<div class="study-view" id="studyView">
+<div class="progress-row"><span id="progText">Card 1 / 1</span><span id="scoreText">✓ 0 ✗ 0</span></div>
+<div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+<div class="flashcard" id="flashcard" onclick="flipCard()">
+<div class="card-side" id="cardSide">Question</div>
+<div class="card-content" id="cardContent">—</div>
+<div class="card-hint" id="cardHint">Tap to reveal</div>
+</div>
+<div class="study-actions">
+<button class="btn red" onclick="markCard(false)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Wrong</button>
+<button class="btn green" onclick="markCard(true)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>Correct</button>
+</div>
+<button class="btn" onclick="exitStudy()" style="width:100%"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Exit Study</button>
+</div>
+</main>
+
+<button class="fab" id="fab" onclick="openNewDeck()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+<div class="sheet">
+<div class="drag"></div>
+<h3 id="modalTitle">New Deck</h3>
+<div class="lbl">Deck Name</div>
+<input type="text" class="inp" id="deckName" placeholder="e.g. Spanish Words">
+<div class="lbl">Cards</div>
+<div class="card-list" id="cardList"></div>
+<div class="lbl">Front (Question)</div>
+<textarea class="inp" id="frontInput" placeholder="Question or term..."></textarea>
+<div class="lbl">Back (Answer)</div>
+<textarea class="inp" id="backInput" placeholder="Answer or definition..."></textarea>
+<button class="btn primary" onclick="addCardToDeck()" style="width:100%;margin-bottom:14px"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add Card</button>
+<div class="btn-row">
+<button class="btn2" onclick="closeModal()">Cancel</button>
+<button class="btn2 primary" onclick="saveDeck()">Save Deck</button>
+</div>
+</div>
+</div>
+
+<div class="tt" id="toast"><span id="tt-txt">Saved</span></div>
+
+<script>
+const PRESETS={
+'spanish':{name:'Spanish Basics',icon:'🇪🇸',cards:[{f:'Hello',b:'Hola'},{f:'Thank you',b:'Gracias'},{f:'Goodbye',b:'Adiós'},{f:'Please',b:'Por favor'},{f:'Yes',b:'Sí'},{f:'No',b:'No'},{f:'Water',b:'Agua'},{f:'Food',b:'Comida'}]},
+'math':{name:'Multiplication',icon:'🔢',cards:[{f:'7 × 8',b:'56'},{f:'9 × 6',b:'54'},{f:'12 × 12',b:'144'},{f:'8 × 9',b:'72'},{f:'7 × 7',b:'49'},{f:'6 × 8',b:'48'}]},
+'capitals':{name:'World Capitals',icon:'🌍',cards:[{f:'France',b:'Paris'},{f:'Japan',b:'Tokyo'},{f:'Egypt',b:'Cairo'},{f:'Brazil',b:'Brasília'},{f:'Australia',b:'Canberra'},{f:'Canada',b:'Ottawa'}]},
+'quran':{name:'Quran Surahs',icon:'📖',cards:[{f:'Longest surah',b:'Al-Baqarah'},{f:'First surah',b:'Al-Fatihah'},{f:'Last surah',b:'An-Nas'},{f:'Heart of Quran',b:'Yasin'},{f:'Number of Juz',b:'30'},{f:'Number of surahs',b:'114'}]}
+};
+let state={theme:'dark',decks:[],study:{deckId:null,index:0,flipped:false,correct:0,wrong:0,cards:[]},building:{cards:[]}};
+let ttm;
+function init(){loadState();applyTheme();if(!state.decks.length)loadPresets();renderDecks();}
+function loadState(){try{const s=localStorage.getItem('fc_v1');if(s){const p=JSON.parse(s);state.theme=p.theme||'dark';state.decks=p.decks||[];}}catch(e){}}
+function saveState(){try{localStorage.setItem('fc_v1',JSON.stringify({theme:state.theme,decks:state.decks}));}catch(e){}}
+function applyTheme(){document.body.setAttribute('data-theme',state.theme);const i=document.getElementById('ti');if(i){if(state.theme==='dark'){i.innerHTML='<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';}else{i.innerHTML='<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';}}}
+function toggleTheme(){state.theme=state.theme==='dark'?'light':'dark';applyTheme();saveState();}
+
+function loadPresets(){
+  Object.keys(PRESETS).forEach(k=>{
+    const p=PRESETS[k];
+    state.decks.push({id:Date.now()+Math.random(),name:p.name,icon:p.icon,cards:[...p.cards]});
+  });
+  saveState();
+}
+
+function renderDecks(){
+  const el=document.getElementById('deckList');
+  if(!state.decks.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--sub);font-size:13px">No decks yet. Create your first deck!</div>';return;}
+  el.innerHTML=state.decks.map(d=>'<div class="deck" onclick="startStudy(\''+d.id+'\')"><div class="deck-icon">'+(d.icon||'📚')+'</div><div class="deck-info"><div class="deck-name">'+esc(d.name)+'</div><div class="deck-count">'+d.cards.length+' cards</div></div><button class="deck-del" onclick="event.stopPropagation();deleteDeck(\''+d.id+'\')"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></button></div>').join('');
+}
+
+function deleteDeck(id){if(!confirm('Delete this deck?'))return;state.decks=state.decks.filter(d=>String(d.id)!==id);saveState();renderDecks();showToast('Deleted');}
+
+function openNewDeck(){
+  state.building={cards:[]};
+  document.getElementById('modalTitle').textContent='New Deck';
+  document.getElementById('deckName').value='';
+  document.getElementById('frontInput').value='';
+  document.getElementById('backInput').value='';
+  renderBuildingCards();
+  document.getElementById('modal').classList.add('show');
+}
+
+function renderBuildingCards(){
+  const el=document.getElementById('cardList');
+  if(!state.building.cards.length){el.innerHTML='<div style="text-align:center;padding:20px;color:var(--sub);font-size:12px">No cards yet. Add some below.</div>';return;}
+  el.innerHTML=state.building.cards.map((c,i)=>'<div class="mini-card"><strong>'+esc(c.f)+'</strong>→ '+esc(c.b)+'<button onclick="removeCard('+i+')" style="margin-left:auto;color:#fca5a5;font-weight:900">✕</button></div>').join('');
+}
+
+function addCardToDeck(){
+  const f=document.getElementById('frontInput').value.trim();
+  const b=document.getElementById('backInput').value.trim();
+  if(!f||!b){showToast('Fill both fields');return;}
+  state.building.cards.push({f,b});
+  document.getElementById('frontInput').value='';
+  document.getElementById('backInput').value='';
+  renderBuildingCards();
+}
+
+function removeCard(i){state.building.cards.splice(i,1);renderBuildingCards();}
+
+function saveDeck(){
+  const name=document.getElementById('deckName').value.trim();
+  if(!name){showToast('Enter deck name');return;}
+  if(!state.building.cards.length){showToast('Add at least 1 card');return;}
+  state.decks.push({id:Date.now(),name,icon:'📚',cards:[...state.building.cards]});
+  saveState();closeModal();renderDecks();showToast('Deck saved');
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('show');}
+
+function startStudy(id){
+  const deck=state.decks.find(d=>String(d.id)===id);
+  if(!deck||!deck.cards.length){showToast('No cards');return;}
+  state.study={deckId:id,index:0,flipped:false,correct:0,wrong:0,cards:[...deck.cards].sort(()=>Math.random()-0.5)};
+  document.getElementById('deckView').style.display='none';
+  document.getElementById('studyView').classList.add('active');
+  document.getElementById('fab').classList.add('hidden');
+  document.getElementById('hdrTitle').textContent=deck.name;
+  renderCard();
+}
+
+function flipCard(){
+  state.study.flipped=!state.study.flipped;
+  renderCard();
+  if(navigator.vibrate)navigator.vibrate(15);
+}
+
+function renderCard(){
+  const s=state.study;
+  const c=s.cards[s.index];
+  if(!c)return;
+  document.getElementById('cardContent').textContent=s.flipped?c.b:c.f;
+  document.getElementById('cardSide').textContent=s.flipped?'Answer':'Question';
+  document.getElementById('cardHint').textContent=s.flipped?'Mark correct or wrong':'Tap to reveal';
+  const content=document.getElementById('cardContent');
+  content.classList.remove('animate');
+  void content.offsetWidth;
+  content.classList.add('animate');
+  const card=document.getElementById('flashcard');
+  card.classList.toggle('flipped',s.flipped);
+  document.getElementById('progText').textContent='Card '+(s.index+1)+' / '+s.cards.length;
+  document.getElementById('scoreText').textContent='✓ '+s.correct+' ✗ '+s.wrong;
+  document.getElementById('progFill').style.width=((s.index)/s.cards.length*100)+'%';
+}
+
+function markCard(correct){
+  if(!state.study.flipped){showToast('Flip first');return;}
+  if(correct)state.study.correct++;else state.study.wrong++;
+  if(navigator.vibrate)navigator.vibrate(correct?30:[50,30,50]);
+  state.study.index++;
+  if(state.study.index>=state.study.cards.length){finishStudy();return;}
+  state.study.flipped=false;
+  renderCard();
+}
+
+function finishStudy(){
+  const s=state.study;
+  const total=s.cards.length;
+  const pct=Math.round(s.correct/total*100);
+  document.getElementById('studyView').innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:80px;margin-bottom:16px">'+(pct>=80?'🎉':pct>=50?'👍':'📖')+'</div><div style="font-size:28px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px">'+pct+'%</div><div style="font-size:14px;color:var(--muted);margin-bottom:24px">'+s.correct+' correct · '+s.wrong+' wrong</div><button class="btn primary" onclick="exitStudy()" style="width:100%">Back to Decks</button></div>';
+  if(navigator.vibrate)navigator.vibrate([100,50,100,50,200]);
+}
+
+function exitStudy(){
+  document.getElementById('studyView').innerHTML='<div class="progress-row"><span id="progText">Card 1 / 1</span><span id="scoreText">✓ 0 ✗ 0</span></div><div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div><div class="flashcard" id="flashcard" onclick="flipCard()"><div class="card-side" id="cardSide">Question</div><div class="card-content" id="cardContent">—</div><div class="card-hint" id="cardHint">Tap to reveal</div></div><div class="study-actions"><button class="btn red" onclick="markCard(false)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>Wrong</button><button class="btn green" onclick="markCard(true)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>Correct</button></div><button class="btn" onclick="exitStudy()" style="width:100%"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Exit Study</button>';
+  document.getElementById('studyView').classList.remove('active');
+  document.getElementById('deckView').style.display='flex';
+  document.getElementById('fab').classList.remove('hidden');
+  document.getElementById('hdrTitle').textContent='Flashcards';
+  renderDecks();
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function showToast(m){const t=document.getElementById('toast');document.getElementById('tt-txt').textContent=m;t.classList.add('show');clearTimeout(ttm);ttm=setTimeout(()=>t.classList.remove('show'),1800);}
+init();
+</script></body></html>
