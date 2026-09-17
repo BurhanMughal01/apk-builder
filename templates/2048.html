@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>2048</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><style>
+:root{--bg:#faf8ef;--board:#bbada0;--cell:#cdc1b4;--text:#776e65;--text-light:#f9f6f2;--btn:#8f7a66;--btn-hover:#9f8b77;--c2:#eee4da;--c4:#ede0c8;--c8:#f2b179;--c16:#f59563;--c32:#f67c5f;--c64:#f65e3b;--c128:#edcf72;--c256:#edcc61;--c512:#edc850;--c1024:#edc53f;--c2048:#edc22e}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);touch-action:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.hdr{padding:16px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:480px;margin:0 auto}
+.hdr-title{font-size:40px;font-weight:900;color:var(--text);line-height:1}
+.scores{display:flex;gap:8px}
+.score-box{background:var(--board);color:var(--text-light);border-radius:8px;padding:8px 14px;text-align:center;min-width:80px;position:relative}
+.score-label{font-size:10px;font-weight:700;letter-spacing:1px;opacity:0.9;text-transform:uppercase}
+.score-val{font-size:20px;font-weight:800;line-height:1.1;margin-top:2px}
+.score-add{position:absolute;left:0;right:0;top:10px;font-size:18px;font-weight:800;color:var(--text);opacity:0;transition:all 0.5s;pointer-events:none}
+.score-add.show{opacity:1;top:-20px}
+.top-row{padding:12px 16px;max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hint{font-size:13px;color:var(--text);opacity:0.8;line-height:1.4;flex:1}
+.new-btn{background:var(--btn);color:var(--text-light);padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;transition:all .2s}
+.new-btn:active{transform:scale(0.95)}
+.main{padding:0 16px 16px;max-width:480px;margin:0 auto}
+.board-wrap{position:relative;background:var(--board);border-radius:12px;padding:10px;aspect-ratio:1;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.grid-bg{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:10px;height:100%}
+.bg-cell{background:var(--cell);border-radius:8px}
+.tile-container{position:absolute;inset:10px;pointer-events:none}
+.tile{position:absolute;width:calc((100% - 30px)/4);height:calc((100% - 30px)/4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;transition:transform 0.1s ease-out;will-change:transform}
+.tile-inner{width:100%;height:100%;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;transition:all 0.1s}
+.tile[data-v="2"] .tile-inner{background:var(--c2);color:var(--text);font-size:36px}
+.tile[data-v="4"] .tile-inner{background:var(--c4);color:var(--text);font-size:36px}
+.tile[data-v="8"] .tile-inner{background:var(--c8);color:var(--text-light);font-size:36px}
+.tile[data-v="16"] .tile-inner{background:var(--c16);color:var(--text-light);font-size:34px}
+.tile[data-v="32"] .tile-inner{background:var(--c32);color:var(--text-light);font-size:34px}
+.tile[data-v="64"] .tile-inner{background:var(--c64);color:var(--text-light);font-size:34px}
+.tile[data-v="128"] .tile-inner{background:var(--c128);color:var(--text-light);font-size:28px;box-shadow:0 0 30px 10px rgba(243,215,116,0.4)}
+.tile[data-v="256"] .tile-inner{background:var(--c256);color:var(--text-light);font-size:28px;box-shadow:0 0 30px 10px rgba(243,215,116,0.5)}
+.tile[data-v="512"] .tile-inner{background:var(--c512);color:var(--text-light);font-size:28px;box-shadow:0 0 30px 10px rgba(243,215,116,0.6)}
+.tile[data-v="1024"] .tile-inner{background:var(--c1024);color:var(--text-light);font-size:22px;box-shadow:0 0 30px 10px rgba(243,215,116,0.7)}
+.tile[data-v="2048"] .tile-inner{background:var(--c2048);color:var(--text-light);font-size:22px;box-shadow:0 0 30px 10px rgba(243,215,116,0.8)}
+.tile[data-v="4096"] .tile-inner,.tile[data-v="8192"] .tile-inner{background:#3c3a32;color:var(--text-light);font-size:22px}
+.tile.new .tile-inner{animation:appear 0.15s ease-out}
+.tile.merged .tile-inner{animation:pop 0.15s ease-out}
+@keyframes appear{0%{transform:scale(0)}100%{transform:scale(1)}}
+@keyframes pop{0%{transform:scale(0.8)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+.overlay{position:absolute;inset:0;background:rgba(250,248,239,0.75);border-radius:12px;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:10;backdrop-filter:blur(4px)}
+.overlay.show{display:flex;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.ov-title{font-size:42px;font-weight:900;color:var(--text);margin-bottom:12px;line-height:1}
+.ov-sub{font-size:15px;color:var(--text);opacity:0.85;margin-bottom:24px;line-height:1.5}
+.ov-btn{background:var(--btn);color:var(--text-light);padding:14px 32px;border-radius:10px;font-size:15px;font-weight:800;box-shadow:0 4px 12px rgba(143,122,102,0.4)}
+.ov-btn:active{transform:scale(0.95)}
+.moves{padding:12px 16px;max-width:480px;margin:0 auto;display:flex;gap:8px;justify-content:center}
+.stat-mini{background:var(--board);color:var(--text-light);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700}
+.tt{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--text-light);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all .3s;pointer-events:none;z-index:200}
+.tt.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="hdr">
+<div class="hdr-title">2048</div>
+<div class="scores">
+<div class="score-box"><div class="score-label">Score</div><div class="score-val" id="scoreVal">0</div><div class="score-add" id="scoreAdd">+0</div></div>
+<div class="score-box"><div class="score-label">Best</div><div class="score-val" id="bestVal">0</div></div>
+</div>
+</div>
+
+<div class="top-row">
+<div class="hint">Swipe to move tiles.<br>Merge same numbers!</div>
+<button class="new-btn" onclick="newGame()">New Game</button>
+</div>
+
+<div class="main">
+<div class="board-wrap" id="boardWrap">
+<div class="grid-bg">
+<div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div>
+<div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div>
+<div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div>
+<div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div><div class="bg-cell"></div>
+</div>
+<div class="tile-container" id="tileContainer"></div>
+<div class="overlay" id="overlay">
+<div class="ov-title" id="ovTitle">You Win!</div>
+<div class="ov-sub" id="ovSub">You reached 2048!</div>
+<button class="ov-btn" onclick="closeOverlay()">Keep Going</button>
+</div>
+</div>
+</div>
+
+<div class="moves">
+<div class="stat-mini">Moves: <span id="movesVal">0</span></div>
+<div class="stat-mini">Time: <span id="timeVal">0s</span></div>
+</div>
+
+<div class="tt" id="toast"><span id="tt-txt">New Game</span></div>
+
+<script>
+const SIZE=4;
+let grid=[],tiles=[],nextId=1,score=0,best=0,moves=0,gameWon=false,gameOver=false,keepGoing=false;
+let startTime=null,timerInterval=null,touchStart=null;
+let ttm,animating=false;
+
+function init(){
+  loadBest();
+  newGame();
+  document.addEventListener('keydown',handleKey);
+  const wrap=document.getElementById('boardWrap');
+  wrap.addEventListener('touchstart',onTouchStart,{passive:true});
+  wrap.addEventListener('touchmove',onTouchMove,{passive:true});
+  wrap.addEventListener('touchend',onTouchEnd,{passive:true});
+  wrap.addEventListener('mousedown',onMouseDown);
+  wrap.addEventListener('mouseup',onMouseUp);
+}
+
+function loadBest(){
+  try{best=parseInt(localStorage.getItem('g2048_best')||'0');}catch(e){best=0;}
+  document.getElementById('bestVal').textContent=best;
+}
+function saveBest(){try{localStorage.setItem('g2048_best',String(best));}catch(e){}}
+
+function newGame(){
+  grid=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+  tiles=[];nextId=1;score=0;moves=0;gameWon=false;gameOver=false;keepGoing=false;
+  startTime=Date.now();
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(updateTime,1000);
+  addRandom();addRandom();
+  document.getElementById('overlay').classList.remove('show');
+  updateScore();updateMoves();
+  render();
+}
+
+function updateTime(){
+  if(gameOver||gameWon&&!keepGoing)return;
+  const s=Math.floor((Date.now()-startTime)/1000);
+  document.getElementById('timeVal').textContent=s+'s';
+}
+
+function addRandom(){
+  const empty=[];
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)if(grid[r][c]===0)empty.push({r,c});
+  if(empty.length===0)return null;
+  const pos=empty[Math.floor(Math.random()*empty.length)];
+  const val=Math.random()<0.9?2:4;
+  grid[pos.r][pos.c]=val;
+  const t={id:nextId++,r:pos.r,c:pos.c,v:val,merged:false,new:true,prevR:pos.r,prevC:pos.c};
+  tiles.push(t);
+  return t;
+}
+
+function render(){
+  const cont=document.getElementById('tileContainer');
+  const wrap=document.getElementById('boardWrap');
+  const size=wrap.clientWidth-20;
+  const cell=(size-30)/4;
+  const gap=10;
+  cont.innerHTML=tiles.map(t=>{
+    const x=t.c*(cell+gap);
+    const y=t.r*(cell+gap);
+    return '<div class="tile '+(t.new?'new':'')+' '+(t.merged?'merged':'')+'" data-v="'+t.v+'" style="transform:translate('+x+'px,'+y+'px);width:'+cell+'px;height:'+cell+'px"><div class="tile-inner">'+t.v+'</div></div>';
+  }).join('');
+  setTimeout(()=>{tiles.forEach(t=>{t.new=false;t.merged=false;});},150);
+}
+
+function move(dir){
+  if(gameOver||(gameWon&&!keepGoing)||animating)return;
+  animating=true;
+  let moved=false;
+  const vectors={up:{r:-1,c:0},down:{r:1,c:0},left:{r:0,c:-1},right:{r:0,c:1}};
+  const v=vectors[dir];
+  const traversals={
+    up:()=>{for(let c=0;c<SIZE;c++)for(let r=0;r<SIZE;r++)process(r,c);},
+    down:()=>{for(let c=0;c<SIZE;c++)for(let r=SIZE-1;r>=0;r--)process(r,c);},
+    left:()=>{for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++)process(r,c);},
+    right:()=>{for(let r=0;r<SIZE;r++)for(let c=SIZE-1;c>=0;c--)process(r,c);}
+  };
+  function process(r,c){
+    if(grid[r][c]===0)return;
+    const tile=tiles.find(t=>t.r===r&&t.c===c);
+    if(!tile)return;
+    let nr=r,nc=c;
+    while(true){
+      const tr=nr+v.r,tc=nc+v.c;
+      if(tr<0||tr>=SIZE||tc<0||tc>=SIZE)break;
+      if(grid[tr][tc]===0){nr=tr;nc=tc;continue;}
+      const other=tiles.find(t=>t.r===tr&&t.c===tc);
+      if(other&&other.v===tile.v&&!other.merged){
+        grid[r][c]=0;grid[tr][tc]=tile.v*2;
+        tile.r=tr;tile.c=tc;tile.v=tile.v*2;tile.merged=true;
+        other.hidden=true;other.v=tile.v*2;other.merged=true;
+        tiles=tiles.filter(t=>t!==other&&t!==tile);
+        tiles.push(tile);
+        score+=tile.v;
+        if(tile.v===2048&&!gameWon){gameWon=true;showWin();}
+        moved=true;
+        return;
+      }
+      break;
+    }
+    if(nr!==r||nc!==c){
+      grid[r][c]=0;grid[nr][nc]=tile.v;tile.r=nr;tile.c=nc;
+      moved=true;
+    }
+  }
+  traversals[dir]();
+  if(moved){
+    moves++;updateMoves();updateScore();
+    setTimeout(()=>{
+      addRandom();
+      render();
+      animating=false;
+      if(!canMove()){gameOver=true;showGameOver();}
+    },130);
+  }else{
+    animating=false;
+  }
+}
+
+function canMove(){
+  for(let r=0;r<SIZE;r++)for(let c=0;c<SIZE;c++){
+    if(grid[r][c]===0)return true;
+    if(r<SIZE-1&&grid[r][c]===grid[r+1][c])return true;
+    if(c<SIZE-1&&grid[r][c]===grid[r][c+1])return true;
+  }
+  return false;
+}
+
+function updateScore(){
+  document.getElementById('scoreVal').textContent=score;
+  if(score>best){best=score;saveBest();document.getElementById('bestVal').textContent=best;}
+}
+function updateMoves(){document.getElementById('movesVal').textContent=moves;}
+
+function showWin(){
+  document.getElementById('ovTitle').textContent='🎉 You Win!';
+  document.getElementById('ovSub').textContent='You reached 2048! Keep going for higher score.';
+  document.getElementById('overlay').classList.add('show');
+  document.querySelector('.ov-btn').textContent='Keep Going';
+  document.querySelector('.ov-btn').onclick=()=>{keepGoing=true;closeOverlay();};
+  if(navigator.vibrate)navigator.vibrate([100,50,100,50,200]);
+}
+
+function showGameOver(){
+  document.getElementById('ovTitle').textContent='Game Over';
+  document.getElementById('ovSub').innerHTML='Score: <strong>'+score+'</strong><br>Moves: '+moves;
+  document.getElementById('overlay').classList.add('show');
+  document.querySelector('.ov-btn').textContent='Try Again';
+  document.querySelector('.ov-btn').onclick=newGame;
+  if(timerInterval)clearInterval(timerInterval);
+  if(navigator.vibrate)navigator.vibrate([200,100,200]);
+}
+
+function closeOverlay(){document.getElementById('overlay').classList.remove('show');}
+
+function handleKey(e){
+  const k=e.key;
+  if(k==='ArrowUp'||k==='w'||k==='W'){e.preventDefault();move('up');}
+  else if(k==='ArrowDown'||k==='s'||k==='S'){e.preventDefault();move('down');}
+  else if(k==='ArrowLeft'||k==='a'||k==='A'){e.preventDefault();move('left');}
+  else if(k==='ArrowRight'||k==='d'||k==='D'){e.preventDefault();move('right');}
+}
+
+function onTouchStart(e){const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY};}
+function onTouchMove(e){
+  if(!touchStart)return;
+  const t=e.touches[0];
+  const dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;
+  if(Math.abs(dx)>25||Math.abs(dy)>25){
+    if(Math.abs(dx)>Math.abs(dy))move(dx>0?'right':'left');
+    else move(dy>0?'down':'up');
+    touchStart=null;
+  }
+}
+function onTouchEnd(){touchStart=null;}
+function onMouseDown(e){touchStart={x:e.clientX,y:e.clientY};}
+function onMouseUp(e){
+  if(!touchStart)return;
+  const dx=e.clientX-touchStart.x,dy=e.clientY-touchStart.y;
+  if(Math.abs(dx)>25||Math.abs(dy)>25){
+    if(Math.abs(dx)>Math.abs(dy))move(dx>0?'right':'left');
+    else move(dy>0?'down':'up');
+  }
+  touchStart=null;
+}
+function showToast(m){const t=document.getElementById('toast');document.getElementById('tt-txt').textContent=m;t.classList.add('show');clearTimeout(ttm);ttm=setTimeout(()=>t.classList.remove('show'),1500);}
+init();
+</script></body></html>
