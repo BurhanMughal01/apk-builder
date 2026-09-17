@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Flappy Bird</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"><style>
+:root{--bg:#0c1929;--card:#1e3a5f;--elev:#2d5484;--text:#e0f2fe;--muted:#7dd3fc;--sub:#38bdf8;--pri:#38bdf8;--gold:#fbbf24;--green:#84cc16;--grad:linear-gradient(135deg,#38bdf8,#0ea5e9);--bdr:rgba(56,189,248,0.25);--glow:0 0 30px rgba(56,189,248,0.5)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);touch-action:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.hdr{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(12,25,41,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 12px;gap:8px;z-index:50}
+.ib{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--muted)}
+.ib svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.hdr-t{flex:1;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--grad);display:grid;place-items:center;font-size:18px;box-shadow:var(--glow)}
+.main{position:fixed;top:60px;bottom:0;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:440px}
+.stat{background:rgba(30,58,95,0.7);border:1px solid var(--bdr);border-radius:14px;padding:8px;text-align:center;backdrop-filter:blur(10px)}
+.stat-v{font-size:22px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.stat-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:800}
+.game-wrap{position:relative;width:100%;max-width:440px;flex:1;border-radius:20px;overflow:hidden;border:2px solid var(--bdr);box-shadow:var(--glow);background:linear-gradient(180deg,#4fb3e8 0%,#7dd3fc 60%,#fef3c7 100%);touch-action:none}
+#gameCanvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.overlay{position:absolute;inset:0;background:rgba(12,25,41,0.85);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:10}
+.overlay.hidden{display:none}
+.ov-emoji{font-size:64px;margin-bottom:12px;animation:flap 0.6s infinite}
+@keyframes flap{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-10px) rotate(5deg)}}
+.ov-title{font-size:28px;font-weight:900;color:var(--text);margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
+.ov-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.ov-score{background:rgba(30,58,95,0.8);border:1px solid var(--bdr);border-radius:16px;padding:14px 24px;margin-bottom:20px;min-width:200px}
+.ov-score-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:6px}
+.ov-score-val{font-size:36px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;font-variant-numeric:tabular-nums}
+.ov-best{font-size:12px;color:var(--gold);font-weight:700;margin-top:6px}
+.btn{padding:16px 40px;border-radius:50px;background:var(--grad);color:#fff;font-size:16px;font-weight:900;font-family:inherit;box-shadow:0 6px 20px rgba(56,189,248,0.5);text-transform:uppercase;letter-spacing:1px}
+.btn:active{transform:scale(0.95)}
+.tap-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,0.9);font-weight:700;letter-spacing:1px;text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,0.5);animation:pulseHint 1.5s infinite;pointer-events:none}
+@keyframes pulseHint{0%,100%{opacity:0.6}50%{opacity:1}}
+.tt{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--elev);color:var(--text);padding:10px 20px;border-radius:14px;font-size:13px;font-weight:700;border:1px solid var(--bdr);opacity:0;transition:all .3s;pointer-events:none;z-index:300}
+.tt.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<header class="hdr"><div class="hdr-t"><div class="logo">🐦</div><span>Flappy Bird</span></div></header>
+
+<main class="main">
+<div class="stats">
+<div class="stat"><div class="stat-v" id="stScore">0</div><div class="stat-l">Score</div></div>
+<div class="stat"><div class="stat-v" id="stBest">0</div><div class="stat-l">Best</div></div>
+<div class="stat"><div class="stat-v" id="stPipes">0</div><div class="stat-l">Passed</div></div>
+</div>
+
+<div class="game-wrap" id="gameWrap">
+<canvas id="gameCanvas"></canvas>
+<div class="overlay" id="overlay">
+<div class="ov-emoji">🐦</div>
+<div class="ov-title" id="ovTitle">FLAPPY BIRD</div>
+<div class="ov-sub" id="ovSub">Tap to flap • Avoid the pipes</div>
+<div class="ov-score" id="ovScoreBox" style="display:none">
+<div class="ov-score-lbl">Score</div>
+<div class="ov-score-val" id="ovScore">0</div>
+<div class="ov-best" id="ovBest">Best: 0</div>
+</div>
+<button class="btn" id="playBtn" onclick="startGame()">PLAY</button>
+</div>
+<div class="tap-hint" id="tapHint" style="display:none">TAP TO FLAP</div>
+</div>
+</main>
+
+<div class="tt" id="toast"><span id="tt-txt">Ready</span></div>
+
+<script>
+let canvas,ctx,W,H,groundY;
+let bird,pipes,clouds,score,best,passed,gameRunning,gameOver,paused;
+let gravity=0.45,jump=-8.5,pipeGap=160,pipeWidth=60,pipeSpeed=2.5,spawnTimer=0,spawnInterval=95;
+let lastTime=0,animId=null;
+let ttm;
+
+const GROUND_H=80;
+const BIRD_SIZE=34;
+
+function init(){
+  canvas=document.getElementById('gameCanvas');
+  ctx=canvas.getContext('2d');
+  loadBest();
+  resetGame();
+  setupListeners();
+  resize();
+  animId=requestAnimationFrame(loop);
+}
+
+function setupListeners(){
+  window.addEventListener('resize',resize);
+  const wrap=document.getElementById('gameWrap');
+  wrap.addEventListener('touchstart',onTap,{passive:true});
+  wrap.addEventListener('mousedown',onTap);
+  document.addEventListener('keydown',e=>{
+    if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();onTap();}
+  });
+}
+
+function resize(){
+  const rect=canvas.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=rect.width*dpr;
+  canvas.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  W=rect.width;
+  H=rect.height;
+  groundY=H-GROUND_H;
+}
+
+function loadBest(){try{best=parseInt(localStorage.getItem('flappy_best')||'0');}catch(e){best=0;}document.getElementById('stBest').textContent=best;}
+function saveBest(){try{localStorage.setItem('flappy_best',String(best));}catch(e){}}
+
+function resetGame(){
+  bird={x:W*0.3,y:H*0.4,vy:0,rot:0,wingUp:false,wingTimer:0};
+  pipes=[];clouds=[];
+  for(let i=0;i<5;i++)clouds.push({x:Math.random()*W,y:Math.random()*H*0.5,s:Math.random()*0.5+0.5,sp:Math.random()*0.3+0.1});
+  score=0;passed=0;spawnTimer=0;
+  gameRunning=false;gameOver=false;paused=false;
+  document.getElementById('stScore').textContent='0';
+  document.getElementById('stPipes').textContent='0';
+}
+
+function startGame(){
+  resetGame();
+  document.getElementById('overlay').classList.add('hidden');
+  document.getElementById('tapHint').style.display='block';
+  gameRunning=true;
+  spawnPipe();
+}
+
+function onTap(){
+  if(!gameRunning||gameOver)return;
+  bird.vy=jump;
+  bird.wingUp=true;
+  bird.wingTimer=8;
+  if(navigator.vibrate)navigator.vibrate(15);
+}
+
+function spawnPipe(){
+  const gapY=pipeGap+40;
+  const minTop=60;
+  const maxTop=groundY-gapY-minTop;
+  const topH=minTop+Math.random()*(maxTop-minTop);
+  pipes.push({x:W,topH:topH,bottomY:topH+gapY,passed:false});
+}
+
+function update(dt){
+  // Clouds
+  clouds.forEach(c=>{c.x-=c.sp;if(c.x<-100)c.x=W+50;});
+  if(!gameRunning||gameOver)return;
+  // Bird
+  bird.vy+=gravity;
+  bird.y+=bird.vy;
+  bird.rot=Math.max(-0.5,Math.min(1.2,bird.vy/12));
+  if(bird.wingTimer>0)bird.wingTimer--;
+  else bird.wingUp=false;
+  // Pipes
+  pipes.forEach(p=>p.x-=pipeSpeed);
+  pipes=pipes.filter(p=>p.x>-pipeWidth-10);
+  spawnTimer++;
+  if(spawnTimer>=spawnInterval){spawnTimer=0;spawnPipe();}
+  // Collisions
+  if(bird.y+BIRD_SIZE/2>groundY){endGame();return;}
+  if(bird.y-BIRD_SIZE/2<0){bird.y=BIRD_SIZE/2;bird.vy=0;}
+  for(const p of pipes){
+    if(bird.x+BIRD_SIZE/2>p.x&&bird.x-BIRD_SIZE/2<p.x+pipeWidth){
+      if(bird.y-BIRD_SIZE/2<p.topH||bird.y+BIRD_SIZE/2>p.bottomY){endGame();return;}
+    }
+    if(!p.passed&&p.x+pipeWidth<bird.x-BIRD_SIZE/2){
+      p.passed=true;score++;passed++;
+      document.getElementById('stScore').textContent=score;
+      document.getElementById('stPipes').textContent=passed;
+      if(navigator.vibrate)navigator.vibrate(20);
+    }
+  }
+}
+
+function endGame(){
+  gameRunning=false;gameOver=true;
+  document.getElementById('tapHint').style.display='none';
+  if(score>best){best=score;saveBest();document.getElementById('stBest').textContent=best;}
+  document.getElementById('ovTitle').textContent='GAME OVER';
+  document.getElementById('ovSub').textContent='Better luck next time!';
+  document.getElementById('ovScoreBox').style.display='block';
+  document.getElementById('ovScore').textContent=score;
+  document.getElementById('ovBest').textContent='Best: '+best;
+  document.getElementById('playBtn').textContent='PLAY AGAIN';
+  document.getElementById('overlay').classList.remove('hidden');
+  if(navigator.vibrate)navigator.vibrate([100,50,100,50,200]);
+}
+
+function draw(){
+  // Sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,H);
+  sky.addColorStop(0,'#4fb3e8');
+  sky.addColorStop(0.6,'#7dd3fc');
+  sky.addColorStop(1,'#fef3c7');
+  ctx.fillStyle=sky;
+  ctx.fillRect(0,0,W,H);
+  // Clouds
+  ctx.fillStyle='rgba(255,255,255,0.85)';
+  clouds.forEach(c=>{
+    ctx.beginPath();
+    ctx.arc(c.x,c.y,20*c.s,0,Math.PI*2);
+    ctx.arc(c.x+18*c.s,c.y,25*c.s,0,Math.PI*2);
+    ctx.arc(c.x+40*c.s,c.y,20*c.s,0,Math.PI*2);
+    ctx.arc(c.x+20*c.s,c.y-8*c.s,18*c.s,0,Math.PI*2);
+    ctx.fill();
+  });
+  // Pipes
+  pipes.forEach(p=>{
+    const grad=ctx.createLinearGradient(p.x,0,p.x+pipeWidth,0);
+    grad.addColorStop(0,'#4ade80');
+    grad.addColorStop(0.3,'#86efac');
+    grad.addColorStop(0.7,'#4ade80');
+    grad.addColorStop(1,'#16a34a');
+    ctx.fillStyle=grad;
+    // Top pipe
+    ctx.fillRect(p.x,0,pipeWidth,p.topH);
+    // Bottom pipe
+    ctx.fillRect(p.x,p.bottomY,pipeWidth,groundY-p.bottomY);
+    // Pipe caps
+    ctx.fillStyle='#16a34a';
+    ctx.fillRect(p.x-4,p.topH-24,pipeWidth+8,24);
+    ctx.fillRect(p.x-4,p.bottomY,pipeWidth+8,24);
+    ctx.fillStyle='#86efac';
+    ctx.fillRect(p.x-2,p.topH-22,pipeWidth+4,6);
+    ctx.fillRect(p.x-2,p.bottomY+2,pipeWidth+4,6);
+  });
+  // Ground
+  ctx.fillStyle='#84cc16';
+  ctx.fillRect(0,groundY,W,GROUND_H);
+  ctx.fillStyle='#65a30d';
+  ctx.fillRect(0,groundY,W,12);
+  ctx.fillStyle='#a3e635';
+  for(let i=0;i<W;i+=20){
+    ctx.fillRect(i,groundY+20,10,4);
+    ctx.fillRect(i+10,groundY+40,10,4);
+    ctx.fillRect(i+5,groundY+60,10,4);
+  }
+  // Bird
+  ctx.save();
+  ctx.translate(bird.x,bird.y);
+  ctx.rotate(bird.rot);
+  // Body
+  ctx.fillStyle='#fbbf24';
+  ctx.beginPath();
+  ctx.arc(0,0,BIRD_SIZE/2,0,Math.PI*2);
+  ctx.fill();
+  // Wing
+  ctx.fillStyle='#f59e0b';
+  ctx.beginPath();
+  ctx.ellipse(-4,bird.wingUp?-4:2,10,6,bird.wingUp?-0.4:0.2,0,Math.PI*2);
+  ctx.fill();
+  // Belly
+  ctx.fillStyle='#fef3c7';
+  ctx.beginPath();
+  ctx.ellipse(4,6,10,7,0,0,Math.PI*2);
+  ctx.fill();
+  // Eye
+  ctx.fillStyle='#fff';
+  ctx.beginPath();
+  ctx.arc(8,-4,6,0,Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle='#000';
+  ctx.beginPath();
+  ctx.arc(10,-4,3,0,Math.PI*2);
+  ctx.fill();
+  // Beak
+  ctx.fillStyle='#f97316';
+  ctx.beginPath();
+  ctx.moveTo(14,-2);
+  ctx.lineTo(24,2);
+  ctx.lineTo(14,6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+  // Score display
+  if(gameRunning||gameOver){
+    ctx.fillStyle='rgba(0,0,0,0.4)';
+    ctx.font='bold 48px Inter,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(score,W/2+2,80+2);
+    ctx.fillStyle='#fff';
+    ctx.fillText(score,W/2,80);
+  }
+}
+
+function loop(t){
+  const dt=(t-lastTime)/16.67;
+  lastTime=t;
+  update(dt);
+  draw();
+  animId=requestAnimationFrame(loop);
+}
+function showToast(m){const t=document.getElementById('toast');document.getElementById('tt-txt').textContent=m;t.classList.add('show');clearTimeout(ttm);ttm=setTimeout(()=>t.classList.remove('show'),1500);}
+init();
+</script></body></html>
