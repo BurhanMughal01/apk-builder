@@ -1,101 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing — APKForge</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pricing — APKForge</title>
+<meta name="description" content="Simple pricing. Buy points once, use forever. No monthly fees.">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <section class="hero" style="padding:140px 0 60px">
-    <div class="container" style="text-align:center">
-      <h1>Simple, <span class="gradient-text">honest pricing</span></h1>
-      <p class="hero-desc" style="margin:0 auto">Start free. Upgrade when you scale. No hidden fees, no surprises.</p>
+<section class="hero" style="padding:140px 0 60px">
+  <div class="container" style="text-align:center">
+    <div class="hero-badge" style="animation:none">
+      <span class="dot"></span>
+      <span>No monthly fees · Points never expire</span>
     </div>
-  </section>
+    <h1>Simple, <span class="gradient-text">honest pricing</span></h1>
+    <p class="hero-desc" style="margin:0 auto">Buy points once. Use them anytime. Islamic apps always free.</p>
+  </div>
+</section>
 
-  <section class="section">
-    <div class="container">
-      <div class="pricing-grid">
-        <div class="price-card">
-          <div class="price-name">Free</div>
-          <div class="price-desc">Perfect for trying out</div>
-          <div class="price-amount">Rs. 0<span>/mo</span></div>
-          <ul class="price-features">
-            <li>3 builds per month</li>
-            <li>All 10 templates</li>
-            <li>12 splash styles</li>
-            <li>Standard queue</li>
-          </ul>
-          <a href="build.html" class="btn btn-outline btn-block">Start Free</a>
-        </div>
+<section class="section" style="padding-top:20px">
+  <div class="container">
+    <div class="pricing-grid">
 
-        <div class="price-card">
-          <div class="price-name">Basic</div>
-          <div class="price-desc">For hobbyists</div>
-          <div class="price-amount">Rs. 500<span>/mo</span></div>
-          <ul class="price-features">
-            <li>20 builds per month</li>
-            <li>Custom app icon</li>
-            <li>Email support</li>
-          </ul>
-          <a href="#" class="btn btn-outline btn-block">Choose Basic</a>
-        </div>
+      <!-- FREE -->
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-desc">Try before you buy</div>
+        <div class="price-points">🎁 3 Trial Builds</div>
+        <div class="price-amount">$0</div>
+        <ul class="price-features">
+          <li>3 trial builds</li>
+          <li>All 14 Islamic apps <strong style="color:var(--success);font-weight:800">FREE forever</strong></li>
+          <li>All 10 templates</li>
+          <li>12 splash styles</li>
+          <li>Standard queue</li>
+        </ul>
+        <a href="build.html" class="btn btn-outline btn-block">Start Free</a>
+      </div>
 
-        <div class="price-card featured">
-          <div class="price-name">Pro</div>
-          <div class="price-desc">For serious builders</div>
-          <div class="price-amount">Rs. 1,500<span>/mo</span></div>
-          <ul class="price-features">
-            <li>100 builds per month</li>
-            <li>Everything in Basic</li>
-            <li>Priority queue</li>
-            <li>Email notifications</li>
-            <li>Analytics dashboard</li>
-          </ul>
-          <a href="#" class="btn btn-primary btn-block">Get Pro</a>
-        </div>
+      <!-- BASIC -->
+      <div class="price-card">
+        <div class="price-name">Basic</div>
+        <div class="price-desc">For hobbyists</div>
+        <div class="price-points">⭐ 20 Points</div>
+        <div class="price-amount">$5<span> one-time</span></div>
+        <ul class="price-features">
+          <li>20 builds (1 point = 1 build)</li>
+          <li>All 10 templates</li>
+          <li>All 20 splash styles</li>
+          <li>Custom app icon</li>
+          <li>No watermark</li>
+          <li>Points never expire</li>
+        </ul>
+        <button onclick="buyPlan('basic')" class="btn btn-outline btn-block">Buy Basic</button>
+      </div>
 
-        <div class="price-card">
-          <div class="price-name">Unlimited</div>
-          <div class="price-desc">For agencies & teams</div>
-          <div class="price-amount">Rs. 3,000<span>/mo</span></div>
-          <ul class="price-features">
-            <li>Unlimited builds</li>
-            <li>Everything in Pro</li>
-            <li>White-label APKs</li>
-            <li>API access</li>
-            <li>Priority support</li>
-          </ul>
-          <a href="#" class="btn btn-outline btn-block">Go Unlimited</a>
-        </div>
+      <!-- PRO -->
+      <div class="price-card featured">
+        <div class="price-name">Pro</div>
+        <div class="price-desc">For serious builders</div>
+        <div class="price-points">🔥 75 Points</div>
+        <div class="price-amount">$15<span> one-time</span></div>
+        <ul class="price-features">
+          <li>75 builds</li>
+          <li>Everything in Basic</li>
+          <li>Priority queue (3x faster)</li>
+          <li>Email notifications</li>
+          <li>Build analytics</li>
+          <li>Bulk build (5 at once)</li>
+          <li>Points never expire</li>
+        </ul>
+        <button onclick="buyPlan('pro')" class="btn btn-primary btn-block">Buy Pro</button>
+      </div>
+
+      <!-- UNLIMITED -->
+      <div class="price-card">
+        <div class="price-name">Unlimited</div>
+        <div class="price-desc">For agencies</div>
+        <div class="price-points">👑 Unlimited Forever</div>
+        <div class="price-amount">$30<span> one-time</span></div>
+        <ul class="price-features">
+          <li><strong>Unlimited builds</strong></li>
+          <li>Everything in Pro</li>
+          <li>White-label APKs</li>
+          <li>API access</li>
+          <li>Custom domain</li>
+          <li>Priority support (24h)</li>
+          <li>Never pay again</li>
+        </ul>
+        <button onclick="buyPlan('unlimited')" class="btn btn-outline btn-block">Go Unlimited</button>
+      </div>
+
+    </div>
+
+    <div class="card" style="margin-top:48px;text-align:center;padding:32px;background:var(--bg-alt);border:1px solid var(--border)">
+      <div style="font-size:2rem;margin-bottom:12px">🕌</div>
+      <h3 style="font-size:1.5rem;margin-bottom:12px">Islamic Apps Are Always Free</h3>
+      <p style="color:var(--text-muted);max-width:640px;margin:0 auto;line-height:1.7">
+        All 14 Islamic templates — Quran, Duas, Tasbeeh, Hadith, Prayer Times, Qibla, 
+        Adhkar, Zakat, Islamic Calendar, and more — are <strong style="color:var(--primary);font-weight:800">100% free with unlimited builds</strong>. 
+        No points needed. Ever. This is our sadaqah jariyah to the Ummah.
+      </p>
+      <a href="build.html" class="btn btn-primary" style="margin-top:20px">Build Islamic App Free →</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">How points work</h2>
+      <p class="section-subtitle">Simple, fair, no surprises.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-icon">💎</div>
+        <h3>1 Point = 1 Build</h3>
+        <p>Each non-Islamic build costs 1 point. Islamic templates are always free — no points needed.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">♾️</div>
+        <h3>Never Expire</h3>
+        <p>Points are one-time purchase. No monthly fees. Use them whenever you want — even years later.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <h3>Refund Policy</h3>
+        <p>If your build fails, points are automatically refunded. You only pay for successful builds.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Frequently asked</h2>
+<section class="section">
+  <div class="container-narrow container">
+    <div class="section-header">
+      <h2 class="section-title">Frequently asked</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Is there a monthly subscription?</button>
+        <div class="faq-a"><div class="faq-a-inner">No. This is a one-time purchase. Points never expire. Buy once, use forever.</div></div>
       </div>
-      <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-q">Can I cancel anytime?</button>
-          <div class="faq-a"><div class="faq-a-inner">Yes, cancel with one click. No questions asked.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q">Do unused builds roll over?</button>
-          <div class="faq-a"><div class="faq-a-inner">Builds reset monthly. Unused builds don't roll over.</div></div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-q">What payment methods do you accept?</button>
-          <div class="faq-a"><div class="faq-a-inner">Credit cards, debit cards, and JazzCash/Easypaisa for Pakistan.</div></div>
-        </div>
+      <div class="faq-item">
+        <button class="faq-q">What if my build fails?</button>
+        <div class="faq-a"><div class="faq-a-inner">If a build fails due to our system, your point is automatically refunded. Failed builds don't count.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Are Islamic apps really free?</button>
+        <div class="faq-a"><div class="faq-a-inner">Yes — 100% free with unlimited builds. No points needed. This is our sadaqah to the Ummah.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What payment methods do you accept?</button>
+        <div class="faq-a"><div class="faq-a-inner">Credit/debit cards worldwide, plus JazzCash & Easypaisa for Pakistan (coming soon).</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do I need to pay again to update my app?</button>
+        <div class="faq-a"><div class="faq-a-inner">Yes, each rebuild costs 1 point. But since APKs are signed with a stable keystore, updates install cleanly over the old version.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Can I get a refund?</button>
+        <div class="faq-a"><div class="faq-a-inner">7-day money-back guarantee on all purchases. If you're not satisfied, we'll refund 100%.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Can I publish to Play Store?</button>
+        <div class="faq-a"><div class="faq-a-inner">Yes — our signed APKs are Play Store compliant (subject to Google's policies).</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What's the difference between Pro and Unlimited?</button>
+        <div class="faq-a"><div class="faq-a-inner">Pro = 75 builds. Unlimited = unlimited builds forever, plus white-label APKs, API access, and custom domain.</div></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <script src="nav.js"></script>
+<script src="nav.js"></script>
+<script>
+function buyPlan(plan) {
+  const prices = { basic: '$5', pro: '$15', unlimited: '$30' };
+  const points = { basic: '20', pro: '75', unlimited: 'Unlimited' };
+  
+  // Check if logged in
+  const user = localStorage.getItem('apkforge_user');
+  if (!user) {
+    showToast('Please login to continue', 'info');
+    setTimeout(function() {
+      window.location.href = 'login.html?redirect=pricing.html&plan=' + plan;
+    }, 1200);
+    return;
+  }
+  
+  // TODO: Integrate LemonSqueezy checkout
+  // For now, show message
+  showToast('Redirecting to checkout for ' + plan.toUpperCase() + ' (' + prices[plan] + ')...', 'success');
+  
+  setTimeout(function() {
+    // Yahan LemonSqueezy checkout URL aayega
+    // window.location.href = 'https://apkforge.lemonsqueezy.com/checkout/buy/xxx?checkout[email]=' + user.email;
+    showToast('Payment system coming soon!', 'info');
+  }, 1500);
+}
+
+// Handle redirect from login
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('plan')) {
+  setTimeout(function() {
+    buyPlan(urlParams.get('plan'));
+  }, 500);
+}
+</script>
 </body>
 </html>
