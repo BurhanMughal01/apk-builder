@@ -1,198 +1,753 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#064e3b">
 <title>Tasbeeh Counter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0a0a1a,#1a1a3a);color:#fff;height:100vh;overflow:hidden;display:flex;flex-direction:column}
-.header{padding:16px 20px;text-align:center;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(99,102,241,0.2)}
-.header h1{font-size:24px;background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;margin-bottom:4px}
-.header p{font-size:12px;color:#94a3b8}
-.dhikr-selector{display:flex;gap:8px;padding:16px;overflow-x:auto;scrollbar-width:none}
-.dhikr-selector::-webkit-scrollbar{display:none}
-.dhikr-btn{flex-shrink:0;padding:8px 16px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:20px;color:#c7d2fe;font-size:13px;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-family:inherit}
-.dhikr-btn.active{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;border-color:transparent;box-shadow:0 4px 15px rgba(99,102,241,0.4)}
-.dhikr-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.dhikr-text{font-size:28px;color:#a5b4fc;text-align:center;margin-bottom:20px;line-height:1.4;font-weight:600;padding:0 20px}
-.counter-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:280px;height:280px;margin:20px 0}
-.counter-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,#6366f1 0%,#ec4899 var(--progress,0%),rgba(99,102,241,0.15) var(--progress,0%));transition:all 0.3s}
-.counter-inner{position:relative;width:250px;height:250px;border-radius:50%;background:linear-gradient(135deg,#16162e,#0a0a1a);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 0 60px rgba(99,102,241,0.3)}
-.counter-inner:active{transform:scale(0.97)}
-.count{font-size:80px;font-weight:800;background:linear-gradient(135deg,#818cf8,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.target{font-size:14px;color:#64748b;margin-top:8px}
-.tap-hint{font-size:12px;color:#475569;margin-top:12px;letter-spacing:2px}
-.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px 24px}
-.action-btn{padding:14px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:14px;color:#c7d2fe;font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.2s}
-.action-btn:active{transform:scale(0.95);background:rgba(99,102,241,0.2)}
-.action-btn.reset{background:rgba(239,68,68,0.1);color:#fca5a5;border-color:rgba(239,68,68,0.2)}
-.target-picker{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
-.target-picker.show{display:flex}
-.picker-box{background:#16162e;border-radius:20px;padding:24px;width:100%;max-width:340px;border:1px solid rgba(99,102,241,0.3)}
-.picker-box h3{font-size:18px;margin-bottom:16px;color:#a5b4fc;text-align:center}
+:root{
+  --bg:#041a12;--bg-card:#0a2a1e;--bg-elev:#0f3628;--bg-input:#061f15;
+  --text:#e8f5e9;--text-muted:#86bfa0;--text-subtle:#4a8b6b;
+  --primary:#10b981;--primary-dark:#059669;--accent:#fbbf24;--accent-dark:#f59e0b;
+  --primary-grad:linear-gradient(135deg,#10b981,#059669);
+  --gold-grad:linear-gradient(135deg,#fbbf24,#f59e0b);
+  --border:rgba(16,185,129,0.2);--border-hover:rgba(16,185,129,0.5);
+  --gold-border:rgba(251,191,36,0.3);
+  --shadow:0 4px 24px rgba(0,0,0,0.5);
+  --shadow-glow:0 0 30px rgba(16,185,129,0.3);
+  --nav-h:64px;--header-h:60px;
+  --font-arabic:38px;
+}
+[data-theme="light"]{
+  --bg:#f0fdf4;--bg-card:#ffffff;--bg-elev:#dcfce7;--bg-input:#f0fdf4;
+  --text:#064e3b;--text-muted:#047857;--text-subtle:#6ee7b7;
+  --border:rgba(16,185,129,0.2);--border-hover:rgba(16,185,129,0.4);
+  --shadow:0 4px 24px rgba(6,78,59,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  transition:background .3s,color .3s;
+  overscroll-behavior:none;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 20% 10%,rgba(16,185,129,0.1),transparent 40%),radial-gradient(circle at 80% 90%,rgba(251,191,36,0.08),transparent 40%);
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ===== HEADER ===== */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:rgba(4,26,18,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:12px;z-index:50;
+}
+[data-theme="light"] .header{background:rgba(240,253,244,0.9)}
+.header-title{flex:1;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--text)}
+.logo{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--gold-grad);
+  display:grid;place-items:center;font-size:18px;
+  box-shadow:0 4px 14px rgba(251,191,36,0.4);
+}
+.icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--text-muted);transition:all .2s}
+.icon-btn:active{background:var(--bg-card);color:var(--text)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== MAIN ===== */
+.main{position:fixed;top:var(--header-h);bottom:var(--nav-h);left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.main::-webkit-scrollbar{width:0}
+.view{display:none;padding:16px;min-height:100%}
+.view.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ===== DHIKR PILLS ===== */
+.dhikr-pills{display:flex;gap:8px;padding:4px 0 20px;overflow-x:auto;scrollbar-width:none}
+.dhikr-pills::-webkit-scrollbar{display:none}
+.pill{
+  flex-shrink:0;padding:9px 18px;border-radius:24px;
+  background:var(--bg-card);border:1px solid var(--border);
+  color:var(--text-muted);font-family:'Noto Naskh Arabic',serif;
+  font-size:15px;white-space:nowrap;transition:all .25s;
+}
+.pill.active{
+  background:var(--gold-grad);color:#041a12;font-weight:700;
+  border-color:transparent;box-shadow:0 6px 20px rgba(251,191,36,0.4);
+}
+.pill:active{transform:scale(0.95)}
+
+/* ===== COUNTER ===== */
+.counter-view{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100% - 20px)}
+.dhikr-arabic{
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:var(--font-arabic);line-height:1.6;
+  color:var(--text);text-align:center;direction:rtl;
+  margin-bottom:4px;padding:0 20px;
+  text-shadow:0 0 30px rgba(251,191,36,0.2);
+}
+.dhikr-meaning{font-size:13px;color:var(--text-subtle);text-align:center;margin-bottom:28px;font-style:italic}
+
+.ring-wrap{position:relative;width:280px;height:280px;margin-bottom:24px}
+.ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--bg-card);stroke-width:14}
+.ring-progress{fill:none;stroke:url(#goldRing);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset .4s cubic-bezier(0.4,0,0.2,1);filter:drop-shadow(0 0 12px rgba(251,191,36,0.6))}
+.ring-inner{
+  position:absolute;inset:24px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,var(--bg-elev),var(--bg-card));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .15s;
+  box-shadow:inset 0 0 50px rgba(16,185,129,0.15),0 8px 40px rgba(0,0,0,0.4);
+  border:1px solid var(--border);
+}
+.ring-inner:active{transform:scale(0.95)}
+.ring-inner.pulse{animation:pulse .3s ease}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(0.96)}100%{transform:scale(1)}}
+.count-num{
+  font-size:76px;font-weight:800;line-height:1;
+  background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.count-target{font-size:13px;color:var(--text-subtle);font-weight:600;letter-spacing:.5px}
+
+.actions-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:340px}
+.action-btn{
+  padding:14px 8px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:all .2s;color:var(--text-muted);font-size:11px;font-weight:600;
+}
+.action-btn:active{transform:scale(0.95);border-color:var(--border-hover);color:var(--primary)}
+.action-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.action-btn.gold{background:var(--gold-grad);color:#041a12;border-color:transparent;box-shadow:0 6px 20px rgba(251,191,36,0.3)}
+.action-btn.gold svg{stroke:#041a12}
+
+/* ===== STATS ===== */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.stat-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:18px;
+  padding:20px;position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;
+  background:var(--gold-grad);opacity:0.08;border-radius:50%;
+}
+.stat-val{
+  font-size:32px;font-weight:800;line-height:1;margin-bottom:8px;
+  background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{font-size:11px;color:var(--text-subtle);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+
+.history-card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.history-item{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:12px}
+.history-item:last-child{border-bottom:none}
+.history-dhikr{font-family:'Noto Naskh Arabic',serif;font-size:17px;color:var(--text);direction:rtl;flex:1}
+.history-count{font-weight:800;color:var(--accent);font-size:16px}
+.history-time{font-size:11px;color:var(--text-subtle);margin-top:3px}
+
+.empty{text-align:center;padding:60px 20px;color:var(--text-subtle)}
+.empty svg{width:64px;height:64px;stroke:var(--border-hover);fill:none;stroke-width:1.5;margin:0 auto 16px}
+.empty h3{font-size:16px;color:var(--text-muted);margin-bottom:6px;font-weight:600}
+.empty p{font-size:13px}
+
+/* ===== SETTINGS ===== */
+.settings-group{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;margin-bottom:14px;overflow:hidden}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;gap:12px;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-info{flex:1;display:flex;align-items:center;gap:12px}
+.setting-info svg{width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.setting-label{font-size:14px;font-weight:600}
+.setting-sub{font-size:11px;color:var(--text-subtle);margin-top:2px}
+.toggle{width:52px;height:30px;border-radius:15px;background:var(--bg-elev);position:relative;transition:background .3s;flex-shrink:0;border:1px solid var(--border)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--text-subtle);transition:all .3s}
+.toggle.on{background:var(--primary-grad);border-color:transparent}
+.toggle.on::after{transform:translateX(22px);background:#fff}
+.font-controls{display:flex;gap:4px;background:var(--bg-elev);border-radius:12px;padding:4px;border:1px solid var(--border)}
+.font-btn{width:36px;height:30px;border-radius:8px;display:grid;place-items:center;font-weight:700;color:var(--text-muted);font-family:inherit;transition:all .2s}
+.font-btn.active{background:var(--gold-grad);color:#041a12}
+.font-btn[data-size="small"]{font-size:12px}
+.font-btn[data-size="medium"]{font-size:14px}
+.font-btn[data-size="large"]{font-size:16px}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(10,42,30,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(3,1fr);z-index:50;padding-bottom:env(safe-area-inset-bottom);
+}
+[data-theme="light"] .bottom-nav{background:rgba(255,255,255,0.95)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-subtle);font-size:10px;font-weight:600;transition:all .2s;padding:8px;position:relative}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active{color:var(--accent)}
+.nav-item.active svg{stroke:url(#goldRing);filter:drop-shadow(0 0 8px rgba(251,191,36,0.6))}
+
+/* ===== MODAL ===== */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex;animation:fadeIn .25s ease}
+.modal-box{background:var(--bg-card);border-radius:24px;padding:24px;width:100%;max-width:340px;border:1px solid var(--border);box-shadow:var(--shadow-glow)}
+.modal-box h3{font-size:18px;margin-bottom:16px;color:var(--text);text-align:center;font-weight:700}
 .target-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.target-opt{padding:14px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:12px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
-.target-opt:active{background:linear-gradient(135deg,#6366f1,#ec4899)}
-.completed-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(135deg,#10b981,#059669);padding:20px 40px;border-radius:16px;font-size:18px;font-weight:700;z-index:200;transition:transform 0.3s;box-shadow:0 10px 40px rgba(16,185,129,0.5)}
-.completed-toast.show{transform:translate(-50%,-50%) scale(1)}
+.target-opt{
+  padding:16px 8px;background:var(--bg-elev);border:1px solid var(--border);
+  border-radius:14px;color:var(--text);font-size:18px;font-weight:700;font-family:inherit;transition:all .2s;
+}
+.target-opt:active{background:var(--gold-grad);color:#041a12;border-color:transparent}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-btn{padding:14px;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;transition:all .2s}
+.modal-btn:active{transform:scale(0.97)}
+.modal-btn.cancel{background:var(--bg-elev);color:var(--text)}
+.modal-btn.primary{background:var(--gold-grad);color:#041a12}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--bg-elev);color:var(--text);
+  padding:12px 22px;border-radius:14px;font-size:13px;font-weight:600;
+  box-shadow:var(--shadow-glow);border:1px solid var(--gold-border);
+  opacity:0;transition:all .3s;pointer-events:none;z-index:200;
+  display:flex;align-items:center;gap:8px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2.5}
 </style>
 </head>
 
-<body>
-<div class="header">
-<h1>Tasbeeh Counter</h1>
-<p>Remember Allah always</p>
+<body data-theme="dark">
+
+<!-- SVG Gradients -->
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#fbbf24"/>
+<stop offset="100%" stop-color="#10b981"/>
+</linearGradient>
+</defs>
+</svg>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">
+    <div class="logo">📿</div>
+    <span id="headerTitle">Tasbeeh</span>
+  </div>
+  <button class="icon-btn" onclick="toggleTheme()" aria-label="Theme">
+    <svg viewBox="0 0 24 24" id="themeIcon"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
+</header>
+
+<!-- MAIN -->
+<main class="main" id="mainArea">
+
+  <!-- COUNTER VIEW -->
+  <div class="view active" id="view-counter">
+    <div class="counter-view">
+      <div class="dhikr-arabic" id="dhikrArabic">سُبْحَانَ اللّٰه</div>
+      <div class="dhikr-meaning" id="dhikrMeaning">Glory be to Allah</div>
+
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 280 280">
+          <circle class="ring-bg" cx="140" cy="140" r="128"/>
+          <circle class="ring-progress" id="ringProgress" cx="140" cy="140" r="128"
+                  stroke-dasharray="804" stroke-dashoffset="804"/>
+        </svg>
+        <div class="ring-inner" id="counterBtn" onclick="increment()">
+          <div class="count-num" id="countNum">0</div>
+          <div class="count-target" id="countTarget">/ 33</div>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="action-btn" onclick="openTargetPicker()">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          Target
+        </button>
+        <button class="action-btn gold" onclick="increment()">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Count
+        </button>
+        <button class="action-btn" onclick="resetCount()">
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DHIKR PICKER VIEW -->
+  <div class="view" id="view-dhikr">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:4px">Select Dhikr</h2>
+    <p style="font-size:13px;color:var(--text-subtle);margin-bottom:16px">Choose a remembrance</p>
+    <div id="dhikrList"></div>
+  </div>
+
+  <!-- STATS VIEW -->
+  <div class="view" id="view-stats">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Your Progress</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="statToday">0</div>
+        <div class="stat-label">Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statTotal">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statSessions">0</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statStreak">0</div>
+        <div class="stat-label">Streak</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:700;margin-bottom:12px;color:var(--text-muted)">Recent Sessions</h3>
+    <div class="history-card" id="historyList"></div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div class="view" id="view-settings">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Settings</h2>
+
+    <div class="settings-group">
+      <div class="setting-row">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+          <div>
+            <div class="setting-label">Vibration</div>
+            <div class="setting-sub">Haptic on each tap</div>
+          </div>
+        </div>
+        <div class="toggle on" id="vibrateToggle" onclick="toggleVibrate()"></div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+          <div>
+            <div class="setting-label">Font Size</div>
+            <div class="setting-sub">Arabic text size</div>
+          </div>
+        </div>
+        <div class="font-controls">
+          <button class="font-btn" data-size="small" onclick="setFontSize('small')">A</button>
+          <button class="font-btn active" data-size="medium" onclick="setFontSize('medium')">A</button>
+          <button class="font-btn" data-size="large" onclick="setFontSize('large')">A</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          <div>
+            <div class="setting-label">Auto Save</div>
+            <div class="setting-sub">Save progress automatically</div>
+          </div>
+        </div>
+        <div class="toggle on" id="autoSaveToggle" onclick="toggleAutoSave()"></div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="setting-row" onclick="confirmResetAll()">
+        <div class="setting-info">
+          <svg viewBox="0 0 24 24" style="stroke:#ef4444"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>
+          <div>
+            <div class="setting-label" style="color:#ef4444">Reset All Data</div>
+            <div class="setting-sub">Clear stats and history</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0;font-size:12px;color:var(--text-subtle);line-height:1.8">
+      Made with ❤️ for the Ummah<br>
+      <strong style="color:var(--accent)">APKForge</strong> · v1.0.0
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="counter" onclick="switchView('counter')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    <span>Counter</span>
+  </button>
+  <button class="nav-item" data-view="stats" onclick="switchView('stats')">
+    <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
+    <span>Stats</span>
+  </button>
+  <button class="nav-item" data-view="settings" onclick="switchView('settings')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<!-- TARGET MODAL -->
+<div class="modal" id="targetModal" onclick="closeTargetPicker(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <h3>Select Target</h3>
+    <div class="target-grid">
+      <button class="target-opt" onclick="setTarget(33)">33</button>
+      <button class="target-opt" onclick="setTarget(66)">66</button>
+      <button class="target-opt" onclick="setTarget(99)">99</button>
+      <button class="target-opt" onclick="setTarget(100)">100</button>
+      <button class="target-opt" onclick="setTarget(500)">500</button>
+      <button class="target-opt" onclick="setTarget(1000)">1000</button>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeTargetPicker()">Cancel</button>
+      <button class="modal-btn primary" onclick="openCustomTarget()">Custom</button>
+    </div>
+  </div>
 </div>
 
-<div class="dhikr-selector" id="dhikrSelector"></div>
-
-<div class="dhikr-display">
-<div class="dhikr-text" id="dhikrText">SubhanAllah</div>
-<div class="counter-wrap">
-<div class="counter-ring" id="ring" style="--progress:0%"></div>
-<div class="counter-inner" id="counterBtn" onclick="increment()">
-<div class="count" id="count">0</div>
-<div class="target" id="target">Target: 33</div>
-<div class="tap-hint">TAP</div>
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastText">Saved</span>
 </div>
-</div>
-</div>
-
-<div class="actions">
-<button class="action-btn" onclick="openTargetPicker()">Target</button>
-<button class="action-btn reset" onclick="resetCount()">Reset</button>
-<button class="action-btn" onclick="changeDhikr()">Next Dhikr</button>
-</div>
-
-<div class="target-picker" id="targetPicker">
-<div class="picker-box">
-<h3>Select Target</h3>
-<div class="target-grid">
-<div class="target-opt" onclick="setTarget(33)">33</div>
-<div class="target-opt" onclick="setTarget(66)">66</div>
-<div class="target-opt" onclick="setTarget(99)">99</div>
-<div class="target-opt" onclick="setTarget(100)">100</div>
-<div class="target-opt" onclick="setTarget(500)">500</div>
-<div class="target-opt" onclick="setTarget(1000)">1000</div>
-</div>
-<button class="action-btn" style="width:100%" onclick="closeTargetPicker()">Close</button>
-</div>
-</div>
-
-<div class="completed-toast" id="toast">Target Completed!</div>
 
 <script>
+/* ===== DHIKR DATA ===== */
 const DHIKR_LIST = [
-  {text: 'SubhanAllah', arabic: 'سُبْحَانَ اللّٰه'},
-  {text: 'Alhamdulillah', arabic: 'اَلْحَمْدُ لِلّٰه'},
-  {text: 'Allahu Akbar', arabic: 'اَللّٰهُ أَكْبَر'},
-  {text: 'La ilaha illallah', arabic: 'لَا إِلٰهَ إِلَّا اللّٰه'},
-  {text: 'Astaghfirullah', arabic: 'أَسْتَغْفِرُ اللّٰه'},
-  {text: 'La hawla wa la quwwata illa billah', arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰه'},
-  {text: 'Durood Shareef', arabic: 'صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّم'},
-  {text: 'SubhanAllahi wa bihamdih', arabic: 'سُبْحَانَ اللّٰهِ وَبِحَمْدِه'}
+  {id:'subhanallah', arabic:'سُبْحَانَ اللّٰه', meaning:'Glory be to Allah', defaultTarget:33},
+  {id:'alhamdulillah', arabic:'اَلْحَمْدُ لِلّٰه', meaning:'All praise is for Allah', defaultTarget:33},
+  {id:'allahuakbar', arabic:'اَللّٰهُ أَكْبَر', meaning:'Allah is the Greatest', defaultTarget:34},
+  {id:'lailaha', arabic:'لَا إِلٰهَ إِلَّا اللّٰه', meaning:'There is no god but Allah', defaultTarget:100},
+  {id:'astaghfirullah', arabic:'أَسْتَغْفِرُ اللّٰه', meaning:'I seek forgiveness from Allah', defaultTarget:100},
+  {id:'lahawla', arabic:'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰه', meaning:'No power except with Allah', defaultTarget:100},
+  {id:'durood', arabic:'صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّم', meaning:'Peace be upon him', defaultTarget:100},
+  {id:'subhanbihamdih', arabic:'سُبْحَانَ اللّٰهِ وَبِحَمْدِه', meaning:'Glory and praise to Allah', defaultTarget:100},
+  {id:'lailaha-wahdah', arabic:'لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ', meaning:'Allah alone, no partner', defaultTarget:100},
+  {id:'hasbunallah', arabic:'حَسْبُنَا اللّٰهُ', meaning:'Allah is sufficient for us', defaultTarget:100}
 ];
 
-let currentIndex = 0;
-let count = 0;
-let target = 33;
+/* ===== STATE ===== */
+let state = {
+  currentDhikr: 'subhanallah',
+  count: 0,
+  target: 33,
+  vibrate: true,
+  autoSave: true,
+  fontSize: 'medium',
+  theme: 'dark',
+  stats: {
+    today: 0,
+    total: 0,
+    sessions: 0,
+    streak: 0,
+    lastDate: null
+  },
+  history: []
+};
 
+/* ===== INIT ===== */
 function init(){
   loadState();
-  renderSelector();
-  updateDisplay();
+  applyTheme();
+  applyFontSize();
+  updateToggles();
+  renderDhikrPills();
+  renderCounter();
+  renderDhikrList();
+  renderStats();
+  renderHistory();
 }
 
 function loadState(){
   try{
-    const saved = localStorage.getItem('tasbeeh_v1');
-    if(saved){
-      const s = JSON.parse(saved);
-      currentIndex = s.idx || 0;
-      count = s.count || 0;
-      target = s.target || 33;
+    const s = localStorage.getItem('tasbeeh_v3');
+    if(s){
+      const saved = JSON.parse(s);
+      state = Object.assign(state, saved);
+      // Reset daily if new day
+      const today = new Date().toDateString();
+      if(state.stats.lastDate !== today){
+        if(state.stats.lastDate){
+          // Check streak
+          const last = new Date(state.stats.lastDate);
+          const now = new Date();
+          const diff = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+          if(diff > 1) state.stats.streak = 0;
+        }
+        state.stats.today = 0;
+        state.stats.lastDate = today;
+      }
     }
-  }catch(e){}
+  }catch(e){console.log('Load error', e);}
 }
 
 function saveState(){
   try{
-    localStorage.setItem('tasbeeh_v1', JSON.stringify({
-      idx: currentIndex, count: count, target: target
-    }));
-  }catch(e){}
+    localStorage.setItem('tasbeeh_v3', JSON.stringify(state));
+  }catch(e){console.log('Save error', e);}
 }
 
-function renderSelector(){
-  const el = document.getElementById('dhikrSelector');
-  el.innerHTML = DHIKR_LIST.map(function(d, i){
-    return '<div class="dhikr-btn' + (i === currentIndex ? ' active' : '') + '" onclick="selectDhikr(' + i + ')">' + d.text + '</div>';
-  }).join('');
+/* ===== THEME ===== */
+function applyTheme(){
+  document.body.setAttribute('data-theme', state.theme);
+  const icon = document.getElementById('themeIcon');
+  if(icon){
+    if(state.theme === 'dark'){
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    } else {
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+    }
+  }
 }
 
-function selectDhikr(i){
-  currentIndex = i;
-  renderSelector();
-  updateDisplay();
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  applyTheme();
   saveState();
+}
+
+/* ===== FONT SIZE ===== */
+function applyFontSize(){
+  const sizes = {small:'30px', medium:'38px', large:'46px'};
+  document.documentElement.style.setProperty('--font-arabic', sizes[state.fontSize]);
+  document.querySelectorAll('.font-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === state.fontSize);
+  });
+}
+
+function setFontSize(size){
+  state.fontSize = size;
+  applyFontSize();
+  saveState();
+}
+
+/* ===== TOGGLES ===== */
+function updateToggles(){
+  const vib = document.getElementById('vibrateToggle');
+  const auto = document.getElementById('autoSaveToggle');
+  if(vib) vib.classList.toggle('on', state.vibrate);
+  if(auto) auto.classList.toggle('on', state.autoSave);
+}
+
+function toggleVibrate(){
+  state.vibrate = !state.vibrate;
+  updateToggles();
+  saveState();
+  if(state.vibrate && navigator.vibrate) navigator.vibrate(20);
+}
+
+function toggleAutoSave(){
+  state.autoSave = !state.autoSave;
+  updateToggles();
+  saveState();
+}
+
+/* ===== DHIKR PILLS ===== */
+function renderDhikrPills(){
+  const el = document.getElementById('dhikrArabic');
+  const mean = document.getElementById('dhikrMeaning');
+  const dhikr = DHIKR_LIST.find(d => d.id === state.currentDhikr) || DHIKR_LIST[0];
+  if(el) el.textContent = dhikr.arabic;
+  if(mean) mean.textContent = dhikr.meaning;
+}
+
+/* ===== COUNTER ===== */
+function renderCounter(){
+  document.getElementById('countNum').textContent = state.count;
+  document.getElementById('countTarget').textContent = '/ ' + state.target;
+  const progress = Math.min(state.count / state.target, 1);
+  const circumference = 2 * Math.PI * 128;
+  const offset = circumference * (1 - progress);
+  document.getElementById('ringProgress').style.strokeDashoffset = offset;
 }
 
 function increment(){
-  count++;
-  if(navigator.vibrate) navigator.vibrate(30);
-  updateDisplay();
-  saveState();
-  if(count === target){
-    if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-    showToast();
+  if(state.count >= state.target){
+    // Auto reset + count session
+    endSession();
+    state.count = 1;
+  } else {
+    state.count++;
   }
-}
-
-function updateDisplay(){
-  document.getElementById('count').textContent = count;
-  document.getElementById('target').textContent = 'Target: ' + target;
-  document.getElementById('dhikrText').textContent = DHIKR_LIST[currentIndex].arabic;
-  const p = Math.min((count / target) * 100, 100);
-  document.getElementById('ring').style.setProperty('--progress', p + '%');
+  if(state.vibrate && navigator.vibrate) navigator.vibrate(30);
+  state.stats.today++;
+  state.stats.total++;
+  if(!state.stats.lastDate){
+    state.stats.lastDate = new Date().toDateString();
+    state.stats.streak = 1;
+  }
+  renderCounter();
+  renderStats();
+  if(state.autoSave) saveState();
+  if(state.count === state.target) showToast('Target completed! ✨');
 }
 
 function resetCount(){
-  if(confirm('Reset counter?')){
-    count = 0;
-    updateDisplay();
-    saveState();
-  }
+  if(state.count > 0) endSession();
+  state.count = 0;
+  renderCounter();
+  saveState();
 }
 
+function endSession(){
+  if(state.count === 0) return;
+  state.stats.sessions++;
+  const dhikr = DHIKR_LIST.find(d => d.id === state.currentDhikr) || DHIKR_LIST[0];
+  state.history.unshift({
+    dhikr: dhikr.arabic,
+    count: state.count,
+    time: new Date().toISOString()
+  });
+  if(state.history.length > 30) state.history = state.history.slice(0, 30);
+  saveState();
+  renderStats();
+  renderHistory();
+}
+
+/* ===== TARGET PICKER ===== */
 function openTargetPicker(){
-  document.getElementById('targetPicker').classList.add('show');
+  document.getElementById('targetModal').classList.add('show');
 }
 
-function closeTargetPicker(){
-  document.getElementById('targetPicker').classList.remove('show');
+function closeTargetPicker(e){
+  if(e && e.target !== e.currentTarget) return;
+  document.getElementById('targetModal').classList.remove('show');
 }
 
 function setTarget(t){
-  target = t;
+  state.target = t;
   closeTargetPicker();
-  updateDisplay();
+  renderCounter();
   saveState();
+  showToast('Target: ' + t);
 }
 
-function showToast(){
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(function(){ toast.classList.remove('show'); }, 2000);
+function openCustomTarget(){
+  const val = prompt('Enter custom target (1-100000):', state.target);
+  const num = parseInt(val);
+  if(num && num > 0 && num <= 100000){
+    state.target = num;
+    closeTargetPicker();
+    renderCounter();
+    saveState();
+    showToast('Target: ' + num);
+  }
 }
 
-function changeDhikr(){
-  currentIndex = (currentIndex + 1) % DHIKR_LIST.length;
-  renderSelector();
-  updateDisplay();
+/* ===== DHIKR LIST VIEW ===== */
+function renderDhikrList(){
+  const el = document.getElementById('dhikrList');
+  if(!el) return;
+  el.innerHTML = DHIKR_LIST.map(d => {
+    const active = d.id === state.currentDhikr;
+    return '<div class="dhikr-item" onclick="selectDhikr(\'' + d.id + '\')" style="background:' + (active ? 'var(--bg-elev)' : 'var(--bg-card)') + ';border:1px solid ' + (active ? 'var(--gold-border)' : 'var(--border)') + ';border-radius:16px;padding:18px;margin-bottom:10px;cursor:pointer;transition:all .2s">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">' +
+        '<div style="font-family:\'Noto Naskh Arabic\',serif;font-size:24px;color:var(--text);direction:rtl;text-align:right;flex:1">' + d.arabic + '</div>' +
+        '<div style="text-align:left">' +
+          '<div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">' + d.meaning + '</div>' +
+          '<div style="font-size:10px;color:' + (active ? 'var(--accent)' : 'var(--text-subtle)') + ';font-weight:700">' + (active ? '✓ SELECTED' : d.defaultTarget + ' TIMES') + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function selectDhikr(id){
+  if(state.count > 0) endSession();
+  state.currentDhikr = id;
+  const dhikr = DHIKR_LIST.find(d => d.id === id);
+  if(dhikr){
+    state.target = dhikr.defaultTarget;
+    state.count = 0;
+  }
   saveState();
+  renderCounter();
+  renderDhikrPills();
+  renderDhikrList();
+  showToast('Selected: ' + dhikr.meaning);
+  setTimeout(() => switchView('counter'), 300);
 }
 
+/* ===== STATS ===== */
+function renderStats(){
+  document.getElementById('statToday').textContent = state.stats.today || 0;
+  document.getElementById('statTotal').textContent = (state.stats.total || 0).toLocaleString();
+  document.getElementById('statSessions').textContent = state.stats.sessions || 0;
+  document.getElementById('statStreak').textContent = state.stats.streak || 0;
+}
+
+function renderHistory(){
+  const el = document.getElementById('historyList');
+  if(!el) return;
+  if(!state.history || state.history.length === 0){
+    el.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><h3>No sessions yet</h3><p>Start counting to see your history</p></div>';
+    return;
+  }
+  el.innerHTML = state.history.slice(0, 10).map(h => {
+    const ago = timeAgo(h.time);
+    return '<div class="history-item">' +
+      '<div style="flex:1">' +
+        '<div class="history-dhikr">' + h.dhikr + '</div>' +
+        '<div class="history-time">' + ago + '</div>' +
+      '</div>' +
+      '<div class="history-count">×' + h.count + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function timeAgo(iso){
+  const diff = Date.now() - new Date(iso).getTime();
+  const min = Math.floor(diff / 60000);
+  if(min < 1) return 'Just now';
+  if(min < 60) return min + ' min ago';
+  const hr = Math.floor(min / 60);
+  if(hr < 24) return hr + 'h ago';
+  const day = Math.floor(hr / 24);
+  return day + 'd ago';
+}
+
+/* ===== VIEWS ===== */
+function switchView(view){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + view);
+  if(target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+
+  const titles = {counter:'Tasbeeh', stats:'Your Stats', settings:'Settings', dhikr:'Select Dhikr'};
+  const titleEl = document.getElementById('headerTitle');
+  if(titleEl) titleEl.textContent = titles[view] || 'Tasbeeh';
+
+  document.getElementById('mainArea').scrollTo({top:0});
+}
+
+/* ===== HELPERS ===== */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function confirmResetAll(){
+  if(confirm('Reset all stats and history? This cannot be undone.')){
+    state.stats = {today: 0, total: 0, sessions: 0, streak: 0, lastDate: new Date().toDateString()};
+    state.history = [];
+    state.count = 0;
+    saveState();
+    renderCounter();
+    renderStats();
+    renderHistory();
+    showToast('All data reset');
+  }
+}
+
+/* ===== START ===== */
 init();
 </script>
 </body>
