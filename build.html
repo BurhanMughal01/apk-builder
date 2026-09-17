@@ -73,15 +73,99 @@
 
         <div data-input="template" style="display:none">
           <label class="label">Choose a template</label>
-          <div class="grid grid-4" id="templateGrid">
-            <div class="template-card" data-template="calculator"><div class="template-emoji">🧮</div><h4>Calculator</h4></div>
-            <div class="template-card" data-template="tasbeeh"><div class="template-emoji">📿</div><h4>Tasbeeh</h4></div>
-            <div class="template-card" data-template="dua"><div class="template-emoji">🤲</div><h4>Duas</h4></div>
-            <div class="template-card" data-template="names99"><div class="template-emoji">☪️</div><h4>99 Names</h4></div>
-            <div class="template-card" data-template="quran"><div class="template-emoji">📖</div><h4>Quran</h4></div>
-            <div class="template-card" data-template="zakat"><div class="template-emoji">💰</div><h4>Zakat</h4></div>
-            <div class="template-card" data-template="todo"><div class="template-emoji">✅</div><h4>Todo</h4></div>
-            <div class="template-card" data-template="snake"><div class="template-emoji">🐍</div><h4>Snake</h4></div>
+          <div id="templateSections">
+            <div class="template-section">
+              <div class="section-head">
+                <div class="section-icon islamic-icon">🕌</div>
+                <div>
+                  <h3 class="section-title">Islamic Apps</h3>
+                  <p class="section-sub">Free & Unlimited</p>
+                </div>
+                <span class="free-badge">100% FREE</span>
+              </div>
+              <div class="grid grid-4">
+                <div class="template-card" data-template="duas"><div class="template-emoji">🤲</div><h4>Duas</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="tasbeeh"><div class="template-emoji">📿</div><h4>Tasbeeh</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="names99"><div class="template-emoji">☪️</div><h4>99 Names</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="quran"><div class="template-emoji">📖</div><h4>Quran</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="prayer"><div class="template-emoji">🕌</div><h4>Prayer Times</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="hadith"><div class="template-emoji">📚</div><h4>Hadith</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="qibla"><div class="template-emoji">🧭</div><h4>Qibla</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="adhkar"><div class="template-emoji">🌙</div><h4>Adhkar</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="islamic-quiz"><div class="template-emoji">❓</div><h4>Islamic Quiz</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="zakat"><div class="template-emoji">💰</div><h4>Zakat</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="hijri"><div class="template-emoji">📅</div><h4>Hijri Calendar</h4><span class="tpl-badge free">FREE</span></div>
+                <div class="template-card" data-template="qunoot"><div class="template-emoji">🤲</div><h4>Dua Qunoot</h4><span class="tpl-badge free">FREE</span></div>
+              </div>
+            </div>
+
+            <div class="template-section">
+              <div class="section-head">
+                <div class="section-icon utility-icon">🧮</div>
+                <div>
+                  <h3 class="section-title">Utility Apps</h3>
+                  <p class="section-sub">Everyday tools</p>
+                </div>
+              </div>
+              <div class="grid grid-4">
+                <div class="template-card" data-template="calculator"><div class="template-emoji">🧮</div><h4>Calculator</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="converter"><div class="template-emoji">🔄</div><h4>Converter</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="currency"><div class="template-emoji">💱</div><h4>Currency</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="notes"><div class="template-emoji">📝</div><h4>Notes</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="todo"><div class="template-emoji">✅</div><h4>Todo</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="timer"><div class="template-emoji">⏱️</div><h4>Timer</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="stopwatch"><div class="template-emoji">⏲️</div><h4>Stopwatch</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="bmi"><div class="template-emoji">💚</div><h4>BMI</h4><span class="tpl-badge pro">PRO</span></div>
+              </div>
+            </div>
+
+            <div class="template-section">
+              <div class="section-head">
+                <div class="section-icon games-icon">🎮</div>
+                <div>
+                  <h3 class="section-title">Games</h3>
+                  <p class="section-sub">Fun & Entertainment</p>
+                </div>
+              </div>
+              <div class="grid grid-4">
+                <div class="template-card" data-template="snake"><div class="template-emoji">🐍</div><h4>Snake</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="2048"><div class="template-emoji">🔢</div><h4>2048</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="tictactoe"><div class="template-emoji">⭕</div><h4>Tic Tac Toe</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="memory"><div class="template-emoji">🎴</div><h4>Memory</h4><span class="tpl-badge pro">PRO</span></div>
+              </div>
+            </div>
+
+            <div class="template-section">
+              <div class="section-head">
+                <div class="section-icon health-icon">💚</div>
+                <div>
+                  <h3 class="section-title">Health & Fitness</h3>
+                  <p class="section-sub">Wellness apps</p>
+                </div>
+              </div>
+              <div class="grid grid-4">
+                <div class="template-card" data-template="water"><div class="template-emoji">💧</div><h4>Water</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="calorie"><div class="template-emoji">🍎</div><h4>Calorie</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="steps"><div class="template-emoji">👟</div><h4>Steps</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="sleep"><div class="template-emoji">😴</div><h4>Sleep</h4><span class="tpl-badge pro">PRO</span></div>
+              </div>
+            </div>
+
+            <div class="template-section">
+              <div class="section-head">
+                <div class="section-icon edu-icon">📚</div>
+                <div>
+                  <h3 class="section-title">Education</h3>
+                  <p class="section-sub">Learning apps</p>
+                </div>
+              </div>
+              <div class="grid grid-4">
+                <div class="template-card" data-template="flashcards"><div class="template-emoji">🎴</div><h4>Flashcards</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="math"><div class="template-emoji">🔢</div><h4>Math</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="periodic"><div class="template-emoji">⚗️</div><h4>Periodic</h4><span class="tpl-badge pro">PRO</span></div>
+                <div class="template-card" data-template="grammar"><div class="template-emoji">📖</div><h4>Grammar</h4><span class="tpl-badge pro">PRO</span></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
