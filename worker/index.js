@@ -13,8 +13,17 @@ export default {
     const origin = request.headers.get('Origin') || '';
 
     if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders(origin, env) });
+  return new Response('', {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': origin || '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, X-API-Key, Authorization, Accept, Origin',
+      'Access-Control-Max-Age': '0',
+      'Vary': 'Origin'
     }
+  });
+}
 
     if (path === '/health') {
       return json({ status: 'ok', version: '2.0.0', time: Date.now() }, origin, env);

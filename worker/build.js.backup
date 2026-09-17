@@ -1,18 +1,4 @@
 import { log } from "./utils.js";
-
-const ISLAMIC_TEMPLATES = [
-  'tasbeeh', 'quran', 'prayer', 'qibla', 'names99', 'dua',
-  'zakat', 'islamic-calendar', 'ramadan', 'hadith', 'yaseen',
-  'ayatulkursi', 'morning-adhkar', 'evening-adhkar', 'islamic-quiz',
-  'hijri', 'namaz', 'islamic-names', 'asmaul-husna', 'dhikr',
-  'quran-audio', 'surah-list', 'tafsir', 'hajj-guide', 'umrah-guide'
-];
-
-function isIslamicTemplate(name) {
-  if (!name) return false;
-  return ISLAMIC_TEMPLATES.includes(String(name).toLowerCase());
-}
-
 export async function handleBuild(request, env, user, ctx) {
   if (request.method !== 'POST') {
     return json({ error: 'Method not allowed' }, 405);
@@ -30,22 +16,9 @@ export async function handleBuild(request, env, user, ctx) {
     return json({ error: 'Invalid package name (e.g. com.example.app)' }, 400);
   }
 
-  const isIslamic = isIslamicTemplate(templateName);
-
-  let profile = null;
-  if (user) {
-    profile = await getUserProfile(user.id, env);
-  }
-
-  // Islamic templates = ALWAYS FREE, no quota check
-  if (user && !isIslamic) {
-    if (!profile || profile.builds_used >= profile.builds_limit) {
-      return json({ 
-        error: 'Quota exceeded', 
-        upgrade: true,
-        message: 'Islamic templates are always free. Upgrade for unlimited non-Islamic apps.'
-      }, 403);
-    }
+  const profile = await getUserProfile(user ? user.id : null, env);
+  if (user && (!profile || profile.builds_used >= profile.builds_limit)) {
+    return json({ error: 'Quota exceeded', upgrade: true }, 403);
   }
 
   const buildId = crypto.randomUUID();
@@ -62,8 +35,7 @@ export async function handleBuild(request, env, user, ctx) {
 
   await supabaseInsert('builds', buildRecord, env);
 
-  // Only increment builds_used for NON-Islamic templates
-  if (user && profile && !isIslamic) {
+  if (user && profile) {
     await supabaseUpdate('profiles', user.id, { builds_used: profile.builds_used + 1 }, env);
   }
 

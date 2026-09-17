@@ -10,16 +10,20 @@ export function corsHeaders(origin, env) {
     'Access-Control-Allow-Origin': allowed,
     'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-API-Key, Authorization',
-    'Access-Control-Max-Age': '86400',
+    'Access-Control-Max-Age': '0',
     'Vary': 'Origin'
   };
 }
 
 export async function verifyApiKey(request, env) {
-  const apiKey = request.headers.get('X-API-Key');
-  if (apiKey !== env.API_SECRET) {
-    return { ok: false, error: 'Invalid API key' };
-  }
+  const url = new URL(request.url);
+const headerKey = request.headers.get('X-API-Key');
+const urlKey = url.searchParams.get('key');
+const apiKey = headerKey || urlKey;
+
+if (apiKey !== env.API_SECRET) {
+  return { ok: false, error: 'Invalid API key' };
+}
 
   const auth = request.headers.get('Authorization');
   if (auth && auth.startsWith('Bearer ')) {
