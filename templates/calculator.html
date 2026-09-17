@@ -1,54 +1,313 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#000">
 <title>Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:system-ui;background:#0a0a1a;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center;padding:12px}
-.calc{width:100%;max-width:400px;background:#16162e;border-radius:24px;padding:20px}
-.display{background:#0a0a1a;border-radius:16px;padding:20px;margin-bottom:20px;text-align:right;min-height:100px;display:flex;flex-direction:column;justify-content:flex-end}
-.history{font-size:14px;color:#64748b;min-height:20px;margin-bottom:8px}
-.current{font-size:42px;font-weight:700;word-break:break-all}
-.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-button{aspect-ratio:1;border:none;border-radius:16px;font-size:22px;font-weight:600;color:#fff;font-family:inherit}
-button:active{transform:scale(0.95);opacity:0.8}
-.num{background:#2a2a4a}.op{background:#6366f1}.func{background:#ec4899}.clear{background:#ef4444}
-.equals{background:linear-gradient(135deg,#6366f1,#ec4899);grid-column:span 2;aspect-ratio:2.1}
-.zero{grid-column:span 2;aspect-ratio:2.1}
-</style></head><body>
+:root{--bg:#000;--bg2:#1c1c1e;--num:#333;--op:#ff9f0a;--fn:#a5a5a5;--text:#fff;--textdark:#000}
+[data-theme="light"]{--bg:#f2f2f7;--bg2:#fff;--num:#d4d4d2;--op:#ff9500;--fn:#a5a5a5;--text:#000;--textdark:#fff}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;outline:none}
+
+.calc{height:100%;display:flex;flex-direction:column;padding:8px}
+.top{display:flex;align-items:center;gap:8px;padding:8px 12px}
+.theme-btn{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;color:var(--text);transition:all .2s}
+.theme-btn:active{transform:scale(0.9)}
+.theme-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mode-btn{flex:1;height:36px;border-radius:18px;background:var(--bg2);color:var(--text);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s}
+.mode-btn:active{transform:scale(0.96)}
+.mode-btn.active{background:var(--op);color:#fff}
+
+.display{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 20px;min-height:0;overflow:hidden}
+.expr{font-size:15px;color:#888;text-align:right;min-height:24px;margin-bottom:6px;word-wrap:break-word;word-break:break-all;font-weight:400}
+.result{font-size:72px;font-weight:300;text-align:right;color:var(--text);line-height:1;word-wrap:break-word;word-break:break-all;letter-spacing:-2px;transition:font-size .2s}
+.result.small{font-size:48px}
+.result.tiny{font-size:36px}
+
+.pad{display:grid;gap:10px;padding:0 4px 4px}
+.pad.basic{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(5,1fr);height:55%}
+.pad.sci{grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);height:65%}
+
+.btn{aspect-ratio:1;border-radius:50%;background:var(--num);color:var(--text);font-size:32px;font-weight:500;display:grid;place-items:center;transition:all .1s;position:relative}
+.btn:active{transform:scale(0.95);opacity:0.8}
+.btn.op{background:var(--op);color:#fff;font-size:36px;font-weight:600}
+.btn.fn{background:var(--fn);color:var(--textdark);font-size:28px;font-weight:600}
+.btn.zero{aspect-ratio:auto;grid-column:span 2;border-radius:50px;justify-content:flex-start;padding-left:32px}
+.btn.sci-btn{background:var(--bg2);color:var(--op);font-size:20px;font-weight:600}
+.btn.sci-fn{background:var(--bg2);color:var(--text);font-size:18px;font-weight:600}
+.btn.active-op{background:#fff;color:var(--op)}
+
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.4);transform:scale(0);animation:ripple .5s;pointer-events:none}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+@media (max-height:640px){
+.result{font-size:56px}
+.result.small{font-size:40px}
+.result.tiny{font-size:30px}
+.btn{font-size:26px}
+}
+</style>
+</head>
+<body data-theme="dark">
+
 <div class="calc">
-<div class="display"><div class="history" id="h"></div><div class="current" id="c">0</div></div>
-<div class="buttons">
-<button class="clear" onclick="ac()">AC</button>
-<button class="func" onclick="del()">DEL</button>
-<button class="func" onclick="pct()">%</button>
-<button class="op" onclick="op(\'/\')">/</button>
-<button class="num" onclick="n(\'7\')">7</button>
-<button class="num" onclick="n(\'8\')">8</button>
-<button class="num" onclick="n(\'9\')">9</button>
-<button class="op" onclick="op(\'*\')">x</button>
-<button class="num" onclick="n(\'4\')">4</button>
-<button class="num" onclick="n(\'5\')">5</button>
-<button class="num" onclick="n(\'6\')">6</button>
-<button class="op" onclick="op(\'-\')">-</button>
-<button class="num" onclick="n(\'1\')">1</button>
-<button class="num" onclick="n(\'2\')">2</button>
-<button class="num" onclick="n(\'3\')">3</button>
-<button class="op" onclick="op(\'+\')">+</button>
-<button class="num zero" onclick="n(\'0\')">0</button>
-<button class="num" onclick="n(\'.\')">.</button>
-<button class="equals" onclick="eq()">=</button>
-</div></div>
+<div class="top">
+<button class="theme-btn" onclick="toggleTheme()">
+<svg viewBox="0 0 24 24" id="ti"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+</button>
+<button class="mode-btn active" id="modeBtn" onclick="toggleMode()">
+<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M4 4h16v16H4zM9 9h6M9 15h6M12 9v6"/></svg>
+<span id="modeText">Basic</span>
+</button>
+</div>
+
+<div class="display">
+<div class="expr" id="expr"></div>
+<div class="result" id="result">0</div>
+</div>
+
+<div class="pad basic" id="basicPad">
+<button class="btn fn" onclick="clearAll()">AC</button>
+<button class="btn fn" onclick="toggleSign()">+/−</button>
+<button class="btn fn" onclick="percent()">%</button>
+<button class="btn op" onclick="op('/')">÷</button>
+<button class="btn" onclick="num('7')">7</button>
+<button class="btn" onclick="num('8')">8</button>
+<button class="btn" onclick="num('9')">9</button>
+<button class="btn op" onclick="op('*')">×</button>
+<button class="btn" onclick="num('4')">4</button>
+<button class="btn" onclick="num('5')">5</button>
+<button class="btn" onclick="num('6')">6</button>
+<button class="btn op" onclick="op('-')">−</button>
+<button class="btn" onclick="num('1')">1</button>
+<button class="btn" onclick="num('2')">2</button>
+<button class="btn" onclick="num('3')">3</button>
+<button class="btn op" onclick="op('+')">+</button>
+<button class="btn zero" onclick="num('0')">0</button>
+<button class="btn" onclick="num('.')">.</button>
+<button class="btn op" onclick="equals()">=</button>
+</div>
+
+<div class="pad sci" id="sciPad" style="display:none">
+<button class="btn sci-btn" onclick="fn('sin')">sin</button>
+<button class="btn sci-btn" onclick="fn('cos')">cos</button>
+<button class="btn sci-btn" onclick="fn('tan')">tan</button>
+<button class="btn sci-fn" onclick="fn('pi')">π</button>
+<button class="btn sci-fn" onclick="fn('e')">e</button>
+<button class="btn sci-btn" onclick="fn('sqrt')">√</button>
+<button class="btn sci-btn" onclick="fn('sq')">x²</button>
+<button class="btn sci-btn" onclick="fn('pow')">x^y</button>
+<button class="btn sci-fn" onclick="fn('(')">(</button>
+<button class="btn sci-fn" onclick="fn(')')">)</button>
+<button class="btn sci-btn" onclick="fn('log')">log</button>
+<button class="btn sci-btn" onclick="fn('ln')">ln</button>
+<button class="btn sci-fn" onclick="fn('inv')">1/x</button>
+<button class="btn sci-fn" onclick="fn('abs')">|x|</button>
+<button class="btn sci-fn" onclick="fn('fact')">n!</button>
+<button class="btn sci-btn" onclick="fn('exp')">exp</button>
+<button class="btn sci-fn" onclick="fn('rand')">RND</button>
+<button class="btn sci-fn" onclick="num('7')">7</button>
+<button class="btn sci-fn" onclick="num('8')">8</button>
+<button class="btn sci-fn" onclick="num('9')">9</button>
+<button class="btn sci-btn" onclick="fn('deg')" id="degBtn">DEG</button>
+<button class="btn sci-fn" onclick="clearAll()">AC</button>
+<button class="btn sci-fn" onclick="fn('bs')">⌫</button>
+<button class="btn sci-fn" onclick="num('4')">4</button>
+<button class="btn sci-fn" onclick="num('5')">5</button>
+<button class="btn sci-fn" onclick="num('6')">6</button>
+<button class="btn op" onclick="op('/')">÷</button>
+<button class="btn sci-fn" onclick="num('1')">1</button>
+<button class="btn sci-fn" onclick="num('2')">2</button>
+<button class="btn sci-fn" onclick="num('3')">3</button>
+<button class="btn op" onclick="op('*')">×</button>
+<button class="btn sci-fn" onclick="num('0')">0</button>
+<button class="btn sci-fn" onclick="num('.')">.</button>
+<button class="btn sci-fn" onclick="percent()">%</button>
+<button class="btn op" onclick="equals()">=</button>
+</div>
+</div>
+
 <script>
-let c=\'0\',p=\'\',o=null,r=false;
-function u(){document.getElementById(\'c\').textContent=c;document.getElementById(\'h\').textContent=p&&o?p+\' \'+o:\'\'}
-function n(x){if(r){c=\'0\';r=false}if(x===\'.\'&&c.includes(\'.\'))return;c=c===\'0\'&&x!==\'.\'?x:c+x;u()}
-function op(x){if(o&&!r)eq();p=c;o=x;r=true;u()}
-function eq(){if(!o)return;let a=parseFloat(p),b=parseFloat(c),res=0;
-if(o===\'+\')res=a+b;else if(o===\'-\')res=a-b;else if(o===\'*\')res=a*b;else res=b===0?\'Err\':a/b;
-c=String(Math.round(res*1e10)/1e10);p=\'\';o=null;r=true;u()}
-function ac(){c=\'0\';p=\'\';o=null;r=false;u()}
-function del(){c=c.length>1?c.slice(0,-1):\'0\';u()}
-function pct(){c=String(parseFloat(c)/100);u()}
-u();
-</script></body></html>
+let current='0',previous='',operation=null,shouldReset=false,expression='',useDeg=true,mode='basic',history=[];
+
+function init(){
+  loadState();
+  applyTheme();
+  updateDisplay();
+  document.addEventListener('keydown',handleKey);
+  document.querySelectorAll('.btn').forEach(b=>{
+    b.addEventListener('touchstart',function(e){
+      const r=document.createElement('span');
+      r.className='ripple';
+      const rect=this.getBoundingClientRect();
+      r.style.left=(e.touches[0].clientX-rect.left)+'px';
+      r.style.top=(e.touches[0].clientY-rect.top)+'px';
+      r.style.width=r.style.height='20px';
+      this.appendChild(r);
+      setTimeout(()=>r.remove(),500);
+      if(navigator.vibrate)navigator.vibrate(10);
+    });
+  });
+}
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('calc_v1');
+    if(s){const p=JSON.parse(s);document.body.setAttribute('data-theme',p.theme||'dark');}
+  }catch(e){}
+  applyTheme();
+}
+function saveState(){
+  try{localStorage.setItem('calc_v1',JSON.stringify({theme:document.body.getAttribute('data-theme')}));}catch(e){}
+}
+function toggleTheme(){
+  const cur=document.body.getAttribute('data-theme');
+  const next=cur==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',next);
+  saveState();
+  applyTheme();
+}
+function applyTheme(){
+  const theme=document.body.getAttribute('data-theme');
+  const i=document.getElementById('ti');
+  if(theme==='dark'){
+    i.innerHTML='<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  }else{
+    i.innerHTML='<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+  }
+}
+function toggleMode(){
+  mode=mode==='basic'?'sci':'basic';
+  document.getElementById('basicPad').style.display=mode==='basic'?'grid':'none';
+  document.getElementById('sciPad').style.display=mode==='sci'?'grid':'none';
+  document.getElementById('modeText').textContent=mode==='basic'?'Basic':'Scientific';
+  document.getElementById('modeBtn').classList.toggle('active',mode==='basic');
+}
+
+function updateDisplay(){
+  const el=document.getElementById('result');
+  let txt=current;
+  if(txt.length>12)txt=parseFloat(txt).toExponential(6);
+  el.textContent=txt;
+  el.className='result';
+  if(txt.length>9)el.classList.add('small');
+  if(txt.length>12)el.classList.add('tiny');
+  document.getElementById('expr').textContent=expression||'';
+}
+
+function num(n){
+  if(shouldReset){current='0';shouldReset=false;expression='';}
+  if(n==='.'&&current.includes('.'))return;
+  if(current==='0'&&n!=='.')current=n;
+  else if(current.length<18)current+=n;
+  updateDisplay();
+}
+
+function op(o){
+  if(operation&&!shouldReset)equals(true);
+  previous=current;
+  operation=o;
+  shouldReset=true;
+  const sym={'+':'+','-':'−','*':'×','/':'÷'};
+  expression=previous+' '+sym[o];
+  document.querySelectorAll('.op').forEach(b=>b.classList.remove('active-op'));
+  updateDisplay();
+}
+
+function equals(silent){
+  if(!operation||!previous)return;
+  const a=parseFloat(previous),b=parseFloat(current);
+  let result=0;
+  switch(operation){
+    case '+':result=a+b;break;
+    case '-':result=a-b;break;
+    case '*':result=a*b;break;
+    case '/':result=b===0?'Error':a/b;break;
+  }
+  if(result==='Error'){current='Error';}
+  else{
+    result=Math.round(result*1e12)/1e12;
+    current=String(result);
+  }
+  if(!silent)expression='';
+  previous='';operation=null;shouldReset=true;
+  updateDisplay();
+}
+
+function clearAll(){
+  current='0';previous='';operation=null;shouldReset=false;expression='';
+  document.querySelectorAll('.op').forEach(b=>b.classList.remove('active-op'));
+  updateDisplay();
+}
+
+function toggleSign(){
+  if(current==='0'||current==='Error')return;
+  current=current.startsWith('-')?current.slice(1):'-'+current;
+  updateDisplay();
+}
+
+function percent(){
+  if(current==='Error')return;
+  current=String(parseFloat(current)/100);
+  updateDisplay();
+}
+
+function fn(f){
+  if(current==='Error')current='0';
+  const n=parseFloat(current);
+  let r=current;
+  const toRad=x=>useDeg?x*Math.PI/180:x;
+  switch(f){
+    case 'sin':r=String(Math.round(Math.sin(toRad(n))*1e10)/1e10);break;
+    case 'cos':r=String(Math.round(Math.cos(toRad(n))*1e10)/1e10);break;
+    case 'tan':r=String(Math.round(Math.tan(toRad(n))*1e10)/1e10);break;
+    case 'sqrt':r=n<0?'Error':String(Math.round(Math.sqrt(n)*1e10)/1e10);break;
+    case 'sq':r=String(n*n);break;
+    case 'pow':previous=current;operation='^';shouldReset=true;expression=current+' ^';return;
+    case 'log':r=n<=0?'Error':String(Math.round(Math.log10(n)*1e10)/1e10);break;
+    case 'ln':r=n<=0?'Error':String(Math.round(Math.log(n)*1e10)/1e10);break;
+    case 'inv':r=n===0?'Error':String(1/n);break;
+    case 'abs':r=String(Math.abs(n));break;
+    case 'fact':r=factorial(n);break;
+    case 'exp':r=String(Math.round(Math.exp(n)*1e10)/1e10);break;
+    case 'pi':r=String(Math.PI);break;
+    case 'e':r=String(Math.E);break;
+    case 'rand':r=String(Math.round(Math.random()*1e6)/1e6);break;
+    case 'deg':useDeg=!useDeg;document.getElementById('degBtn').textContent=useDeg?'DEG':'RAD';return;
+    case 'bs':if(shouldReset||current==='Error'){clearAll();return;}current=current.length>1?current.slice(0,-1):'0';updateDisplay();return;
+    case '(':if(current==='0')current='(';else current+='(';updateDisplay();return;
+    case ')':current+=')';updateDisplay();return;
+  }
+  current=r;shouldReset=true;updateDisplay();
+}
+
+function factorial(n){
+  if(n<0||n!==Math.floor(n))return 'Error';
+  if(n>170)return 'Infinity';
+  let r=1;for(let i=2;i<=n;i++)r*=i;
+  return String(r);
+}
+
+function handleKey(e){
+  const k=e.key;
+  if(/^[0-9]$/.test(k))num(k);
+  else if(k==='.')num('.');
+  else if(k==='+')op('+');
+  else if(k==='-')op('-');
+  else if(k==='*')op('*');
+  else if(k==='/'){e.preventDefault();op('/');}
+  else if(k==='Enter'||k==='='){e.preventDefault();equals();}
+  else if(k==='Escape')clearAll();
+  else if(k==='Backspace'){e.preventDefault();if(shouldReset)clearAll();else{current=current.length>1?current.slice(0,-1):'0';updateDisplay();}}
+  else if(k==='%')percent();
+}
+
+init();
+</script>
+</body>
+</html>
