@@ -1,580 +1,981 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Build APK — APKForge</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Build APK — APKForge</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.wizard-container{max-width:1000px;margin:110px auto 60px;padding:0 24px}
+.wizard-progress{display:flex;justify-content:space-between;margin-bottom:50px;position:relative}
+.wizard-progress::before{content:'';position:absolute;top:22px;left:10%;right:10%;height:2px;background:var(--border);z-index:0}
+.wizard-step{position:relative;z-index:1;text-align:center;flex:1;cursor:pointer}
+.wizard-step-num{width:44px;height:44px;border-radius:50%;background:var(--bg-card);border:2px solid var(--border);color:var(--text-muted);display:grid;place-items:center;margin:0 auto 10px;font-weight:700;transition:all var(--t);font-size:1rem}
+.wizard-step.active .wizard-step-num{background:var(--grad-primary);border-color:transparent;color:#fff;box-shadow:0 0 0 6px rgba(99,102,241,0.15)}
+.wizard-step.completed .wizard-step-num{background:var(--grad-primary);border-color:transparent;color:#fff}
+.wizard-step-label{font-size:0.8125rem;font-weight:600;color:var(--text-muted)}
+.wizard-step.active .wizard-step-label{color:var(--primary)}
+.wizard-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:40px;box-shadow:var(--shadow-md);animation:fadeInUp 0.4s ease}
+.wizard-panel h2{margin-bottom:8px;font-size:1.5rem;color:var(--text)}
+.wizard-panel .subtitle{color:var(--text-muted);margin-bottom:32px;font-size:0.9375rem}
+.wizard-actions{display:flex;justify-content:space-between;margin-top:32px;gap:12px;flex-wrap:wrap}
+
+.build-type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.build-type{padding:28px 20px;border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;text-align:center;transition:all var(--t)}
+.build-type:hover{border-color:var(--primary);transform:translateY(-3px)}
+.build-type.active{border-color:var(--primary);background:rgba(99,102,241,0.06);box-shadow:0 0 0 3px rgba(99,102,241,0.12)}
+.build-type-emoji{font-size:2.2rem;margin-bottom:12px}
+.build-type h4{font-size:1rem;margin-bottom:4px;color:var(--text)}
+.build-type p{font-size:0.8125rem;color:var(--text-muted)}
+
+.cat-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:20px;padding-bottom:4px;scrollbar-width:none}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{padding:8px 16px;border-radius:var(--radius-full);background:var(--bg-alt);border:1px solid var(--border);color:var(--text-muted);font-size:0.8125rem;font-weight:700;cursor:pointer;transition:all var(--t-fast);white-space:nowrap}
+.cat-tab:hover{border-color:var(--primary);color:var(--primary)}
+.cat-tab.active{background:var(--grad-primary);color:#fff;border-color:transparent}
+
+.template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;max-height:500px;overflow-y:auto;padding:4px}
+.template-grid::-webkit-scrollbar{width:6px}
+.template-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.template-option{background:var(--bg);border:2px solid var(--border);border-radius:var(--radius);padding:16px 12px;text-align:center;cursor:pointer;transition:all var(--t-fast)}
+.template-option:hover{border-color:var(--primary);transform:translateY(-3px)}
+.template-option.active{border-color:var(--primary);background:rgba(99,102,241,0.08);box-shadow:0 0 0 3px rgba(99,102,241,0.12)}
+.template-option .t-emoji{font-size:1.75rem;margin-bottom:6px}
+.template-option h5{font-size:0.8125rem;margin-bottom:4px;color:var(--text);font-weight:700}
+.template-option .t-tag{display:inline-block;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;letter-spacing:0.03em}
+.t-tag.free{background:rgba(16,185,129,0.15);color:var(--success)}
+.t-tag.paid{background:rgba(99,102,241,0.15);color:var(--primary)}
+
+.dropzone{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;transition:all var(--t);cursor:pointer;background:var(--bg)}
+.dropzone:hover,.dropzone.drag{border-color:var(--primary);background:rgba(99,102,241,0.06)}
+.dropzone-icon{font-size:3rem;margin-bottom:12px}
+.dropzone p{color:var(--text-muted);font-size:0.9375rem}
+.dropzone strong{color:var(--primary);font-weight:700}
+
+.splash-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.splash-preview{aspect-ratio:9/16;max-width:280px;margin:0 auto;border-radius:var(--radius-lg);border:10px solid var(--text);overflow:hidden;position:relative;display:grid;place-items:center;box-shadow:var(--shadow-xl)}
+.splash-preview-inner{width:100%;height:100%;display:grid;place-items:center;color:#fff;text-align:center;padding:20px;transition:all 0.3s}
+.splash-icon{font-size:4rem;margin-bottom:16px}
+.splash-appname{font-weight:700;font-size:1.2rem;margin-bottom:6px}
+.splash-tagline{font-size:0.875rem;opacity:0.9}
+
+.style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px}
+.style-option{aspect-ratio:1;border-radius:var(--radius-sm);border:2px solid var(--border);cursor:pointer;display:grid;place-items:center;font-size:0.7rem;font-weight:700;color:#fff;transition:all var(--t-fast);overflow:hidden;text-shadow:0 1px 3px rgba(0,0,0,0.5);padding:4px;text-align:center}
+.style-option:hover{transform:scale(1.05)}
+.style-option.active{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.25);transform:scale(1.05)}
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:8px}
+.color-option{aspect-ratio:1;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all var(--t-fast)}
+.color-option:hover{transform:scale(1.1)}
+.color-option.active{border-color:var(--text);box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--primary);transform:scale(1.1)}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:10px}
+.icon-option{aspect-ratio:1;border-radius:var(--radius-sm);border:2px solid var(--border);background:var(--bg);display:grid;place-items:center;font-size:1.5rem;cursor:pointer;transition:all var(--t-fast)}
+.icon-option:hover{transform:scale(1.08)}
+.icon-option.active{border-color:var(--primary);background:rgba(99,102,241,0.1)}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.review-box{background:var(--bg-alt);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.review-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.9375rem}
+.review-row:last-child{border-bottom:none}
+.review-label{color:var(--text-muted)}
+.review-value{color:var(--text);font-weight:700}
+
+.build-progress{display:none;margin-top:24px}
+.progress-track{height:10px;background:var(--bg-alt);border-radius:5px;overflow:hidden}
+.progress-fill{height:100%;background:var(--grad-primary);width:0;transition:width 0.5s;border-radius:5px;box-shadow:0 0 12px rgba(99,102,241,0.6)}
+.progress-text{margin-top:12px;text-align:center;color:var(--text-muted);font-size:0.9375rem;font-weight:600}
+.progress-status{margin-top:8px;text-align:center;color:var(--primary);font-size:0.875rem;font-weight:700}
+
+.build-success{display:none;text-align:center;padding:32px 0}
+.build-success .success-icon{font-size:5rem;margin-bottom:16px;animation:fadeInUp 0.5s ease}
+.build-success h2{margin-bottom:8px;color:var(--text)}
+.build-success p{color:var(--text-muted);margin-bottom:24px}
+.build-success .btn-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.build-error{display:none;background:rgba(239,68,68,0.1);border:1px solid var(--danger);border-radius:var(--radius);padding:16px;margin-top:16px;color:var(--danger);font-size:0.9375rem;font-weight:600}
+
+.quota-bar{background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;font-size:0.875rem}
+.quota-bar .q-icon{font-size:1.5rem}
+.quota-bar .q-info{flex:1}
+.quota-bar .q-label{color:var(--text-muted);font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:2px}
+.quota-bar .q-value{font-weight:800;color:var(--primary)}
+.quota-bar .q-points{background:var(--grad-primary);color:#fff;padding:6px 14px;border-radius:var(--radius-full);font-weight:800;font-size:0.8125rem}
+
+@media (max-width:768px){
+  .splash-layout{grid-template-columns:1fr;gap:24px}
+  .form-row{grid-template-columns:1fr}
+  .wizard-step-label{display:none}
+  .wizard-panel{padding:24px}
+  .template-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+}
+</style>
 </head>
 <body>
 
-  <div class="wizard-container">
+<div class="wizard-container">
 
-    <div class="wizard-progress" id="progress">
-      <div class="wizard-step active" data-step="1">
-        <div class="wizard-step-num">1</div>
-        <div class="wizard-step-label">Content</div>
-      </div>
-      <div class="wizard-step" data-step="2">
-        <div class="wizard-step-num">2</div>
-        <div class="wizard-step-label">Splash</div>
-      </div>
-      <div class="wizard-step" data-step="3">
-        <div class="wizard-step-num">3</div>
-        <div class="wizard-step-label">Details</div>
-      </div>
-      <div class="wizard-step" data-step="4">
-        <div class="wizard-step-num">4</div>
-        <div class="wizard-step-label">Build</div>
-      </div>
+  <!-- Quota Bar -->
+  <div class="quota-bar" id="quotaBar">
+    <span class="q-icon">💎</span>
+    <div class="q-info">
+      <div class="q-label">Your Balance</div>
+      <div class="q-value" id="quotaText">Loading...</div>
     </div>
-
-    <!-- STEP 1: CONTENT -->
-    <div class="wizard-panel" id="panel-1">
-      <h2>What should your app contain?</h2>
-      <p class="subtitle">Choose your content source.</p>
-
-      <div class="build-type-grid" id="buildTypes">
-        <div class="build-type active" data-type="html">
-          <div class="build-type-emoji">📄</div>
-          <h4>Upload HTML</h4>
-          <p>Upload a .html file</p>
-        </div>
-        <div class="build-type" data-type="url">
-          <div class="build-type-emoji">🌐</div>
-          <h4>Website URL</h4>
-          <p>Turn any URL into an app</p>
-        </div>
-        <div class="build-type" data-type="template">
-          <div class="build-type-emoji">🎨</div>
-          <h4>Template</h4>
-          <p>Pick from 10 templates</p>
-        </div>
-      </div>
-
-      <div id="contentInputs" style="margin-top:32px">
-        <div data-input="html">
-          <div class="dropzone" id="dropzone">
-            <div class="dropzone-icon">📁</div>
-            <p>Drop your HTML file here or <strong>browse</strong></p>
-            <p style="font-size:0.8125rem;margin-top:8px">Max 5 MB</p>
-            <input type="file" id="fileInput" accept=".html,.htm" hidden>
-          </div>
-          <p id="fileName" style="margin-top:12px;color:var(--success);font-weight:600;display:none"></p>
-        </div>
-
-        <div data-input="url" style="display:none">
-          <label class="label">Website URL</label>
-          <input type="url" class="input" id="urlInput" placeholder="https://example.com">
-          <p style="margin-top:8px;font-size:0.8125rem;color:var(--text-muted)">
-            Tip: Test in your browser first to ensure mobile-friendliness.
-          </p>
-        </div>
-
-        <div data-input="template" style="display:none">
-          <label class="label">Choose a template</label>
-          <div id="templateSections">
-            <div class="template-section">
-              <div class="section-head">
-                <div class="section-icon islamic-icon">🕌</div>
-                <div>
-                  <h3 class="section-title">Islamic Apps</h3>
-                  <p class="section-sub">Free & Unlimited</p>
-                </div>
-                <span class="free-badge">100% FREE</span>
-              </div>
-              <div class="grid grid-4">
-                <div class="template-card" data-template="duas"><div class="template-emoji">🤲</div><h4>Duas</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="tasbeeh"><div class="template-emoji">📿</div><h4>Tasbeeh</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="names99"><div class="template-emoji">☪️</div><h4>99 Names</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="quran"><div class="template-emoji">📖</div><h4>Quran</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="prayer"><div class="template-emoji">🕌</div><h4>Prayer Times</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="hadith"><div class="template-emoji">📚</div><h4>Hadith</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="qibla"><div class="template-emoji">🧭</div><h4>Qibla</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="adhkar"><div class="template-emoji">🌙</div><h4>Adhkar</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="islamic-quiz"><div class="template-emoji">❓</div><h4>Islamic Quiz</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="zakat"><div class="template-emoji">💰</div><h4>Zakat</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="hijri"><div class="template-emoji">📅</div><h4>Hijri Calendar</h4><span class="tpl-badge free">FREE</span></div>
-                <div class="template-card" data-template="qunoot"><div class="template-emoji">🤲</div><h4>Dua Qunoot</h4><span class="tpl-badge free">FREE</span></div>
-              </div>
-            </div>
-
-            <div class="template-section">
-              <div class="section-head">
-                <div class="section-icon utility-icon">🧮</div>
-                <div>
-                  <h3 class="section-title">Utility Apps</h3>
-                  <p class="section-sub">Everyday tools</p>
-                </div>
-              </div>
-              <div class="grid grid-4">
-                <div class="template-card" data-template="calculator"><div class="template-emoji">🧮</div><h4>Calculator</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="converter"><div class="template-emoji">🔄</div><h4>Converter</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="currency"><div class="template-emoji">💱</div><h4>Currency</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="notes"><div class="template-emoji">📝</div><h4>Notes</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="todo"><div class="template-emoji">✅</div><h4>Todo</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="timer"><div class="template-emoji">⏱️</div><h4>Timer</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="stopwatch"><div class="template-emoji">⏲️</div><h4>Stopwatch</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="bmi"><div class="template-emoji">💚</div><h4>BMI</h4><span class="tpl-badge pro">PRO</span></div>
-              </div>
-            </div>
-
-            <div class="template-section">
-              <div class="section-head">
-                <div class="section-icon games-icon">🎮</div>
-                <div>
-                  <h3 class="section-title">Games</h3>
-                  <p class="section-sub">Fun & Entertainment</p>
-                </div>
-              </div>
-              <div class="grid grid-4">
-                <div class="template-card" data-template="snake"><div class="template-emoji">🐍</div><h4>Snake</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="2048"><div class="template-emoji">🔢</div><h4>2048</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="tictactoe"><div class="template-emoji">⭕</div><h4>Tic Tac Toe</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="memory"><div class="template-emoji">🎴</div><h4>Memory</h4><span class="tpl-badge pro">PRO</span></div>
-              </div>
-            </div>
-
-            <div class="template-section">
-              <div class="section-head">
-                <div class="section-icon health-icon">💚</div>
-                <div>
-                  <h3 class="section-title">Health & Fitness</h3>
-                  <p class="section-sub">Wellness apps</p>
-                </div>
-              </div>
-              <div class="grid grid-4">
-                <div class="template-card" data-template="water"><div class="template-emoji">💧</div><h4>Water</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="calorie"><div class="template-emoji">🍎</div><h4>Calorie</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="steps"><div class="template-emoji">👟</div><h4>Steps</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="sleep"><div class="template-emoji">😴</div><h4>Sleep</h4><span class="tpl-badge pro">PRO</span></div>
-              </div>
-            </div>
-
-            <div class="template-section">
-              <div class="section-head">
-                <div class="section-icon edu-icon">📚</div>
-                <div>
-                  <h3 class="section-title">Education</h3>
-                  <p class="section-sub">Learning apps</p>
-                </div>
-              </div>
-              <div class="grid grid-4">
-                <div class="template-card" data-template="flashcards"><div class="template-emoji">🎴</div><h4>Flashcards</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="math"><div class="template-emoji">🔢</div><h4>Math</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="periodic"><div class="template-emoji">⚗️</div><h4>Periodic</h4><span class="tpl-badge pro">PRO</span></div>
-                <div class="template-card" data-template="grammar"><div class="template-emoji">📖</div><h4>Grammar</h4><span class="tpl-badge pro">PRO</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="wizard-actions">
-        <div></div>
-        <button class="btn btn-primary" id="next1">Next: Splash →</button>
-      </div>
-    </div>
-
-    <!-- STEP 2: SPLASH -->
-    <div class="wizard-panel" id="panel-2" style="display:none">
-      <h2>Design your splash screen</h2>
-      <p class="subtitle">This is what users see when the app opens.</p>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start" class="splash-layout">
-
-        <div>
-          <div class="splash-preview">
-            <div class="splash-preview-inner" id="splashPreview">
-              <div>
-                <div class="splash-icon" id="previewIcon">🚀</div>
-                <div style="font-weight:700;font-size:1.125rem" id="previewName">My App</div>
-                <div class="splash-tagline" id="previewTagline">Powered by APKForge</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div class="form-group">
-            <label class="label">Style</label>
-            <div class="style-grid" id="styleGrid"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="label">Color</label>
-            <div class="color-grid" id="colorGrid"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="label">Icon</label>
-            <div class="icon-grid" id="iconGrid"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="label">Tagline</label>
-            <input type="text" class="input" id="taglineInput" placeholder="Powered by APKForge" maxlength="40">
-          </div>
-
-          <div class="form-group">
-            <label class="label">Duration</label>
-            <select class="select" id="durationSelect">
-              <option value="1000">1 second</option>
-              <option value="2000" selected>2 seconds</option>
-              <option value="3000">3 seconds</option>
-              <option value="4000">4 seconds</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="wizard-actions">
-        <button class="btn btn-ghost" data-back="1">← Back</button>
-        <button class="btn btn-primary" id="next2">Next: Details →</button>
-      </div>
-    </div>
-
-    <!-- STEP 3: DETAILS -->
-    <div class="wizard-panel" id="panel-3" style="display:none">
-      <h2>App details</h2>
-      <p class="subtitle">Configure your app's identity and behavior.</p>
-
-      <div class="form-group">
-        <label class="label">App Name</label>
-        <input type="text" class="input" id="appName" placeholder="My Awesome App" maxlength="50">
-      </div>
-
-      <div class="form-group">
-        <label class="label">Package Name</label>
-        <input type="text" class="input" id="packageName" placeholder="com.example.myapp" pattern="^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$">
-        <p style="margin-top:6px;font-size:0.8125rem;color:var(--text-muted)">
-          Format: com.company.appname (lowercase, no spaces)
-        </p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-        <div class="form-group">
-          <label class="label">Version</label>
-          <input type="text" class="input" id="version" value="1.0.0">
-        </div>
-        <div class="form-group">
-          <label class="label">Orientation</label>
-          <select class="select" id="orientation">
-            <option value="portrait">Portrait</option>
-            <option value="landscape">Landscape</option>
-            <option value="auto">Auto</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="label">Custom App Icon (optional)</label>
-        <input type="file" class="input" id="iconUpload" accept="image/png,image/jpeg">
-        <p style="margin-top:6px;font-size:0.8125rem;color:var(--text-muted)">
-          PNG or JPG, 512x512 recommended
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label style="display:flex;gap:10px;align-items:center;cursor:pointer">
-          <input type="checkbox" id="fullscreen">
-          <span>Fullscreen mode (hide status bar)</span>
-        </label>
-      </div>
-
-      <div class="wizard-actions">
-        <button class="btn btn-ghost" data-back="2">← Back</button>
-        <button class="btn btn-primary" id="next3">Review & Build →</button>
-      </div>
-    </div>
-
-    <!-- STEP 4: BUILD -->
-    <div class="wizard-panel" id="panel-4" style="display:none">
-      <h2>Review & build</h2>
-      <p class="subtitle">Double-check, then hit build.</p>
-
-      <div style="background:var(--bg-alt);border-radius:var(--radius);padding:24px;margin-bottom:24px">
-        <div style="display:grid;gap:12px;font-size:0.9375rem">
-          <div style="display:flex;justify-content:space-between">
-            <span style="color:var(--text-muted)">App Name</span>
-            <strong id="reviewName">—</strong>
-          </div>
-          <div style="display:flex;justify-content:space-between">
-            <span style="color:var(--text-muted)">Package</span>
-            <strong id="reviewPackage">—</strong>
-          </div>
-          <div style="display:flex;justify-content:space-between">
-            <span style="color:var(--text-muted)">Type</span>
-            <strong id="reviewType">—</strong>
-          </div>
-          <div style="display:flex;justify-content:space-between">
-            <span style="color:var(--text-muted)">Splash</span>
-            <strong id="reviewSplash">—</strong>
-          </div>
-        </div>
-      </div>
-
-      <div style="text-align:center;padding:32px 0">
-        <button class="btn btn-primary btn-lg" id="buildBtn">🚀 Build APK</button>
-        <p style="margin-top:16px;color:var(--text-muted);font-size:0.875rem">
-          Build usually takes 60-90 seconds
-        </p>
-      </div>
-
-      <div id="buildProgress" style="display:none">
-        <div style="height:8px;background:var(--bg-alt);border-radius:4px;overflow:hidden">
-          <div id="progressFill" style="height:100%;width:0;background:var(--grad-primary);transition:width 0.3s"></div>
-        </div>
-        <p id="progressText" style="margin-top:12px;text-align:center;color:var(--text-muted)">Starting...</p>
-      </div>
-
-      <div id="buildSuccess" style="display:none;text-align:center;padding:32px 0">
-        <div style="font-size:4rem;margin-bottom:16px">✅</div>
-        <h2 style="margin-bottom:8px">Your APK is ready!</h2>
-        <p style="color:var(--text-muted);margin-bottom:24px">Download and install on any Android device.</p>
-        <a id="downloadLink" class="btn btn-primary btn-lg" download>⬇ Download APK</a>
-      </div>
-
-      <div class="wizard-actions" id="buildActions">
-        <button class="btn btn-ghost" data-back="3">← Back</button>
-      </div>
-    </div>
-
+    <span class="q-points" id="pointsDisplay">0 points</span>
   </div>
 
-  <script src="nav.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script><script src="build-api.js"></script>
-  <script>
-    window.state = {
-      step: 1,
-      buildType: 'html',
-      htmlContent: null,
-      fileName: null,
-      url: null,
-      template: null,
-      splash: { style: 'gradient', color: '#6366f1', icon: '🚀', duration: 2000, tagline: '' },
-      details: { appName: '', packageName: '', version: '1.0.0', orientation: 'portrait', fullscreen: false, icon: null }
+  <!-- Progress Steps -->
+  <div class="wizard-progress" id="progress">
+    <div class="wizard-step active" data-step="1" onclick="goToStep(1)">
+      <div class="wizard-step-num">1</div>
+      <div class="wizard-step-label">Content</div>
+    </div>
+    <div class="wizard-step" data-step="2" onclick="goToStep(2)">
+      <div class="wizard-step-num">2</div>
+      <div class="wizard-step-label">Splash</div>
+    </div>
+    <div class="wizard-step" data-step="3" onclick="goToStep(3)">
+      <div class="wizard-step-num">3</div>
+      <div class="wizard-step-label">Details</div>
+    </div>
+    <div class="wizard-step" data-step="4" onclick="goToStep(4)">
+      <div class="wizard-step-num">4</div>
+      <div class="wizard-step-label">Build</div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 1: CONTENT ===== -->
+  <div class="wizard-panel" id="panel-1">
+    <h2>What should your app contain?</h2>
+    <p class="subtitle">Choose your content source.</p>
+
+    <div class="build-type-grid" id="buildTypes">
+      <div class="build-type active" data-type="template">
+        <div class="build-type-emoji">🎨</div>
+        <h4>Template</h4>
+        <p>Pick from 52 ready templates</p>
+      </div>
+      <div class="build-type" data-type="html">
+        <div class="build-type-emoji">📄</div>
+        <h4>Upload HTML</h4>
+        <p>Upload your own .html file</p>
+      </div>
+      <div class="build-type" data-type="url">
+        <div class="build-type-emoji">🌐</div>
+        <h4>Website URL</h4>
+        <p>Turn any URL into an app</p>
+      </div>
+    </div>
+
+    <div id="contentInputs" style="margin-top:32px">
+      
+      <!-- Template Selection -->
+      <div data-input="template">
+        <div class="cat-tabs" id="catTabs"></div>
+        <div class="template-grid" id="templateGrid">
+          <p style="text-align:center;grid-column:1/-1;color:var(--text-muted)">Loading templates...</p>
+        </div>
+      </div>
+
+      <!-- HTML Upload -->
+      <div data-input="html" style="display:none">
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-icon">📁</div>
+          <p>Drop your HTML file here or <strong>browse</strong></p>
+          <p style="font-size:0.8125rem;margin-top:8px">Max 5 MB</p>
+          <input type="file" id="fileInput" accept=".html,.htm" hidden>
+        </div>
+        <p id="fileName" style="margin-top:12px;color:var(--success);font-weight:600;display:none"></p>
+      </div>
+
+      <!-- URL Input -->
+      <div data-input="url" style="display:none">
+        <label class="label">Website URL</label>
+        <input type="url" class="input" id="urlInput" placeholder="https://example.com">
+        <p style="margin-top:8px;font-size:0.8125rem;color:var(--text-muted)">
+          💡 Tip: Test in your browser first to ensure mobile-friendliness.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="wizard-actions">
+      <a href="index.html" class="btn btn-ghost">← Cancel</a>
+      <button class="btn btn-primary" onclick="goToStep(2)">Next: Splash →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 2: SPLASH ===== -->
+  <div class="wizard-panel" id="panel-2" style="display:none">
+    <h2>Design your splash screen</h2>
+    <p class="subtitle">This is what users see when the app opens.</p>
+
+    <div class="splash-layout">
+      
+      <!-- Live Preview -->
+      <div>
+        <div class="splash-preview">
+          <div class="splash-preview-inner" id="splashPreview">
+            <div>
+              <div class="splash-icon" id="previewIcon">🚀</div>
+              <div class="splash-appname" id="previewName">My App</div>
+              <div class="splash-tagline" id="previewTagline">Powered by APKForge</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div>
+        <div class="form-group">
+          <label class="label">Style <span id="styleCount" style="color:var(--text-muted);font-weight:400"></span></label>
+          <div class="style-grid" id="styleGrid"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Color <span id="colorCount" style="color:var(--text-muted);font-weight:400"></span></label>
+          <div class="color-grid" id="colorGrid"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Icon <span id="iconCount" style="color:var(--text-muted);font-weight:400"></span></label>
+          <div class="icon-grid" id="iconGrid"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Tagline (optional)</label>
+          <input type="text" class="input" id="taglineInput" placeholder="Powered by APKForge" maxlength="40">
+        </div>
+
+        <div class="form-group">
+          <label class="label">Duration</label>
+          <select class="select" id="durationSelect">
+            <option value="1000">1 second</option>
+            <option value="2000" selected>2 seconds</option>
+            <option value="3000">3 seconds</option>
+            <option value="4000">4 seconds</option>
+          </select>
+        </div>
+
+        <button class="btn btn-secondary btn-block" onclick="randomSplash()" style="margin-top:8px">
+          🎲 Random Style
+        </button>
+      </div>
+    </div>
+
+    <div class="wizard-actions">
+      <button class="btn btn-ghost" onclick="goToStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">Next: Details →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 3: DETAILS ===== -->
+  <div class="wizard-panel" id="panel-3" style="display:none">
+    <h2>App details</h2>
+    <p class="subtitle">Configure your app's identity.</p>
+
+    <div class="form-group">
+      <label class="label">App Name *</label>
+      <input type="text" class="input" id="appName" placeholder="My Awesome App" maxlength="50">
+    </div>
+
+    <div class="form-group">
+      <label class="label">Package Name *</label>
+      <input type="text" class="input" id="packageName" placeholder="com.example.myapp">
+      <p style="margin-top:6px;font-size:0.8125rem;color:var(--text-muted)">
+        Format: com.company.appname (lowercase, no spaces)
+      </p>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="label">Version</label>
+        <input type="text" class="input" id="version" value="1.0.0">
+      </div>
+      <div class="form-group">
+        <label class="label">Orientation</label>
+        <select class="select" id="orientation">
+          <option value="portrait">Portrait</option>
+          <option value="landscape">Landscape</option>
+          <option value="auto">Auto-rotate</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="label">Custom App Icon (optional)</label>
+      <input type="file" class="input" id="iconUpload" accept="image/png,image/jpeg">
+      <p style="margin-top:6px;font-size:0.8125rem;color:var(--text-muted)">
+        PNG or JPG, 512x512 recommended
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label style="display:flex;gap:10px;align-items:center;cursor:pointer">
+        <input type="checkbox" id="fullscreen">
+        <span>Fullscreen mode (hide status bar)</span>
+      </label>
+    </div>
+
+    <div class="wizard-actions">
+      <button class="btn btn-ghost" onclick="goToStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(4)">Review & Build →</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 4: BUILD ===== -->
+  <div class="wizard-panel" id="panel-4" style="display:none">
+    <h2>Review & build</h2>
+    <p class="subtitle">Double-check, then hit build.</p>
+
+    <div class="review-box">
+      <div class="review-row">
+        <span class="review-label">App Name</span>
+        <span class="review-value" id="reviewName">—</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Package</span>
+        <span class="review-value" id="reviewPackage">—</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Type</span>
+        <span class="review-value" id="reviewType">—</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Splash</span>
+        <span class="review-value" id="reviewSplash">—</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Cost</span>
+        <span class="review-value" id="reviewCost" style="color:var(--primary)">—</span>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:24px 0">
+      <button class="btn btn-primary btn-lg" id="buildBtn" onclick="startBuild()">
+        🚀 Build APK
+      </button>
+      <p style="margin-top:16px;color:var(--text-muted);font-size:0.875rem">
+        Build usually takes 60-90 seconds
+      </p>
+    </div>
+
+    <!-- Progress -->
+    <div class="build-progress" id="buildProgress">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-text" id="progressText">Starting build...</div>
+      <div class="progress-status" id="progressStatus"></div>
+    </div>
+
+    <!-- Success -->
+    <div class="build-success" id="buildSuccess">
+      <div class="success-icon">✅</div>
+      <h2>Your APK is ready!</h2>
+      <p>Download and install on any Android device.</p>
+      <div class="btn-group">
+        <a id="downloadLink" class="btn btn-primary btn-lg" download>⬇ Download APK</a>
+        <button class="btn btn-outline btn-lg" onclick="shareBuild()">📤 Share</button>
+        <button class="btn btn-ghost btn-lg" onclick="location.href='dashboard.html'">📊 Dashboard</button>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="build-error" id="buildError"></div>
+
+    <div class="wizard-actions" id="buildActions">
+      <button class="btn btn-ghost" onclick="goToStep(3)">← Back</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="nav.js"></script>
+<script src="supabase.js"></script>
+
+<script>
+// ==========================================
+// APKForge v3.0 — Build Wizard
+// ==========================================
+
+const TEMPLATES = [
+  // ===== ISLAMIC (14) — FREE =====
+  {id:'quran',name:'Quran',emoji:'📖',cat:'islamic',free:true},
+  {id:'duas',name:'Duas',emoji:'🤲',cat:'islamic',free:true},
+  {id:'tasbeeh',name:'Tasbeeh',emoji:'📿',cat:'islamic',free:true},
+  {id:'hadith',name:'Hadith',emoji:'📚',cat:'islamic',free:true},
+  {id:'names99',name:'99 Names',emoji:'☪️',cat:'islamic',free:true},
+  {id:'prayer',name:'Prayer Times',emoji:'🕌',cat:'islamic',free:true},
+  {id:'qibla',name:'Qibla',emoji:'🧭',cat:'islamic',free:true},
+  {id:'zakat',name:'Zakat',emoji:'💰',cat:'islamic',free:true},
+  {id:'adhkar',name:'Adhkar',emoji:'🌅',cat:'islamic',free:true},
+  {id:'quiz',name:'Islamic Quiz',emoji:'🎯',cat:'islamic',free:true},
+  {id:'calendar',name:'Hijri Calendar',emoji:'📅',cat:'islamic',free:true},
+  {id:'names',name:'Islamic Names',emoji:'👶',cat:'islamic',free:true},
+  {id:'ramadan',name:'Ramadan',emoji:'🌙',cat:'islamic',free:true},
+  {id:'qunoot',name:'Dua Qunoot',emoji:'🤲',cat:'islamic',free:true},
+  
+  // ===== UTILITY (10) =====
+  {id:'calculator',name:'Calculator',emoji:'🧮',cat:'utility',free:false},
+  {id:'converter',name:'Converter',emoji:'🔄',cat:'utility',free:false},
+  {id:'currency',name:'Currency',emoji:'💱',cat:'utility',free:false},
+  {id:'notes',name:'Notes',emoji:'📝',cat:'utility',free:false},
+  {id:'todo',name:'Todo',emoji:'✅',cat:'utility',free:false},
+  {id:'timer',name:'Timer',emoji:'⏰',cat:'utility',free:false},
+  {id:'stopwatch',name:'Stopwatch',emoji:'⏲️',cat:'utility',free:false},
+  {id:'bmi',name:'BMI',emoji:'💚',cat:'utility',free:false},
+  {id:'age',name:'Age',emoji:'🎂',cat:'utility',free:false},
+  {id:'percentage',name:'Percentage',emoji:'📊',cat:'utility',free:false},
+  
+  // ===== GAMES (8) =====
+  {id:'snake',name:'Snake',emoji:'🐍',cat:'games',free:false},
+  {id:'2048',name:'2048',emoji:'🔢',cat:'games',free:false},
+  {id:'tictactoe',name:'Tic Tac Toe',emoji:'⭕',cat:'games',free:false},
+  {id:'memory',name:'Memory',emoji:'🎴',cat:'games',free:false},
+  {id:'sudoku',name:'Sudoku',emoji:'🧩',cat:'games',free:false},
+  {id:'rps',name:'Rock Paper',emoji:'✊',cat:'games',free:false},
+  {id:'flappy',name:'Flappy Bird',emoji:'🐦',cat:'games',free:false},
+  {id:'wordsearch',name:'Word Search',emoji:'🔍',cat:'games',free:false},
+  
+  // ===== HEALTH (7) =====
+  {id:'water',name:'Water',emoji:'💧',cat:'health',free:false},
+  {id:'calorie',name:'Calorie',emoji:'🔥',cat:'health',free:false},
+  {id:'steps',name:'Steps',emoji:'👟',cat:'health',free:false},
+  {id:'sleep',name:'Sleep',emoji:'😴',cat:'health',free:false},
+  {id:'workout',name:'Workout',emoji:'💪',cat:'health',free:false},
+  {id:'meditation',name:'Meditation',emoji:'🧘',cat:'health',free:false},
+  {id:'period',name:'Period',emoji:'🌸',cat:'health',free:false},
+  
+  // ===== EDUCATION (6) =====
+  {id:'flashcards',name:'Flashcards',emoji:'📚',cat:'education',free:false},
+  {id:'mathpractice',name:'Math',emoji:'🔢',cat:'education',free:false},
+  {id:'alphabet',name:'Alphabet',emoji:'🔤',cat:'education',free:false},
+  {id:'spelling',name:'Spelling',emoji:'🐝',cat:'education',free:false},
+  {id:'periodic',name:'Periodic',emoji:'⚗️',cat:'education',free:false},
+  {id:'grammar',name:'Grammar',emoji:'📖',cat:'education',free:false},
+  
+  // ===== BUSINESS (5) =====
+  {id:'invoice',name:'Invoice',emoji:'🧾',cat:'business',free:false},
+  {id:'bizcard',name:'Business Card',emoji:'💼',cat:'business',free:false},
+  {id:'menu',name:'Restaurant Menu',emoji:'🍽️',cat:'business',free:false},
+  {id:'catalog',name:'Catalog',emoji:'🛍️',cat:'business',free:false},
+  {id:'booking',name:'Booking',emoji:'📅',cat:'business',free:false},
+  
+  // ===== MEDIA (2) =====
+  {id:'gallery',name:'Photo Gallery',emoji:'📷',cat:'media',free:false},
+  {id:'qrscanner',name:'QR Scanner',emoji:'📱',cat:'media',free:false}
+];
+
+const CATEGORIES = [
+  {id:'all',name:'All',icon:'📦'},
+  {id:'islamic',name:'Islamic',icon:'🕌'},
+  {id:'utility',name:'Utility',icon:'🧮'},
+  {id:'games',name:'Games',icon:'🎮'},
+  {id:'health',name:'Health',icon:'💚'},
+  {id:'education',name:'Education',icon:'📚'},
+  {id:'business',name:'Business',icon:'💼'},
+  {id:'media',name:'Media',icon:'📷'}
+];
+
+const SPLASH_STYLES = [
+  {id:'gradient',label:'Gradient',css:'linear-gradient(135deg, {c} 0%, #ec4899 100%)'},
+  {id:'minimal',label:'Minimal',css:'{c}'},
+  {id:'neon',label:'Neon',css:'radial-gradient(circle at 50% 50%, {c}, #000)'},
+  {id:'glass',label:'Glass',css:'linear-gradient(135deg, {c}40 0%, {c}80 100%), #000'},
+  {id:'aurora',label:'Aurora',css:'linear-gradient(45deg, {c}, #06b6d4, #ec4899)'},
+  {id:'waves',label:'Waves',css:'linear-gradient(180deg, {c} 0%, #000 100%)'},
+  {id:'matrix',label:'Matrix',css:'linear-gradient(180deg, #000 0%, {c} 200%)'},
+  {id:'cosmic',label:'Cosmic',css:'radial-gradient(at 0% 0%, {c}, #000), radial-gradient(at 100% 100%, #ec4899, transparent)'},
+  {id:'sunset',label:'Sunset',css:'linear-gradient(180deg, #ec4899, #f59e0b, {c})'},
+  {id:'ocean',label:'Ocean',css:'linear-gradient(180deg, #06b6d4, {c}, #1e3a8a)'},
+  {id:'mono',label:'Mono',css:'linear-gradient(135deg, #1a1a1a, #333)'},
+  {id:'fire',label:'Fire',css:'linear-gradient(180deg, #ef4444, #f59e0b, #000)'}
+];
+
+const COLORS = ['#6366f1','#8b5cf6','#ec4899','#ef4444','#f59e0b','#10b981','#06b6d4','#3b82f6','#14b8a6','#84cc16','#f97316','#a855f7','#d946ef','#0ea5e9','#22c55e','#eab308','#64748b','#0f172a','#7c3aed','#e11d48'];
+
+const ICONS = ['🚀','⚡','⭐','❤️','🔥','✨','💎','🎯','🌟','💡','🎨','🌈','🎵','📱','🌍','⚙️','🏆','💪','🎉','🌈'];
+
+const state = {
+  step: 1,
+  buildType: 'template',
+  selectedTemplate: null,
+  selectedCat: 'all',
+  htmlContent: null,
+  fileName: null,
+  url: null,
+  splash: { style: 'gradient', color: '#6366f1', icon: '🚀', duration: 2000, tagline: '' },
+  details: { appName: '', packageName: '', version: '1.0.0', orientation: 'portrait', fullscreen: false, icon: null },
+  user: null,
+  profile: null,
+  buildId: null,
+  pollInterval: null
+};
+
+// ===== INIT =====
+async function init() {
+  await checkAuth();
+  renderCategories();
+  renderTemplates();
+  renderStyles();
+  renderColors();
+  renderIcons();
+  bindEvents();
+  updatePreview();
+}
+
+async function checkAuth() {
+  try {
+    const session = await Auth.getSession();
+    if (session) {
+      state.user = session.user;
+      state.profile = await Profile.get(state.user.id);
+      updateQuotaBar();
+    } else {
+      document.getElementById('quotaText').textContent = 'Not logged in';
+      document.getElementById('pointsDisplay').textContent = 'Login required';
+    }
+  } catch(e) {
+    console.log('Auth check failed', e);
+  }
+}
+
+function updateQuotaBar() {
+  if (!state.profile) return;
+  const p = state.profile;
+  document.getElementById('quotaText').textContent = 
+    `${p.builds_used} / ${p.builds_limit} builds used this month`;
+  document.getElementById('pointsDisplay').textContent = 
+    p.plan === 'unlimited' ? '∞ Unlimited' : `${p.plan.toUpperCase()} plan`;
+}
+
+// ===== CATEGORIES =====
+function renderCategories() {
+  document.getElementById('catTabs').innerHTML = CATEGORIES.map(c => 
+    `<div class="cat-tab ${c.id === state.selectedCat ? 'active' : ''}" data-cat="${c.id}">${c.icon} ${c.name}</div>`
+  ).join('');
+  
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.onclick = () => {
+      state.selectedCat = tab.dataset.cat;
+      renderCategories();
+      renderTemplates();
     };
+  });
+}
 
-    const SPLASH_STYLES = [
-      { id: 'gradient', label: 'Gradient', css: 'linear-gradient(135deg, {c} 0%, #ec4899 100%)' },
-      { id: 'minimal', label: 'Minimal', css: '{c}' },
-      { id: 'neon', label: 'Neon', css: 'radial-gradient(circle at 50% 50%, {c}, #000)' },
-      { id: 'glass', label: 'Glass', css: 'linear-gradient(135deg, {c}40 0%, {c}80 100%), #000' },
-      { id: 'aurora', label: 'Aurora', css: 'linear-gradient(45deg, {c}, #06b6d4, #ec4899)' },
-      { id: 'waves', label: 'Waves', css: 'linear-gradient(180deg, {c} 0%, #000 100%)' },
-      { id: 'matrix', label: 'Matrix', css: 'linear-gradient(180deg, #000 0%, {c} 200%)' },
-      { id: 'cosmic', label: 'Cosmic', css: 'radial-gradient(at 0% 0%, {c}, #000)' },
-      { id: 'sunset', label: 'Sunset', css: 'linear-gradient(180deg, #ec4899, #f59e0b, {c})' },
-      { id: 'ocean', label: 'Ocean', css: 'linear-gradient(180deg, #06b6d4, {c}, #1e3a8a)' },
-      { id: 'mono', label: 'Mono', css: 'linear-gradient(135deg, #1a1a1a, #333)' },
-      { id: 'stars', label: 'Stars', css: 'radial-gradient(circle at 20% 30%, #fff 2px, transparent 2px), {c}' }
-    ];
+// ===== TEMPLATES =====
+function renderTemplates() {
+  const filtered = state.selectedCat === 'all' 
+    ? TEMPLATES 
+    : TEMPLATES.filter(t => t.cat === state.selectedCat);
+  
+  const grid = document.getElementById('templateGrid');
+  
+  if (!filtered.length) {
+    grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">No templates in this category</p>';
+    return;
+  }
+  
+  grid.innerHTML = filtered.map(t => `
+    <div class="template-option ${state.selectedTemplate === t.id ? 'active' : ''}" data-template="${t.id}">
+      <div class="t-emoji">${t.emoji}</div>
+      <h5>${t.name}</h5>
+      <span class="t-tag ${t.free ? 'free' : 'paid'}">${t.free ? 'FREE' : 'PRO'}</span>
+    </div>
+  `).join('');
+  
+  document.querySelectorAll('.template-option').forEach(el => {
+    el.onclick = () => {
+      document.querySelectorAll('.template-option').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      state.selectedTemplate = el.dataset.template;
+      
+      // Auto-fill app name if empty
+      const t = TEMPLATES.find(x => x.id === state.selectedTemplate);
+      if (t && !document.getElementById('appName').value) {
+        document.getElementById('appName').value = t.name;
+        state.details.appName = t.name;
+      }
+    };
+  });
+}
 
-    const COLORS = [
-      '#6366f1','#8b5cf6','#ec4899','#ef4444','#f59e0b',
-      '#10b981','#06b6d4','#3b82f6','#14b8a6','#84cc16',
-      '#f97316','#a855f7','#d946ef','#0ea5e9','#22c55e',
-      '#eab308','#64748b','#0f172a','#7c3aed','#e11d48'
-    ];
-
-    const ICONS = ['🚀','⚡','⭐','❤️','🔥','✨','💎','🎯','🌟','💡','🎨','🌈','🎵','📱','🌍','⚙️'];
-
-    function init() {
+// ===== SPLASH STYLES =====
+function renderStyles() {
+  document.getElementById('styleCount').textContent = `(${SPLASH_STYLES.length} styles)`;
+  document.getElementById('styleGrid').innerHTML = SPLASH_STYLES.map(s => {
+    const bg = s.css.replace(/{c}/g, state.splash.color).replace(/{c2}/g, '#ec4899');
+    return `<div class="style-option ${s.id === state.splash.style ? 'active' : ''}" 
+      data-style="${s.id}" style="background:${bg}">${s.label}</div>`;
+  }).join('');
+  
+  document.querySelectorAll('.style-option').forEach(el => {
+    el.onclick = () => {
+      state.splash.style = el.dataset.style;
       renderStyles();
-      renderColors();
-      renderIcons();
-      bindEvents();
       updatePreview();
+    };
+  });
+}
+
+function renderColors() {
+  document.getElementById('colorCount').textContent = `(${COLORS.length} colors)`;
+  document.getElementById('colorGrid').innerHTML = COLORS.map(c => 
+    `<div class="color-option ${c === state.splash.color ? 'active' : ''}" 
+      data-color="${c}" style="background:${c}"></div>`
+  ).join('');
+  
+  document.querySelectorAll('.color-option').forEach(el => {
+    el.onclick = () => {
+      state.splash.color = el.dataset.color;
+      renderColors();
+      renderStyles();
+      updatePreview();
+    };
+  });
+}
+
+function renderIcons() {
+  document.getElementById('iconCount').textContent = `(${ICONS.length} icons)`;
+  document.getElementById('iconGrid').innerHTML = ICONS.map(i => 
+    `<div class="icon-option ${i === state.splash.icon ? 'active' : ''}" data-icon="${i}">${i}</div>`
+  ).join('');
+  
+  document.querySelectorAll('.icon-option').forEach(el => {
+    el.onclick = () => {
+      state.splash.icon = el.dataset.icon;
+      renderIcons();
+      updatePreview();
+    };
+  });
+}
+
+function updatePreview() {
+  const style = SPLASH_STYLES.find(s => s.id === state.splash.style) || SPLASH_STYLES[0];
+  const css = style.css.replace(/{c}/g, state.splash.color).replace(/{c2}/g, '#ec4899');
+  
+  const preview = document.getElementById('splashPreview');
+  preview.style.background = css;
+  document.getElementById('previewIcon').textContent = state.splash.icon;
+  document.getElementById('previewTagline').textContent = state.splash.tagline || 'Powered by APKForge';
+  document.getElementById('previewName').textContent = state.details.appName || 'My App';
+}
+
+function randomSplash() {
+  state.splash.style = SPLASH_STYLES[Math.floor(Math.random() * SPLASH_STYLES.length)].id;
+  state.splash.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  state.splash.icon = ICONS[Math.floor(Math.random() * ICONS.length)];
+  renderStyles();
+  renderColors();
+  renderIcons();
+  updatePreview();
+  showToast('🎲 Random style applied!', 'success');
+}
+
+// ===== EVENTS =====
+function bindEvents() {
+  // Build type
+  document.querySelectorAll('.build-type').forEach(el => {
+    el.onclick = () => {
+      document.querySelectorAll('.build-type').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      state.buildType = el.dataset.type;
+      
+      document.querySelectorAll('[data-input]').forEach(x => x.style.display = 'none');
+      document.querySelector(`[data-input="${state.buildType}"]`).style.display = 'block';
+    };
+  });
+  
+  // File upload
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  
+  dropzone.onclick = () => fileInput.click();
+  dropzone.ondragover = e => { e.preventDefault(); dropzone.classList.add('drag'); };
+  dropzone.ondragleave = () => dropzone.classList.remove('drag');
+  dropzone.ondrop = e => {
+    e.preventDefault();
+    dropzone.classList.remove('drag');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  };
+  fileInput.onchange = e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  };
+  
+  // URL input
+  document.getElementById('urlInput').oninput = e => state.url = e.target.value;
+  
+  // Splash
+  document.getElementById('taglineInput').oninput = e => {
+    state.splash.tagline = e.target.value;
+    updatePreview();
+  };
+  document.getElementById('durationSelect').onchange = e => {
+    state.splash.duration = parseInt(e.target.value);
+  };
+  
+  // Details
+  document.getElementById('appName').oninput = e => {
+    state.details.appName = e.target.value;
+    updatePreview();
+  };
+  document.getElementById('packageName').oninput = e => state.details.packageName = e.target.value;
+  document.getElementById('version').oninput = e => state.details.version = e.target.value;
+  document.getElementById('orientation').onchange = e => state.details.orientation = e.target.value;
+  document.getElementById('fullscreen').onchange = e => state.details.fullscreen = e.target.checked;
+  document.getElementById('iconUpload').onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      state.details.icon = ev.target.result;
+      showToast('✅ Custom icon loaded', 'success');
+    };
+    reader.readAsDataURL(file);
+  };
+}
+
+function handleFile(file) {
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('❌ File too large (max 5 MB)', 'error');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    state.htmlContent = e.target.result;
+    state.fileName = file.name;
+    const nameEl = document.getElementById('fileName');
+    nameEl.textContent = '✅ ' + file.name + ' loaded (' + (file.size / 1024).toFixed(1) + ' KB)';
+    nameEl.style.display = 'block';
+    showToast('File loaded', 'success');
+  };
+  reader.readAsText(file);
+}
+
+// ===== WIZARD NAVIGATION =====
+function goToStep(n) {
+  if (n > state.step && !validateStep(state.step)) return;
+  
+  state.step = n;
+  document.querySelectorAll('.wizard-panel').forEach(p => p.style.display = 'none');
+  document.getElementById(`panel-${n}`).style.display = 'block';
+  
+  document.querySelectorAll('.wizard-step').forEach(s => {
+    const step = parseInt(s.dataset.step);
+    s.classList.toggle('active', step === n);
+    s.classList.toggle('completed', step < n);
+  });
+  
+  if (n === 4) updateReview();
+  
+  window.scrollTo({ top: 100, behavior: 'smooth' });
+}
+
+function validateStep(step) {
+  if (step === 1) {
+    if (state.buildType === 'template' && !state.selectedTemplate) {
+      showToast('❌ Please select a template', 'error');
+      return false;
     }
-
-    function renderStyles() {
-      document.getElementById('styleGrid').innerHTML = SPLASH_STYLES.map(s => {
-        const bg = s.css.replace(/{c}/g, state.splash.color);
-        return '<div class="style-option ' + (s.id === state.splash.style ? 'active' : '') + '" data-style="' + s.id + '" style="background:' + bg + '">' + s.label + '</div>';
-      }).join('');
+    if (state.buildType === 'html' && !state.htmlContent) {
+      showToast('❌ Please upload an HTML file', 'error');
+      return false;
     }
-
-    function renderColors() {
-      document.getElementById('colorGrid').innerHTML = COLORS.map(c =>
-        '<div class="color-option ' + (c === state.splash.color ? 'active' : '') + '" data-color="' + c + '" style="background:' + c + '"></div>'
-      ).join('');
+    if (state.buildType === 'url' && !state.url) {
+      showToast('❌ Please enter a URL', 'error');
+      return false;
     }
-
-    function renderIcons() {
-      document.getElementById('iconGrid').innerHTML = ICONS.map(i =>
-        '<div class="icon-option ' + (i === state.splash.icon ? 'active' : '') + '" data-icon="' + i + '">' + i + '</div>'
-      ).join('');
+  }
+  if (step === 3) {
+    if (!state.details.appName) {
+      showToast('❌ Please enter app name', 'error');
+      return false;
     }
-
-    function updatePreview() {
-      const style = SPLASH_STYLES.find(s => s.id === state.splash.style);
-      const css = style.css.replace(/{c}/g, state.splash.color);
-      document.getElementById('splashPreview').style.background = css;
-      document.getElementById('previewIcon').textContent = state.splash.icon;
-      document.getElementById('previewTagline').textContent = state.splash.tagline || 'Powered by APKForge';
-      document.getElementById('previewName').textContent = state.details.appName || 'My App';
+    if (!state.details.packageName) {
+      showToast('❌ Please enter package name', 'error');
+      return false;
     }
+    if (!/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(state.details.packageName)) {
+      showToast('❌ Invalid package name format', 'error');
+      return false;
+    }
+  }
+  return true;
+}
 
-    function bindEvents() {
-      document.querySelectorAll('.build-type').forEach(el => {
-        el.addEventListener('click', () => {
-          document.querySelectorAll('.build-type').forEach(x => x.classList.remove('active'));
-          el.classList.add('active');
-          state.buildType = el.dataset.type;
-          document.querySelectorAll('[data-input]').forEach(x => x.style.display = 'none');
-          document.querySelector('[data-input="' + state.buildType + '"]').style.display = 'block';
-        });
-      });
+function updateReview() {
+  document.getElementById('reviewName').textContent = state.details.appName;
+  document.getElementById('reviewPackage').textContent = state.details.packageName;
+  
+  const typeText = state.buildType === 'template' 
+    ? `Template: ${state.selectedTemplate}`
+    : state.buildType === 'html' ? 'HTML Upload' : 'URL';
+  document.getElementById('reviewType').textContent = typeText;
+  
+  document.getElementById('reviewSplash').textContent = 
+    `${state.splash.style} · ${state.splash.color}`;
+  
+  // Cost calculation
+  const isIslamic = state.buildType === 'template' && 
+    TEMPLATES.find(t => t.id === state.selectedTemplate && t.free);
+  
+  document.getElementById('reviewCost').textContent = 
+    isIslamic ? '🆓 FREE (Islamic template)' : '1 point';
+}
 
-      const dropzone = document.getElementById('dropzone');
-      const fileInput = document.getElementById('fileInput');
-      dropzone.addEventListener('click', () => fileInput.click());
-      dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
-      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
-      dropzone.addEventListener('drop', e => {
-        e.preventDefault();
-        dropzone.classList.remove('drag');
-        if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
-      });
-      fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+// ===== BUILD =====
+async function startBuild() {
+  if (!state.user) {
+    showToast('❌ Please login first', 'error');
+    setTimeout(() => location.href = 'login.html?redirect=build.html', 1500);
+    return;
+  }
+  
+  const btn = document.getElementById('buildBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Building...';
+  
+  document.getElementById('buildProgress').style.display = 'block';
+  document.getElementById('buildActions').style.display = 'none';
+  document.getElementById('buildError').style.display = 'none';
+  document.getElementById('buildSuccess').style.display = 'none';
+  
+  try {
+    const payload = {
+      buildType: state.buildType,
+      htmlContent: state.htmlContent,
+      url: state.url,
+      templateName: state.selectedTemplate,
+      appName: state.details.appName,
+      packageName: state.details.packageName,
+      version: state.details.version,
+      splashStyle: state.splash.style,
+      splashColor: state.splash.color,
+      splashIcon: state.splash.icon,
+      splashDuration: state.splash.duration,
+      splashTagline: state.splash.tagline,
+      orientation: state.details.orientation,
+      fullscreen: state.details.fullscreen,
+      customIcon: state.details.icon
+    };
+    
+    updateProgress(20, 'Sending to server...');
+    
+    const result = await API.build(payload);
+    
+    if (!result.ok) throw new Error(result.error || 'Build failed');
+    
+    state.buildId = result.buildId;
+    updateProgress(35, `In queue (position ${result.queuePosition})`);
+    
+    // Poll status
+    pollStatus(result.buildId);
+    
+  } catch(err) {
+    console.error(err);
+    showBuildError(err.message);
+  }
+}
 
-      function handleFile(file) {
-        if (file.size > 5 * 1024 * 1024) return showToast('File too large (max 5 MB)', 'error');
-        const reader = new FileReader();
-        reader.onload = e => {
-          state.htmlContent = e.target.result;
-          state.fileName = file.name;
-          const nameEl = document.getElementById('fileName');
-          nameEl.textContent = '✅ ' + file.name + ' loaded';
-          nameEl.style.display = 'block';
-        };
-        reader.readAsText(file);
+function updateProgress(pct, text) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = text;
+}
+
+function pollStatus(buildId) {
+  let attempts = 0;
+  const maxAttempts = 60; // 5 minutes (5s x 60)
+  
+  state.pollInterval = setInterval(async () => {
+    attempts++;
+    try {
+      const status = await API.status(buildId);
+      const build = status.build;
+      
+      if (build.status === 'queued') {
+        updateProgress(35, `In queue (position ${status.queuePosition || '?'})`);
+      } else if (build.status === 'building') {
+        updateProgress(70, '🔨 Building APK... 60-90 seconds');
+      } else if (build.status === 'success') {
+        clearInterval(state.pollInterval);
+        updateProgress(100, '✅ Done!');
+        setTimeout(() => showSuccess(build), 500);
+        return;
+      } else if (build.status === 'failed') {
+        clearInterval(state.pollInterval);
+        showBuildError(build.error_message || 'Build failed');
+        return;
       }
-
-      document.getElementById('urlInput').addEventListener('input', e => { state.url = e.target.value; });
-
-      document.querySelectorAll('[data-template]').forEach(el => {
-        el.addEventListener('click', () => {
-          document.querySelectorAll('[data-template]').forEach(x => x.classList.remove('active'));
-          el.classList.add('active');
-          state.template = el.dataset.template;
-        });
-      });
-
-      document.getElementById('styleGrid').addEventListener('click', e => {
-        const el = e.target.closest('[data-style]');
-        if (!el) return;
-        state.splash.style = el.dataset.style;
-        renderStyles();
-        updatePreview();
-      });
-
-      document.getElementById('colorGrid').addEventListener('click', e => {
-        const el = e.target.closest('[data-color]');
-        if (!el) return;
-        state.splash.color = el.dataset.color;
-        renderColors();
-        renderStyles();
-        updatePreview();
-      });
-
-      document.getElementById('iconGrid').addEventListener('click', e => {
-        const el = e.target.closest('[data-icon]');
-        if (!el) return;
-        state.splash.icon = el.dataset.icon;
-        renderIcons();
-        updatePreview();
-      });
-
-      document.getElementById('taglineInput').addEventListener('input', e => {
-        state.splash.tagline = e.target.value;
-        updatePreview();
-      });
-
-      document.getElementById('durationSelect').addEventListener('change', e => {
-        state.splash.duration = parseInt(e.target.value);
-      });
-
-      document.getElementById('appName').addEventListener('input', e => {
-        state.details.appName = e.target.value;
-        updatePreview();
-      });
-      document.getElementById('packageName').addEventListener('input', e => { state.details.packageName = e.target.value; });
-      document.getElementById('version').addEventListener('input', e => { state.details.version = e.target.value; });
-      document.getElementById('orientation').addEventListener('change', e => { state.details.orientation = e.target.value; });
-      document.getElementById('fullscreen').addEventListener('change', e => { state.details.fullscreen = e.target.checked; });
-
-      document.getElementById('next1').addEventListener('click', () => goToStep(2));
-      document.getElementById('next2').addEventListener('click', () => goToStep(3));
-      document.getElementById('next3').addEventListener('click', () => { updateReview(); goToStep(4); });
-      document.querySelectorAll('[data-back]').forEach(btn => {
-        btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.back)));
-      });
-
-      document.getElementById('buildBtn').addEventListener('click', startBuild);
-    }
-
-    function goToStep(n) {
-      if (n > 1 && !validateStep(state.step)) return;
-      state.step = n;
-      document.querySelectorAll('.wizard-panel').forEach(p => p.style.display = 'none');
-      document.getElementById('panel-' + n).style.display = 'block';
-      document.querySelectorAll('.wizard-step').forEach(s => {
-        const step = parseInt(s.dataset.step);
-        s.classList.toggle('active', step === n);
-        s.classList.toggle('completed', step < n);
-      });
-      window.scrollTo({ top: 100, behavior: 'smooth' });
-    }
-
-    function validateStep(step) {
-      if (step === 1) {
-        if (state.buildType === 'html' && !state.htmlContent) { showToast('Please upload an HTML file', 'error'); return false; }
-        if (state.buildType === 'url' && !state.url) { showToast('Please enter a URL', 'error'); return false; }
-        if (state.buildType === 'template' && !state.template) { showToast('Please pick a template', 'error'); return false; }
+      
+      if (attempts >= maxAttempts) {
+        clearInterval(state.pollInterval);
+        showBuildError('Timeout. Check History page for status.');
       }
-      if (step === 3) {
-        if (!state.details.appName) { showToast('Please enter app name', 'error'); return false; }
-        if (!state.details.packageName) { showToast('Please enter package name', 'error'); return false; }
-      }
-      return true;
+    } catch(err) {
+      console.error('Poll error:', err);
     }
+  }, 5000);
+}
 
-    function updateReview() {
-      document.getElementById('reviewName').textContent = state.details.appName;
-      document.getElementById('reviewPackage').textContent = state.details.packageName;
-      document.getElementById('reviewType').textContent = state.buildType.toUpperCase() + (state.template ? ' (' + state.template + ')' : '');
-      document.getElementById('reviewSplash').textContent = state.splash.style + ' · ' + state.splash.color;
-    }
+function showSuccess(build) {
+  document.getElementById('buildProgress').style.display = 'none';
+  document.getElementById('buildSuccess').style.display = 'block';
+  
+  const link = document.getElementById('downloadLink');
+  link.href = build.apk_url || '#';
+  link.setAttribute('download', `${build.app_name}.apk`);
+  
+  showToast('🎉 APK ready! Download now', 'success');
+  
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+}
 
-    async function startBuild() {
-      const btn = document.getElementById('buildBtn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Building...';
-      document.getElementById('buildProgress').style.display = 'block';
-      document.getElementById('buildActions').style.display = 'none';
+function showBuildError(msg) {
+  document.getElementById('buildProgress').style.display = 'none';
+  document.getElementById('buildError').style.display = 'block';
+  document.getElementById('buildError').textContent = '❌ ' + msg;
+  document.getElementById('buildActions').style.display = 'flex';
+  
+  const btn = document.getElementById('buildBtn');
+  btn.disabled = false;
+  btn.textContent = '🚀 Retry Build';
+  
+  showToast('Build failed: ' + msg, 'error');
+}
 
-      const stages = [
-        { p: 20, t: 'Queued...' },
-        { p: 40, t: 'Generating resources...' },
-        { p: 60, t: 'Compiling...' },
-        { p: 80, t: 'Signing APK...' },
-        { p: 100, t: 'Done!' }
-      ];
+function shareBuild() {
+  const buildId = state.buildId;
+  if (!buildId) return;
+  
+  const url = `${location.origin}/history.html?id=${buildId}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: state.details.appName,
+      text: 'Check out my app!',
+      url: url
+    }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('🔗 Link copied to clipboard', 'success');
+    });
+  }
+}
 
-      for (const stage of stages) {
-        document.getElementById('progressFill').style.width = stage.p + '%';
-        document.getElementById('progressText').textContent = stage.t;
-        await new Promise(r => setTimeout(r, 1200));
-      }
+// ===== URL PARAMS =====
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(location.search);
+  const template = params.get('template');
+  if (template && TEMPLATES.find(t => t.id === template)) {
+    state.selectedTemplate = template;
+    state.selectedCat = TEMPLATES.find(t => t.id === template).cat;
+  }
+});
 
-      document.getElementById('buildProgress').style.display = 'none';
-      document.getElementById('buildSuccess').style.display = 'block';
-      showToast('Build complete! 🎉', 'success');
-      document.getElementById('downloadLink').href = '#';
-    }
-
-    init();
-  </script>
+// Start
+init();
+</script>
 </body>
 </html>
