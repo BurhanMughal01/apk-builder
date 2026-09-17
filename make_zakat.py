@@ -1,0 +1,391 @@
+content = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#052e16">
+<title>Zakat Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#041e0f;--bg-card:#0a3a1e;--bg-elev:#0f4f28;--bg-input:#062a15;
+  --text:#d1fae5;--text-muted:#6ee7b7;--text-subtle:#34a56f;
+  --primary:#10b981;--primary-dark:#059669;--accent:#fbbf24;--gold:#f59e0b;
+  --green-grad:linear-gradient(135deg,#10b981,#059669);
+  --gold-grad:linear-gradient(135deg,#fbbf24,#f59e0b);
+  --border:rgba(16,185,129,0.2);--border-hover:rgba(16,185,129,0.5);
+  --shadow:0 4px 24px rgba(0,0,0,0.5);
+  --shadow-glow:0 0 30px rgba(16,185,129,0.3);
+  --nav-h:64px;--header-h:60px;
+}
+[data-theme="light"]{
+  --bg:#f0fdf4;--bg-card:#ffffff;--bg-elev:#dcfce7;--bg-input:#ffffff;
+  --text:#052e16;--text-muted:#047857;--text-subtle:#6ee7b7;
+  --border:rgba(5,150,105,0.2);--border-hover:rgba(5,150,105,0.4);
+  --shadow:0 4px 24px rgba(5,46,22,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  transition:background .3s,color .3s;
+  overscroll-behavior:none;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 20% 10%,rgba(16,185,129,0.08),transparent 40%),radial-gradient(circle at 80% 90%,rgba(251,191,36,0.06),transparent 40%);
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit}
+
+/* HEADER */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:rgba(4,30,15,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:12px;z-index:50;
+}
+[data-theme="light"] .header{background:rgba(240,253,244,0.95)}
+.header-title{flex:1;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--gold-grad);display:grid;place-items:center;font-size:18px;box-shadow:0 4px 14px rgba(251,191,36,0.5)}
+.icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--text-muted);transition:all .2s}
+.icon-btn:active{background:var(--bg-card);color:var(--primary)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.main{position:fixed;top:var(--header-h);bottom:var(--nav-h);left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.main::-webkit-scrollbar{width:0}
+.view{display:none;padding:16px;min-height:100%}
+.view.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* RESULT HERO */
+.result-hero{
+  background:linear-gradient(135deg,#059669 0%,#10b981 50%,#34d399 100%);
+  border-radius:24px;padding:24px;margin-bottom:20px;
+  position:relative;overflow:hidden;color:#fff;
+  box-shadow:0 8px 30px rgba(16,185,129,0.4);
+}
+.result-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(251,191,36,0.4),transparent 70%);
+}
+.hero-content{position:relative;z-index:1;text-align:center}
+.hero-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;opacity:0.9;margin-bottom:8px;font-weight:600}
+.hero-amount{font-family:'Amiri',serif;font-size:48px;font-weight:800;line-height:1;margin-bottom:8px;text-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.hero-sub{font-size:13px;opacity:0.9;margin-bottom:16px}
+.hero-stats{display:flex;justify-content:space-around;gap:12px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.2)}
+.hero-stat{text-align:center}
+.hero-stat-val{font-size:18px;font-weight:800;margin-bottom:2px}
+.hero-stat-label{font-size:10px;opacity:0.85;text-transform:uppercase;letter-spacing:0.5px}
+
+/* SECTION */
+.section-title{
+  font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;
+  letter-spacing:1.5px;margin-bottom:12px;padding-left:4px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-title svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+.input-group{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px}
+.input-row{display:flex;align-items:center;gap:12px}
+.input-icon{width:40px;height:40px;border-radius:12px;background:var(--bg-elev);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.input-label{flex:1}
+.input-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.input-hint{font-size:11px;color:var(--text-subtle)}
+.input-field{
+  width:100%;padding:12px 14px;background:var(--bg-input);border:1px solid var(--border);
+  border-radius:12px;color:var(--text);font-size:16px;font-weight:700;outline:none;
+  text-align:right;font-variant-numeric:tabular-nums;transition:all .2s;
+}
+.input-field:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(16,185,129,0.15)}
+.input-wrap{margin-top:12px;position:relative}
+.input-wrap::after{content:'PKR';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--text-subtle);font-weight:700;pointer-events:none}
+
+/* NISAB CARD */
+.nisab-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:16px;
+  padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.nisab-icon{width:44px;height:44px;border-radius:12px;background:var(--gold-grad);display:grid;place-items:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 12px rgba(251,191,36,0.3)}
+.nisab-info{flex:1}
+.nisab-label{font-size:12px;color:var(--text-subtle);margin-bottom:2px}
+.nisab-value{font-size:16px;font-weight:700}
+.nisab-status{font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:0.5px}
+.nisab-status.above{background:rgba(16,185,129,0.2);color:#34d399}
+.nisab-status.below{background:rgba(239,68,68,0.15);color:#fca5a5}
+
+/* BUTTONS */
+.actions-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.btn{padding:16px;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn:active{transform:scale(0.97)}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.btn-primary{background:var(--gold-grad);color:#041e0f;box-shadow:0 4px 14px rgba(251,191,36,0.4)}
+.btn-secondary{background:var(--bg-elev);color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)}
+
+/* GUIDE */
+.guide-item{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
+.guide-item h4{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--primary);display:flex;align-items:center;gap:6px}
+.guide-item h4 svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5}
+.guide-item p{font-size:13px;color:var(--text-muted);line-height:1.7}
+
+/* HISTORY */
+.history-item{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.history-info{flex:1}
+.history-amount{font-size:16px;font-weight:800;color:var(--primary);margin-bottom:2px;font-variant-numeric:tabular-nums}
+.history-date{font-size:11px;color:var(--text-subtle)}
+.history-delete{width:32px;height:32px;border-radius:10px;background:rgba(239,68,68,0.1);color:#fca5a5;display:grid;place-items:center;flex-shrink:0}
+.history-delete svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(10,58,30,0.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(3,1fr);z-index:50;padding-bottom:env(safe-area-inset-bottom);
+}
+[data-theme="light"] .bottom-nav{background:rgba(255,255,255,0.95)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-subtle);font-size:10px;font-weight:600;padding:8px}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active{color:var(--primary)}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--text-subtle)}
+.empty svg{width:64px;height:64px;stroke:var(--border-hover);fill:none;stroke-width:1.5;margin:0 auto 16px}
+.empty h3{font-size:16px;color:var(--text-muted);margin-bottom:6px;font-weight:600}
+.empty p{font-size:13px}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg-elev);color:var(--text);padding:12px 22px;border-radius:14px;font-size:13px;font-weight:600;box-shadow:var(--shadow-glow);border:1px solid var(--border-hover);opacity:0;transition:all .3s;pointer-events:none;z-index:200;display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2.5}
+</style>
+</head>
+<body data-theme="dark">
+
+<header class="header">
+  <div class="header-title">
+    <div class="logo">💰</div>
+    <span id="headerTitle">Zakat Calculator</span>
+  </div>
+  <button class="icon-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24" id="themeIcon"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+</header>
+
+<main class="main" id="mainArea">
+
+  <!-- CALCULATOR VIEW -->
+  <div class="view active" id="view-calc">
+    <div class="result-hero">
+      <div class="hero-content">
+        <div class="hero-label">Your Zakat</div>
+        <div class="hero-amount" id="zakatAmount">PKR 0</div>
+        <div class="hero-sub">2.5% of net wealth</div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="assetsTotal">0</div>
+            <div class="hero-stat-label">Assets</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="liabilitiesTotal">0</div>
+            <div class="hero-stat-label">Liabilities</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="netWealth">0</div>
+            <div class="hero-stat-label">Net Wealth</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nisab-card">
+      <div class="nisab-icon">⚖️</div>
+      <div class="nisab-info">
+        <div class="nisab-label">Nisab Threshold</div>
+        <div class="nisab-value" id="nisabValue">PKR 179,689</div>
+      </div>
+      <span class="nisab-status below" id="nisabStatus">BELOW</span>
+    </div>
+
+    <div class="section-title">
+      <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Assets
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">💵</div>
+        <div class="input-label">
+          <div class="input-name">Cash & Bank</div>
+          <div class="input-hint">Cash in hand, savings, current</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="cash" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">🥇</div>
+        <div class="input-label">
+          <div class="input-name">Gold Value</div>
+          <div class="input-hint">Market value of gold you own</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="gold" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">🥈</div>
+        <div class="input-label">
+          <div class="input-name">Silver Value</div>
+          <div class="input-hint">Market value of silver you own</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="silver" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">🏪</div>
+        <div class="input-label">
+          <div class="input-name">Business Assets</div>
+          <div class="input-hint">Stock, inventory for sale</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="business" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">📈</div>
+        <div class="input-label">
+          <div class="input-name">Investments</div>
+          <div class="input-hint">Shares, mutual funds, crypto</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="invest" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">🏠</div>
+        <div class="input-label">
+          <div class="input-name">Property (Investment)</div>
+          <div class="input-hint">Property held for resale</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="property" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="section-title" style="margin-top:20px">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      Liabilities (Deducted)
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">💳</div>
+        <div class="input-label">
+          <div class="input-name">Debts Owed</div>
+          <div class="input-hint">Loans, credit card debt</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="debt" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-icon">🧾</div>
+        <div class="input-label">
+          <div class="input-name">Immediate Bills</div>
+          <div class="input-hint">Rent, utilities due now</div>
+        </div>
+      </div>
+      <div class="input-wrap"><input type="number" class="input-field" id="bills" value="0" min="0" oninput="calc()" placeholder="0"></div>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn btn-secondary" onclick="resetCalc()">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+      <button class="btn btn-primary" onclick="saveCalculation()">
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <!-- GUIDE VIEW -->
+  <div class="view" id="view-guide">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Zakat Guide</h2>
+
+    <div class="guide-item">
+      <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> What is Zakat?</h4>
+      <p>Zakat is one of the five pillars of Islam. It's an obligatory charity of 2.5% on your accumulated wealth held for one lunar year.</p>
+    </div>
+
+    <div class="guide-item">
+      <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Who must pay?</h4>
+      <p>Every adult Muslim who owns wealth equal to or above the Nisab threshold for one full lunar year must pay Zakat.</p>
+    </div>
+
+    <div class="guide-item">
+      <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Nisab Threshold</h4>
+      <p>Nisab is the minimum wealth. It equals 87.48g of gold or 612.36g of silver. Current Nisab is calculated based on silver rate.</p>
+    </div>
+
+    <div class="guide-item">
+      <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> What is Zakatable?</h4>
+      <p>Cash, bank savings, gold, silver, business inventory, investments, and property held for resale. Your primary home and personal items are exempt.</p>
+    </div>
+
+    <div class="guide-item">
+      <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> How to Calculate</h4>
+      <p>Total all zakatable assets, subtract immediate liabilities, and if the result exceeds Nisab, pay 2.5% of it as Zakat.</p>
+    </div>
+
+    <div class="guide-item">
+      <h4><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Who receives it?</h4>
+      <p>The poor, needy, those in debt, travelers in need, and other categories mentioned in Surah At-Tawbah (9:60).</p>
+    </div>
+  </div>
+
+  <!-- HISTORY VIEW -->
+  <div class="view" id="view-history">
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Saved Calculations</h2>
+    <div id="historyList"></div>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="calc" onclick="switchView('calc')">
+    <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h8"/></svg>
+    <span>Calculator</span>
+  </button>
+  <button class="nav-item" data-view="guide" onclick="switchView('guide')">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    <span>Guide</span>
+  </button>
+  <button class="nav-item" data-view="history" onclick="switchView('history')">
+    <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
+    <span>History</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastText">Saved</span>
+</div>
+
+<script>
+/* PART 2 WILL BE INJECTED */
+</script>
+</body>
+</html>
+'''
+
+with open('templates/zakat.html', 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print('Chunk 1 saved:', len(content), 'bytes')
