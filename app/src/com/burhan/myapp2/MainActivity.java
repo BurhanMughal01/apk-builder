@@ -7,10 +7,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.webkit.WebView;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class MainActivity extends Activity {
+  private static final String TAG = "APKForge";
   private static final String BG = "#0a0a1a";
   private FrameLayout root;
   private View splashView;
@@ -32,108 +34,144 @@ public class MainActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Log.d(TAG, "=== onCreate ===");
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor(BG)));
     root = new FrameLayout(this);
     root.setBackgroundColor(Color.parseColor(BG));
     setContentView(root);
-
-    loadWebView();
-
     JSONObject config = loadSplashConfig();
-    if (config != null) {
-      showSplash(config);
-    }
+    Log.d(TAG, "Config: " + (config != null ? config.toString() : "NULL"));
+    showSplash(config);
+    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+      @Override public void run() { loadWebView(); }
+    }, 100);
   }
 
   private JSONObject loadSplashConfig() {
     try {
       InputStream is = getAssets().open("splash_config.json");
-      BufferedReader r = new BufferedReader(new InputStreamReader(is));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
       StringBuilder sb = new StringBuilder();
       String line;
-      while ((line = r.readLine()) != null) sb.append(line);
-      r.close(); is.close();
+      while ((line = reader.readLine()) != null) sb.append(line);
+      reader.close();
+      is.close();
       return new JSONObject(sb.toString());
     } catch (Exception e) {
+      Log.e(TAG, "loadSplashConfig failed: " + e.getMessage());
       return null;
     }
   }
 
   private void showSplash(JSONObject c) {
-    String style = c.optString("style", "gradient");
-    String color = c.optString("color", "#6366f1");
-    String icon = c.optString("icon", "rocket");
-    int duration = c.optInt("duration", 2000);
-    String tagline = c.optString("tagline", "");
-    String appName = c.optString("appName", "My App");
+    try {
+      String style = "gradient";
+      String color = "#6366f1";
+      String icon = "🚀";
+      int duration = 2000;
+      String tagline = "";
+      String appName = "My App";
 
-    LinearLayout splash = new LinearLayout(this);
-    splash.setOrientation(LinearLayout.VERTICAL);
-    splash.setGravity(Gravity.CENTER);
-    splash.setBackground(makeBg(style, color));
+      if (c != null) {
+        style = c.optString("style", "gradient");
+        color = c.optString("color", "#6366f1");
+        icon = decodeIcon(c.optString("icon", "🚀"));
+        duration = c.optInt("duration", 2000);
+        tagline = c.optString("tagline", "");
+        appName = c.optString("appName", "My App");
+      }
 
-    TextView iconView = new TextView(this);
-    iconView.setText(emoji(icon));
-    iconView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 72);
-    iconView.setGravity(Gravity.CENTER);
-    splash.addView(iconView);
+      if (duration < 500) duration = 1500;
+      if (duration > 10000) duration = 10000;
 
-    TextView nameView = new TextView(this);
-    nameView.setText(appName);
-    nameView.setTextColor(Color.WHITE);
-    nameView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-    nameView.setTypeface(Typeface.DEFAULT_BOLD);
-    nameView.setGravity(Gravity.CENTER);
-    LinearLayout.LayoutParams nlp = new LinearLayout.LayoutParams(-2, -2);
-    nlp.topMargin = dp(14);
-    splash.addView(nameView, nlp);
+      Log.d(TAG, "Splash: style=" + style + ", color=" + color + ", dur=" + duration);
 
-    if (tagline.length() > 0) {
-      TextView tagView = new TextView(this);
-      tagView.setText(tagline);
-      tagView.setTextColor(0xDDFFFFFF);
-      tagView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-      tagView.setGravity(Gravity.CENTER);
-      LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-2, -2);
-      tlp.topMargin = dp(8);
-      splash.addView(tagView, tlp);
+      LinearLayout splash = new LinearLayout(this);
+      splash.setOrientation(LinearLayout.VERTICAL);
+      splash.setGravity(Gravity.CENTER);
+      splash.setBackground(makeBg(style, color));
+
+      TextView iconView = new TextView(this);
+      iconView.setText(icon);
+      iconView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
+      iconView.setGravity(Gravity.CENTER);
+      splash.addView(iconView);
+
+      if (appName.length() > 0) {
+        TextView nameView = new TextView(this);
+        nameView.setText(appName);
+        nameView.setTextColor(Color.WHITE);
+        nameView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        nameView.setTypeface(Typeface.DEFAULT_BOLD);
+        nameView.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams nlp = new LinearLayout.LayoutParams(-2, -2);
+        nlp.topMargin = dp(16);
+        splash.addView(nameView, nlp);
+      }
+
+      if (tagline.length() > 0) {
+        TextView tagView = new TextView(this);
+        tagView.setText(tagline);
+        tagView.setTextColor(0xDDFFFFFF);
+        tagView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        tagView.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-2, -2);
+        tlp.topMargin = dp(8);
+        splash.addView(tagView, tlp);
+      }
+
+      splashView = splash;
+      root.addView(splash, new FrameLayout.LayoutParams(-1, -1));
+      splash.bringToFront();
+      splash.requestLayout();
+      Log.d(TAG, "Splash added");
+
+      new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        @Override public void run() { fadeOut(); }
+      }, duration);
+    } catch (Exception e) {
+      Log.e(TAG, "showSplash failed: " + e.getMessage());
     }
-
-    splashView = splash;
-    root.addView(splash, new FrameLayout.LayoutParams(-1, -1));
-
-    new Handler().postDelayed(new Runnable() {
-      @Override public void run() { fadeOut(); }
-    }, duration);
   }
 
   private void fadeOut() {
     if (splashView == null) return;
-    AlphaAnimation a = new AlphaAnimation(1f, 0f);
-    a.setDuration(500);
-    a.setAnimationListener(new Animation.AnimationListener() {
-      @Override public void onAnimationStart(Animation x) {}
-      @Override public void onAnimationRepeat(Animation x) {}
-      @Override public void onAnimationEnd(Animation x) {
-        if (splashView != null) { root.removeView(splashView); splashView = null; }
-      }
-    });
-    splashView.startAnimation(a);
+    try {
+      AlphaAnimation a = new AlphaAnimation(1f, 0f);
+      a.setDuration(500);
+      a.setAnimationListener(new Animation.AnimationListener() {
+        @Override public void onAnimationStart(Animation x) {}
+        @Override public void onAnimationRepeat(Animation x) {}
+        @Override public void onAnimationEnd(Animation x) {
+          try { if (splashView != null) root.removeView(splashView); } catch (Exception e) {}
+          splashView = null;
+        }
+      });
+      splashView.startAnimation(a);
+    } catch (Exception e) {
+      try { if (splashView != null) root.removeView(splashView); } catch (Exception ex) {}
+      splashView = null;
+    }
   }
 
   private void loadWebView() {
-    WebView w = new WebView(this);
-    w.setBackgroundColor(Color.parseColor(BG));
-    WebSettings s = w.getSettings();
-    s.setJavaScriptEnabled(true);
-    s.setDomStorageEnabled(true);
-    s.setAllowFileAccess(true);
-    s.setLoadWithOverviewMode(true);
-    s.setUseWideViewPort(true);
-    s.setAllowContentAccess(true);
-    w.setWebViewClient(new WebViewClient());
-    w.loadUrl("file:///android_asset/index.html");
-    root.addView(w, new FrameLayout.LayoutParams(-1, -1));
+    try {
+      WebView w = new WebView(this);
+      w.setBackgroundColor(Color.parseColor(BG));
+      WebSettings s = w.getSettings();
+      s.setJavaScriptEnabled(true);
+      s.setDomStorageEnabled(true);
+      s.setAllowFileAccess(true);
+      s.setLoadWithOverviewMode(true);
+      s.setUseWideViewPort(true);
+      s.setAllowContentAccess(true);
+      w.setWebViewClient(new WebViewClient());
+      w.loadUrl("file:///android_asset/index.html");
+      root.addView(w, 0, new FrameLayout.LayoutParams(-1, -1));
+      Log.d(TAG, "WebView loaded behind splash");
+    } catch (Exception e) {
+      Log.e(TAG, "loadWebView failed: " + e.getMessage());
+    }
   }
 
   private GradientDrawable makeBg(String style, String color) {
@@ -150,8 +188,11 @@ public class MainActivity extends Activity {
       } else if ("aurora".equals(style)) {
         g.setOrientation(GradientDrawable.Orientation.TL_BR);
         g.setColors(new int[]{c, Color.parseColor("#06b6d4"), Color.parseColor("#ec4899")});
-      } else if ("waves".equals(style) || "matrix".equals(style)) {
-        g.setOrientation("matrix".equals(style) ? GradientDrawable.Orientation.TOP_BOTTOM : GradientDrawable.Orientation.BOTTOM_TOP);
+      } else if ("waves".equals(style)) {
+        g.setOrientation(GradientDrawable.Orientation.BOTTOM_TOP);
+        g.setColors(new int[]{Color.BLACK, c});
+      } else if ("matrix".equals(style)) {
+        g.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
         g.setColors(new int[]{Color.BLACK, c});
       } else if ("cosmic".equals(style) || "stars".equals(style)) {
         g.setGradientType(GradientDrawable.RADIAL_GRADIENT);
@@ -185,8 +226,8 @@ public class MainActivity extends Activity {
     return Color.argb(alpha, Color.red(c), Color.green(c), Color.blue(c));
   }
 
-  private String emoji(String name) {
-    if (name == null) return "🚀";
+  private String decodeIcon(String name) {
+    if (name == null || name.length() == 0) return "🚀";
     if (name.length() > 2) return name;
     switch (name.toLowerCase()) {
       case "rocket": return "🚀";

@@ -24,6 +24,7 @@ with open('package_name.txt', 'w') as f:
 
 # Splash config
 splash = config.get('splash', {})
+splash['appName'] = config.get('appName', 'My App')
 os.makedirs('app/assets', exist_ok=True)
 with open('app/assets/splash_config.json', 'w') as f:
     json.dump(splash, f, indent=2)
