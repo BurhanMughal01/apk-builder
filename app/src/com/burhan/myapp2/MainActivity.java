@@ -181,13 +181,8 @@ public class MainActivity extends Activity {
     return g;
   }
 
-  private int withAlpha(String hex, int alpha) {
-    try {
-      int c = Color.parseColor(hex);
-      return Color.argb(alpha, Color.red(c), Color.green(c), Color.blue(c));
-    } catch (Exception e) {
-      return Color.argb(alpha, 99, 102, 241);
-    }
+  private int withAlpha(int c, int alpha) {
+    return Color.argb(alpha, Color.red(c), Color.green(c), Color.blue(c));
   }
 
   private String emoji(String name) {

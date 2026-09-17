@@ -1,11 +1,9 @@
 import { log } from "./utils.js";
 
 const ISLAMIC_TEMPLATES = [
-  'tasbeeh', 'quran', 'prayer', 'qibla', 'names99', 'dua',
-  'zakat', 'islamic-calendar', 'ramadan', 'hadith', 'yaseen',
-  'ayatulkursi', 'morning-adhkar', 'evening-adhkar', 'islamic-quiz',
-  'hijri', 'namaz', 'islamic-names', 'asmaul-husna', 'dhikr',
-  'quran-audio', 'surah-list', 'tafsir', 'hajj-guide', 'umrah-guide'
+  'quran', 'duas', 'tasbeeh', 'hadith', 'names99', 'prayer',
+  'qibla', 'zakat', 'adhkar', 'quiz', 'calendar', 'names',
+  'ramadan', 'qunoot'
 ];
 
 function isIslamicTemplate(name) {
