@@ -33,7 +33,9 @@ h1,h2,h3,h4,h5{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;li
 .nav-actions{display:flex;align-items:center;gap:12px}
 .theme-toggle{width:44px;height:44px;border-radius:var(--radius-sm);display:grid;place-items:center;background:var(--bg-alt);border:1px solid var(--border);color:var(--text);transition:all var(--t-fast);font-size:1.2rem}
 .theme-toggle:hover{background:var(--bg-card);border-color:var(--primary);transform:scale(1.05)}
-.nav-mobile-btn{display:none;width:44px;height:44px;border-radius:var(--radius-sm);background:var(--bg-alt);border:1px solid var(--border);place-items:center;font-size:1.3rem;color:var(--text)}
+.nav-mobile-btn{display:none;width:44px;height:44px;border-radius:var(--radius-sm);background:var(--bg-alt);border:1px solid var(--border);place-items:center;font-size:1.3rem;color:var(--text);cursor:pointer;transition:all var(--t-fast)}
+.nav-mobile-btn:hover{background:var(--bg-card);border-color:var(--primary)}
+.nav-mobile-btn:active{transform:scale(0.95)}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:var(--radius-sm);font-weight:600;font-size:0.9375rem;transition:all var(--t-fast);white-space:nowrap;cursor:pointer;border:1px solid transparent}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
@@ -133,7 +135,7 @@ h1,h2,h3,h4,h5{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;li
 .tpl-badge.free{background:rgba(16,185,129,0.12);color:var(--success);border:1px solid var(--success)}
 .tpl-badge.pro{background:rgba(99,102,241,0.12);color:var(--primary);border:1px solid var(--primary)}
 
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
 .price-card{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:32px;transition:all var(--t);position:relative}
 .price-card.featured{border-color:var(--primary);box-shadow:var(--shadow-glow);transform:scale(1.02)}
 .price-card.featured::before{content:'MOST POPULAR';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--grad-primary);color:#fff;padding:6px 18px;border-radius:var(--radius-full);font-size:0.7rem;font-weight:800;letter-spacing:0.08em;white-space:nowrap}
