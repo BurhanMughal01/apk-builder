@@ -43,7 +43,7 @@
     .drawer-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-card); z-index: 1; }
     .notif-list { padding: 16px; }
     .notif-item { padding: 16px; border-radius: var(--radius-sm); margin-bottom: 8px; background: var(--bg-alt); }
-    .notif-item.unread { background: rgba(99,102,241,0.08); border-left: 3px solid var(--primary); }
+    .notif-item.unread { background: rgba(5,150,105,0.08); border-left: 3px solid var(--primary); }
     .notif-item h4 { font-size: 0.9375rem; margin-bottom: 4px; }
     .notif-item p { font-size: 0.8125rem; color: var(--text-muted); }
     .hidden { display: none !important; }
@@ -159,7 +159,7 @@
     function renderProfile() {
       document.getElementById('userName').textContent = profile.full_name || 'User';
       document.getElementById('userAvatar').src = profile.avatar_url ||
-        'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.full_name || 'U') + '&background=6366f1&color=fff';
+        'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile.full_name || 'U') + '&background=059669&color=fff';
       document.getElementById('userPlan').textContent = (profile.plan || 'free').toUpperCase();
     }
 
