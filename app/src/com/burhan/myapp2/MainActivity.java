@@ -206,3 +206,4 @@ public class MainActivity extends Activity {
       Log.e(TAG, "showSplash failed: " + e.getMessage());
     }
   }
+}
