@@ -206,4 +206,224 @@ public class MainActivity extends Activity {
       Log.e(TAG, "showSplash failed: " + e.getMessage());
     }
   }
+
+  private void loadWebView() {
+    try {
+      WebView webView = new WebView(this);
+      WebSettings ws = webView.getSettings();
+      ws.setJavaScriptEnabled(true);
+      ws.setDomStorageEnabled(true);
+      ws.setAllowFileAccess(true);
+      ws.setLoadWithOverviewMode(true);
+      ws.setUseWideViewPort(true);
+      ws.setBuiltInZoomControls(false);
+      ws.setDisplayZoomControls(false);
+      webView.setWebViewClient(new WebViewClient());
+      webView.setBackgroundColor(Color.parseColor(BG));
+      webView.loadUrl("file:///android_asset/index.html");
+      root.addView(webView, new FrameLayout.LayoutParams(-1, -1));
+    } catch (Exception e) {
+      Log.e(TAG, "loadWebView failed: " + e.getMessage());
+    }
+  }
+
+  private String decodeIcon(String encoded) {
+    if (encoded == null) return "\ud83d\ude80";
+    try {
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < encoded.length(); i++) {
+        char ch = encoded.charAt(i);
+        if (ch == '\\' && i + 5 < encoded.length() && encoded.charAt(i+1) == 'u') {
+          String hex = encoded.substring(i+2, i+6);
+          sb.append((char) Integer.parseInt(hex, 16));
+          i += 5;
+        } else {
+          sb.append(ch);
+        }
+      }
+      return sb.toString();
+    } catch (Exception e) {
+      return encoded;
+    }
+  }
+
+  private int iconSizeSp(String size) {
+    if ("small".equals(size)) return 48;
+    if ("large".equals(size)) return 96;
+    if ("xlarge".equals(size)) return 128;
+    return 72;
+  }
+
+  private android.graphics.drawable.Drawable makeBg(String style, String color) {
+    try {
+      int c1 = Color.parseColor(color);
+      GradientDrawable.Orientation o = GradientDrawable.Orientation.TL_BR;
+      if ("gradient".equals(style)) {
+        return new GradientDrawable(o, new int[]{ c1, lighten(c1, 0.3f), darken(c1, 0.3f) });
+      } else if ("solid".equals(style) || "minimal".equals(style)) {
+        return new ColorDrawable(c1);
+      } else if ("neon".equals(style)) {
+        return new GradientDrawable(o, new int[]{ darken(c1, 0.7f), c1, darken(c1, 0.7f) });
+      } else if ("dark".equals(style)) {
+        return new GradientDrawable(o, new int[]{ darken(c1, 0.8f), Color.parseColor(BG) });
+      } else {
+        return new GradientDrawable(o, new int[]{ c1, darken(c1, 0.4f) });
+      }
+    } catch (Exception e) {
+      return new ColorDrawable(Color.parseColor(BG));
+    }
+  }
+
+  private void applyIconAnimation(TextView iconView, String anim) {
+    if (anim == null || "none".equals(anim) || iconView == null) return;
+    try {
+      AnimationSet set = new AnimationSet(true);
+      if ("bounce".equals(anim)) {
+        ScaleAnimation s1 = new ScaleAnimation(0f, 1.2f, 0f, 1.2f,
+          Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        s1.setDuration(500);
+        ScaleAnimation s2 = new ScaleAnimation(1.2f, 1f, 1.2f, 1f,
+          Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        s2.setDuration(300);
+        s2.setStartOffset(500);
+        set.addAnimation(s1);
+        set.addAnimation(s2);
+        set.setInterpolator(new OvershootInterpolator());
+      } else if ("fade".equals(anim)) {
+        AlphaAnimation a = new AlphaAnimation(0f, 1f);
+        a.setDuration(800);
+        set.addAnimation(a);
+      } else if ("rotate".equals(anim)) {
+        RotateAnimation r = new RotateAnimation(0, 360,
+          Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        r.setDuration(1000);
+        r.setInterpolator(new LinearInterpolator());
+        set.addAnimation(r);
+      } else if ("scale".equals(anim)) {
+        ScaleAnimation s = new ScaleAnimation(0f, 1f, 0f, 1f,
+          Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        s.setDuration(600);
+        s.setInterpolator(new DecelerateInterpolator());
+        set.addAnimation(s);
+      }
+      iconView.startAnimation(set);
+    } catch (Exception e) {
+      Log.e(TAG, "applyIconAnimation failed: " + e.getMessage());
+    }
+  }
+
+  private void applyTextAnimation(TextView view, String anim, int delay) {
+    if (view == null) return;
+    try {
+      if ("slide".equals(anim)) {
+        TranslateAnimation t = new TranslateAnimation(0, 0, dp(30), 0);
+        t.setDuration(600);
+        t.setStartOffset(delay);
+        t.setInterpolator(new DecelerateInterpolator());
+        view.startAnimation(t);
+        view.animate().alpha(1f).setDuration(600).setStartDelay(delay).start();
+      } else if ("fade".equals(anim)) {
+        view.animate().alpha(1f).setDuration(800).setStartDelay(delay).start();
+      } else if ("scale".equals(anim)) {
+        view.setScaleX(0f);
+        view.setScaleY(0f);
+        view.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(600).setStartDelay(delay).start();
+      } else {
+        view.animate().alpha(1f).setDuration(600).setStartDelay(delay).start();
+      }
+    } catch (Exception e) {
+      Log.e(TAG, "applyTextAnimation failed: " + e.getMessage());
+    }
+  }
+
+  private int getTextColor(String textColor, String bgColor) {
+    try {
+      if ("white".equals(textColor)) return Color.WHITE;
+      if ("black".equals(textColor)) return Color.BLACK;
+      if ("auto".equals(textColor)) {
+        int bg = Color.parseColor(bgColor);
+        double lum = 0.299 * Color.red(bg) + 0.587 * Color.green(bg) + 0.114 * Color.blue(bg);
+        return lum > 128 ? Color.BLACK : Color.WHITE;
+      }
+      return Color.parseColor(textColor);
+    } catch (Exception e) {
+      return Color.WHITE;
+    }
+  }
+
+  private int withAlpha(int color, int alpha) {
+    return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
+  }
+
+  private int lighten(int color, float amount) {
+    int r = Math.min(255, (int)(Color.red(color) + 255 * amount));
+    int g = Math.min(255, (int)(Color.green(color) + 255 * amount));
+    int b = Math.min(255, (int)(Color.blue(color) + 255 * amount));
+    return Color.rgb(r, g, b);
+  }
+
+  private int darken(int color, float amount) {
+    int r = Math.max(0, (int)(Color.red(color) * (1 - amount)));
+    int g = Math.max(0, (int)(Color.green(color) * (1 - amount)));
+    int b = Math.max(0, (int)(Color.blue(color) * (1 - amount)));
+    return Color.rgb(r, g, b);
+  }
+
+  private int dp(int value) {
+    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value,
+      getResources().getDisplayMetrics());
+  }
+
+  private View makeLoadingView(String type, String color) {
+    try {
+      if ("spinner".equals(type) || "bar".equals(type) || "dots".equals(type)) {
+        ProgressBar pb = new ProgressBar(this);
+        pb.setIndeterminate(true);
+        return pb;
+      }
+      return null;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  private void applyBgAnimation(LinearLayout splash, String anim) {
+    if (splash == null) return;
+    try {
+      if ("pulse".equals(anim)) {
+        AlphaAnimation pulse = new AlphaAnimation(0.7f, 1f);
+        pulse.setDuration(1500);
+        pulse.setRepeatMode(Animation.REVERSE);
+        pulse.setRepeatCount(Animation.INFINITE);
+        splash.startAnimation(pulse);
+      } else if ("fade".equals(anim)) {
+        AlphaAnimation fade = new AlphaAnimation(0f, 1f);
+        fade.setDuration(1000);
+        splash.startAnimation(fade);
+      }
+    } catch (Exception e) {
+      Log.e(TAG, "applyBgAnimation failed: " + e.getMessage());
+    }
+  }
+
+  private void fadeOut() {
+    if (splashView == null) return;
+    try {
+      AlphaAnimation fade = new AlphaAnimation(1f, 0f);
+      fade.setDuration(400);
+      fade.setAnimationListener(new Animation.AnimationListener() {
+        @Override public void onAnimationStart(Animation a) {}
+        @Override public void onAnimationRepeat(Animation a) {}
+        @Override public void onAnimationEnd(Animation a) {
+          if (splashView != null && root != null) {
+            root.removeView(splashView);
+            splashView = null;
+          }
+        }
+      });
+      splashView.startAnimation(fade);
+    } catch (Exception e) {
+      Log.e(TAG, "fadeOut failed: " + e.getMessage());
+    }
+  }
 }
