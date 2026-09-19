@@ -5,20 +5,31 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -40,7 +51,6 @@ public class MainActivity extends Activity {
     root.setBackgroundColor(Color.parseColor(BG));
     setContentView(root);
     JSONObject config = loadSplashConfig();
-    Log.d(TAG, "Config: " + (config != null ? config.toString() : "NULL"));
     showSplash(config);
     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
       @Override public void run() { loadWebView(); }
@@ -58,7 +68,7 @@ public class MainActivity extends Activity {
       is.close();
       return new JSONObject(sb.toString());
     } catch (Exception e) {
-      Log.e(TAG, "loadSplashConfig failed: " + e.getMessage());
+      Log.e(TAG, "Config load failed: " + e.getMessage());
       return null;
     }
   }
@@ -68,23 +78,54 @@ public class MainActivity extends Activity {
       String style = "gradient";
       String color = "#6366f1";
       String icon = "🚀";
-      int duration = 2000;
+      int duration = 2500;
       String tagline = "";
       String appName = "My App";
+      String iconAnim = "bounce";
+      String bgAnim = "static";
+      String loading = "none";
+      String textAnim = "slide";
+      String iconSize = "medium";
+      String textColor = "white";
+      boolean showAppName = true;
+      boolean showTagline = true;
+      boolean vibrate = false;
 
       if (c != null) {
         style = c.optString("style", "gradient");
         color = c.optString("color", "#6366f1");
         icon = decodeIcon(c.optString("icon", "🚀"));
-        duration = c.optInt("duration", 2000);
+        duration = c.optInt("duration", 2500);
         tagline = c.optString("tagline", "");
         appName = c.optString("appName", "My App");
+        iconAnim = c.optString("iconAnim", "bounce");
+        bgAnim = c.optString("bgAnim", "static");
+        loading = c.optString("loading", "none");
+        textAnim = c.optString("textAnim", "slide");
+        iconSize = c.optString("iconSize", "medium");
+        textColor = c.optString("textColor", "white");
+        showAppName = c.optBoolean("showAppName", true);
+        showTagline = c.optBoolean("showTagline", true);
+        vibrate = c.optBoolean("vibrate", false);
       }
 
-      if (duration < 500) duration = 1500;
+      if (duration < 1000) duration = 2500;
       if (duration > 10000) duration = 10000;
 
-      Log.d(TAG, "Splash: style=" + style + ", color=" + color + ", dur=" + duration);
+      Log.d(TAG, "Splash: icon=" + iconAnim + ", bg=" + bgAnim + ", loading=" + loading);
+
+      if (vibrate) {
+        try {
+          Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+          if (v != null) {
+            if (Build.VERSION.SDK_INT >= 26) {
+              v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+              v.vibrate(50);
+            }
+          }
+        } catch (Exception e) {}
+      }
 
       LinearLayout splash = new LinearLayout(this);
       splash.setOrientation(LinearLayout.VERTICAL);
@@ -93,168 +134,75 @@ public class MainActivity extends Activity {
 
       TextView iconView = new TextView(this);
       iconView.setText(icon);
-      iconView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
+      iconView.setTextSize(TypedValue.COMPLEX_UNIT_SP, iconSizeSp(iconSize));
       iconView.setGravity(Gravity.CENTER);
       splash.addView(iconView);
+      applyIconAnimation(iconView, iconAnim);
 
-      if (appName.length() > 0) {
-        TextView nameView = new TextView(this);
+      TextView nameView = null;
+      if (showAppName && appName.length() > 0) {
+        LinearLayout.LayoutParams nlp = new LinearLayout.LayoutParams(-2, -2);
+        nlp.topMargin = dp(24);
+        nameView = new TextView(this);
         nameView.setText(appName);
-        nameView.setTextColor(Color.WHITE);
-        nameView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        nameView.setTextColor(getTextColor(textColor, color));
+        nameView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
         nameView.setTypeface(Typeface.DEFAULT_BOLD);
         nameView.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams nlp = new LinearLayout.LayoutParams(-2, -2);
-        nlp.topMargin = dp(16);
+        nameView.setAlpha(0f);
         splash.addView(nameView, nlp);
+        applyTextAnimation(nameView, textAnim, 400);
       }
 
-      if (tagline.length() > 0) {
-        TextView tagView = new TextView(this);
-        tagView.setText(tagline);
-        tagView.setTextColor(0xDDFFFFFF);
-        tagView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        tagView.setGravity(Gravity.CENTER);
+      TextView tagView = null;
+      if (showTagline && tagline.length() > 0) {
         LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-2, -2);
-        tlp.topMargin = dp(8);
+        tlp.topMargin = dp(12);
+        tagView = new TextView(this);
+        tagView.setText(tagline);
+        tagView.setTextColor(withAlpha(getTextColor(textColor, color), 220));
+        tagView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        tagView.setGravity(Gravity.CENTER);
+        tagView.setAlpha(0f);
         splash.addView(tagView, tlp);
+        applyTextAnimation(tagView, textAnim, 700);
+      }
+
+      if (!"none".equals(loading)) {
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(-2, -2);
+        llp.topMargin = dp(32);
+        View loadingView = makeLoadingView(loading, color);
+        if (loadingView != null) {
+          splash.addView(loadingView, llp);
+        }
+      }
+
+      if (!"static".equals(bgAnim)) {
+        applyBgAnimation(splash, bgAnim);
       }
 
       splashView = splash;
       root.addView(splash, new FrameLayout.LayoutParams(-1, -1));
       splash.bringToFront();
-      splash.requestLayout();
-      Log.d(TAG, "Splash added");
+
+      final TextView fName = nameView;
+      final TextView fTag = tagView;
+      new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        @Override public void run() {
+          if (fName != null && fName.getAnimation() != null) fName.getAnimation().start();
+        }
+      }, 100);
+      new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        @Override public void run() {
+          if (fTag != null && fTag.getAnimation() != null) fTag.getAnimation().start();
+        }
+      }, 100);
 
       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
         @Override public void run() { fadeOut(); }
       }, duration);
+
     } catch (Exception e) {
       Log.e(TAG, "showSplash failed: " + e.getMessage());
     }
   }
-
-  private void fadeOut() {
-    if (splashView == null) return;
-    try {
-      AlphaAnimation a = new AlphaAnimation(1f, 0f);
-      a.setDuration(500);
-      a.setAnimationListener(new Animation.AnimationListener() {
-        @Override public void onAnimationStart(Animation x) {}
-        @Override public void onAnimationRepeat(Animation x) {}
-        @Override public void onAnimationEnd(Animation x) {
-          try { if (splashView != null) root.removeView(splashView); } catch (Exception e) {}
-          splashView = null;
-        }
-      });
-      splashView.startAnimation(a);
-    } catch (Exception e) {
-      try { if (splashView != null) root.removeView(splashView); } catch (Exception ex) {}
-      splashView = null;
-    }
-  }
-
-  private void loadWebView() {
-    try {
-      WebView w = new WebView(this);
-      w.setBackgroundColor(Color.parseColor(BG));
-      WebSettings s = w.getSettings();
-      s.setJavaScriptEnabled(true);
-      s.setDomStorageEnabled(true);
-      s.setAllowFileAccess(true);
-      s.setLoadWithOverviewMode(true);
-      s.setUseWideViewPort(true);
-      s.setAllowContentAccess(true);
-      w.setWebViewClient(new WebViewClient());
-      w.loadUrl("file:///android_asset/index.html");
-      root.addView(w, 0, new FrameLayout.LayoutParams(-1, -1));
-      Log.d(TAG, "WebView loaded behind splash");
-    } catch (Exception e) {
-      Log.e(TAG, "loadWebView failed: " + e.getMessage());
-    }
-  }
-
-  private GradientDrawable makeBg(String style, String color) {
-    GradientDrawable g = new GradientDrawable();
-    try {
-      int c = Color.parseColor(color);
-      if ("gradient".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TL_BR);
-        g.setColors(new int[]{c, Color.parseColor("#ec4899")});
-      } else if ("neon".equals(style)) {
-        g.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        g.setGradientRadius(700);
-        g.setColors(new int[]{c, Color.BLACK});
-      } else if ("aurora".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TL_BR);
-        g.setColors(new int[]{c, Color.parseColor("#06b6d4"), Color.parseColor("#ec4899")});
-      } else if ("waves".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.BOTTOM_TOP);
-        g.setColors(new int[]{Color.BLACK, c});
-      } else if ("matrix".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-        g.setColors(new int[]{Color.BLACK, c});
-      } else if ("cosmic".equals(style) || "stars".equals(style)) {
-        g.setGradientType(GradientDrawable.RADIAL_GRADIENT);
-        g.setGradientRadius(800);
-        g.setColors(new int[]{c, Color.BLACK});
-      } else if ("sunset".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-        g.setColors(new int[]{Color.parseColor("#ec4899"), Color.parseColor("#f59e0b"), c});
-      } else if ("ocean".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-        g.setColors(new int[]{Color.parseColor("#06b6d4"), c, Color.parseColor("#1e3a8a")});
-      } else if ("fire".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-        g.setColors(new int[]{Color.parseColor("#ef4444"), Color.parseColor("#f59e0b"), Color.BLACK});
-      } else if ("glass".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TL_BR);
-        g.setColors(new int[]{withAlpha(c, 100), withAlpha(c, 200), Color.BLACK});
-      } else if ("mono".equals(style)) {
-        g.setOrientation(GradientDrawable.Orientation.TL_BR);
-        g.setColors(new int[]{Color.parseColor("#1a1a1a"), Color.parseColor("#333333")});
-      } else {
-        g.setColor(c);
-      }
-    } catch (Exception e) {
-      g.setColor(Color.parseColor("#6366f1"));
-    }
-    return g;
-  }
-
-  private int withAlpha(int c, int alpha) {
-    return Color.argb(alpha, Color.red(c), Color.green(c), Color.blue(c));
-  }
-
-  private String decodeIcon(String name) {
-    if (name == null || name.length() == 0) return "🚀";
-    if (name.length() > 2) return name;
-    switch (name.toLowerCase()) {
-      case "rocket": return "🚀";
-      case "star": return "⭐";
-      case "heart": return "❤️";
-      case "fire": return "🔥";
-      case "sparkles": return "✨";
-      case "diamond": return "💎";
-      case "target": return "🎯";
-      case "glow": return "🌟";
-      case "bulb": return "💡";
-      case "palette": return "🎨";
-      case "rainbow": return "🌈";
-      case "music": return "🎵";
-      case "phone": return "📱";
-      case "globe": return "🌍";
-      case "gear": return "⚙️";
-      case "trophy": return "🏆";
-      case "muscle": return "💪";
-      case "party": return "🎉";
-      case "moon": return "🌙";
-      case "quran": return "📖";
-      default: return "🚀";
-    }
-  }
-
-  private int dp(int v) {
-    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
-  }
-}
