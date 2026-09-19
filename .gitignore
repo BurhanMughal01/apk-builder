@@ -32,3 +32,7 @@ __pycache__/
 *.swp
 .github/workflows/build-apk-old.yml
 .github/scripts/*.backup
+
+# Build artifacts
+scripts/__pycache__/
+data/*.tmp
