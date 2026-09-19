@@ -13,10 +13,35 @@
   <div class="container" style="text-align:center">
     <div class="hero-badge" style="animation:none">
       <span class="dot"></span>
-      <span>No monthly fees · Points never expire</span>
+      <span>Beta · Free tier fully working · Paid plans coming soon</span>
     </div>
     <h1>Simple, <span class="gradient-text">honest pricing</span></h1>
     <p class="hero-desc" style="margin:0 auto">Buy points once. Use them anytime. Islamic apps always free.</p>
+    <div style="margin-top:24px;display:flex;justify-content:center;align-items:center;gap:10px">
+      <label for="currencySelect" style="font-size:0.875rem;color:var(--text-muted);font-weight:600">Show prices in</label>
+      <select id="currencySelect" data-currency-select onchange="Currency.set(this.value)" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-weight:600;font-size:0.875rem;cursor:pointer">
+        <option value="USD">USD $</option>
+        <option value="PKR">PKR Rs</option>
+        <option value="INR">INR ₹</option>
+        <option value="BDT">BDT ৳</option>
+        <option value="SAR">SAR SR</option>
+        <option value="AED">AED</option>
+        <option value="MYR">MYR RM</option>
+        <option value="IDR">IDR Rp</option>
+        <option value="TRY">TRY ₺</option>
+        <option value="EGP">EGP E£</option>
+        <option value="NGN">NGN ₦</option>
+        <option value="KES">KES KSh</option>
+        <option value="ZAR">ZAR R</option>
+        <option value="GBP">GBP £</option>
+        <option value="EUR">EUR €</option>
+        <option value="CAD">CAD C$</option>
+        <option value="AUD">AUD A$</option>
+        <option value="SGD">SGD S$</option>
+        <option value="CNY">CNY ¥</option>
+        <option value="JPY">JPY ¥</option>
+      </select>
+    </div>
   </div>
 </section>
 
@@ -29,7 +54,7 @@
         <div class="price-name">Free</div>
         <div class="price-desc">Try before you buy</div>
         <div class="price-points">🎁 3 Trial Builds</div>
-        <div class="price-amount">$0</div>
+        <div class="price-amount"><span data-usd="0">$0</span></div>
         <ul class="price-features">
           <li>3 trial builds</li>
           <li>All 14 Islamic apps <strong style="color:var(--success);font-weight:800">FREE forever</strong></li>
@@ -45,7 +70,7 @@
         <div class="price-name">Basic</div>
         <div class="price-desc">For hobbyists</div>
         <div class="price-points">⭐ 20 Points</div>
-        <div class="price-amount">$5<span> one-time</span></div>
+        <div class="price-amount"><span data-usd="5">$5</span><span> one-time</span></div>
         <ul class="price-features">
           <li>20 builds (1 point = 1 build)</li>
           <li>All 10 templates</li>
@@ -54,7 +79,7 @@
           <li>No watermark</li>
           <li>Points never expire</li>
         </ul>
-        <button onclick="buyPlan('basic')" class="btn btn-outline btn-block">Buy Basic</button>
+        <button onclick="buyPlan('basic')" class="btn btn-outline btn-block">Coming Soon</button>
       </div>
 
       <!-- PRO -->
@@ -62,7 +87,7 @@
         <div class="price-name">Pro</div>
         <div class="price-desc">For serious builders</div>
         <div class="price-points">🔥 75 Points</div>
-        <div class="price-amount">$15<span> one-time</span></div>
+        <div class="price-amount"><span data-usd="15">$15</span><span> one-time</span></div>
         <ul class="price-features">
           <li>75 builds</li>
           <li>Everything in Basic</li>
@@ -72,7 +97,7 @@
           <li>Bulk build (5 at once)</li>
           <li>Points never expire</li>
         </ul>
-        <button onclick="buyPlan('pro')" class="btn btn-primary btn-block">Buy Pro</button>
+        <button onclick="buyPlan('pro')" class="btn btn-primary btn-block">Coming Soon</button>
       </div>
 
       <!-- UNLIMITED -->
@@ -80,7 +105,7 @@
         <div class="price-name">Unlimited</div>
         <div class="price-desc">For agencies</div>
         <div class="price-points">👑 Unlimited Forever</div>
-        <div class="price-amount">$30<span> one-time</span></div>
+        <div class="price-amount"><span data-usd="30">$30</span><span> one-time</span></div>
         <ul class="price-features">
           <li><strong>Unlimited builds</strong></li>
           <li>Everything in Pro</li>
@@ -90,7 +115,7 @@
           <li>Priority support (24h)</li>
           <li>Never pay again</li>
         </ul>
-        <button onclick="buyPlan('unlimited')" class="btn btn-outline btn-block">Go Unlimited</button>
+        <button onclick="buyPlan('unlimited')" class="btn btn-outline btn-block">Coming Soon</button>
       </div>
 
     </div>
@@ -177,6 +202,7 @@
   </div>
 </section>
 
+<script src="currency.js"></script>
 <script src="nav.js"></script>
 <script>
 function buyPlan(plan) {
@@ -195,7 +221,7 @@ function buyPlan(plan) {
   
   // TODO: Integrate LemonSqueezy checkout
   // For now, show message
-  showToast('Redirecting to checkout for ' + plan.toUpperCase() + ' (' + prices[plan] + ')...', 'success');
+  showToast("Paid plans coming soon. Free tier is fully working!", "info");
   
   setTimeout(function() {
     // Yahan LemonSqueezy checkout URL aayega
