@@ -351,7 +351,7 @@
     // Calculate stats
     const totalBuilds = Array.isArray(builds) ? builds.length : 0;
     const successBuilds = Array.isArray(builds) ? builds.filter(b => b.status === 'success').length : 0;
-    const successRate = totalBuilds > 0 ? Math.round((successBuilds / totalBuilds) * 100) + '%' : '—';
+    const successRate = totalBuilds > 0 ? Math.round((successBuilds / totalBuilds) * 100) + '%' : '0%';
 
     document.getElementById('statApps').textContent = totalBuilds;
     document.getElementById('statUsers').textContent = Array.isArray(users) ? users.length : 0;

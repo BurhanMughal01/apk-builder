@@ -16,15 +16,7 @@ export function corsHeaders(origin, env) {
 }
 
 export async function verifyApiKey(request, env) {
-  const url = new URL(request.url);
-const headerKey = request.headers.get('X-API-Key');
-const urlKey = url.searchParams.get('key');
-const apiKey = headerKey || urlKey;
-
-if (apiKey !== env.API_SECRET) {
-  return { ok: false, error: 'Invalid API key' };
-}
-
+  // 1. Try Supabase JWT (logged-in users)
   const auth = request.headers.get('Authorization');
   if (auth && auth.startsWith('Bearer ')) {
     const token = auth.slice(7);
@@ -32,8 +24,23 @@ if (apiKey !== env.API_SECRET) {
     if (user) return { ok: true, user };
   }
 
-  return { ok: true, user: null };
+  // 2. Try API key (server-to-server, admin, webhooks)
+  const url = new URL(request.url);
+  const headerKey = request.headers.get('X-API-Key');
+  const urlKey = url.searchParams.get('key');
+  const apiKey = headerKey || urlKey;
+
+  if (apiKey) {
+    if (apiKey === env.API_SECRET) {
+      return { ok: true, user: null, isServer: true };
+    }
+    return { ok: false, error: 'Invalid API key' };
+  }
+
+  // 3. Guest access allowed
+  return { ok: true, user: null, isGuest: true };
 }
+
 
 async function verifySupabaseJWT(token, env) {
   try {

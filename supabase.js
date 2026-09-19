@@ -110,15 +110,15 @@ window.Notifications = {
 
 window.API = {
   baseUrl: '/api',
-  apiKey: 'apkforge_super_secret_key_2024_change_me',
   async call(path, options) {
     options = options || {};
     const session = await Auth.getSession();
     const headers = {
-      'Content-Type': 'application/json',
-      'X-API-Key': this.apiKey
+      'Content-Type': 'application/json'
     };
-    if (session) headers['Authorization'] = 'Bearer ' + session.access_token;
+    if (session && session.access_token) {
+      headers['Authorization'] = 'Bearer ' + session.access_token;
+    }
     const res = await fetch(this.baseUrl + path, Object.assign({}, options, { headers: Object.assign(headers, options.headers || {}) }));
     const data = await res.json();
     if (!res.ok) throw Object.assign(new Error(data.error || 'Failed'), { status: res.status });
