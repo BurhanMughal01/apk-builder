@@ -25,10 +25,7 @@ jobs:
       - name: Deploy Worker
         working-directory: worker
         env:
-          RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          RAW_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          export CLOUDFLARE_API_TOKEN=$(echo "$RAW_TOKEN" | tr -d '[:space:]')
-          export CLOUDFLARE_ACCOUNT_ID=$(echo "$RAW_ACCOUNT" | tr -d '[:space:]')
-          echo "Token length: ${#CLOUDFLARE_API_TOKEN}"
-          wrangler deploy
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: wrangler deploy
