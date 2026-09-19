@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Changelog | APKForge</title>
+<meta name="description" content="APKForge updates and releases.">
+<meta name="theme-color" content="#059669">
+<link rel="stylesheet" href="style.css">
+<style>
+.version-card{border-left:3px solid var(--primary);padding:24px;background:var(--bg-card);border-radius:var(--radius-md);margin-bottom:24px}
+.version-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.version-tag{font-size:1.25rem;font-weight:800;color:var(--primary);font-family:'Space Grotesk',sans-serif}
+.version-date{font-size:0.875rem;color:var(--text-muted)}
+.version-badge{padding:3px 10px;border-radius:9999px;font-size:0.7rem;font-weight:700;text-transform:uppercase}
+.badge-new{background:rgba(16,185,129,0.15);color:#10b981}
+.badge-fix{background:rgba(245,158,11,0.15);color:#f59e0b}
+.badge-major{background:rgba(5,150,105,0.15);color:#059669}
+.change-list{list-style:none;padding:0}
+.change-list li{padding:8px 0;padding-left:24px;position:relative;color:var(--text-muted);line-height:1.6}
+.change-list li:before{content:"•";position:absolute;left:6px;color:var(--primary);font-weight:800}
+</style>
+</head>
+<body>
+<section class="section" style="padding-top:120px">
+  <div class="container container-narrow">
+    <h1 class="section-title" style="text-align:left">Changelog</h1>
+    <p style="color:var(--text-muted);margin-bottom:48px">Har update, har fix, har feature — public record.</p>
+
+    <div class="version-card">
+      <div class="version-header">
+        <span class="version-tag">v0.13.0</span>
+        <span class="version-badge badge-new">Latest</span>
+        <span class="version-date">19 September 2026</span>
+      </div>
+      <ul class="change-list">
+        <li>Added icon generator with crop + preview + initials</li>
+        <li>Expanded Splash Studio from 12 to 32 styles</li>
+        <li>Added Sach (transparency) page</li>
+        <li>Added Privacy, Terms, Refund pages</li>
+        <li>Added 404 page and clean URLs</li>
+        <li>Added multi-currency support (20+ currencies)</li>
+        <li>Updated README with full documentation</li>
+      </ul>
+    </div>
+
+    <div class="version-card">
+      <div class="version-header">
+        <span class="version-tag">v0.12.0</span>
+        <span class="version-badge badge-fix">Fixes</span>
+        <span class="version-date">19 September 2026</span>
+      </div>
+      <ul class="change-list">
+        <li>Removed fake claims from homepage ("60-second", "10 templates")</li>
+        <li>Fixed pricing to points-based model (Basic $5, Pro $15, Mega $30)</li>
+        <li>Removed fake features (priority queue, white-label, API access)</li>
+        <li>Replaced "Unlimited forever" with honest "200 points one-time"</li>
+        <li>Changed all Buy buttons to "Coming Soon" (honest)</li>
+        <li>Fixed FAQ to reflect actual capabilities</li>
+      </ul>
+    </div>
+
+    <div class="version-card">
+      <div class="version-header">
+        <span class="version-tag">v0.11.0</span>
+        <span class="version-badge badge-major">Design</span>
+        <span class="version-date">19 September 2026</span>
+      </div>
+      <ul class="change-list">
+        <li>Changed primary color from indigo (#6366f1) to emerald (#059669)</li>
+        <li>Professional color palette applied site-wide</li>
+        <li>Improved typography consistency</li>
+      </ul>
+    </div>
+
+    <div class="version-card">
+      <div class="version-header">
+        <span class="version-tag">v0.10.0</span>
+        <span class="version-badge badge-major">Cleanup</span>
+        <span class="version-date">19 September 2026</span>
+      </div>
+      <ul class="change-list">
+        <li>Organized scripts into scripts/ folder</li>
+        <li>Organized data files into data/ folder</li>
+        <li>Removed orphan test pages (diag, diagnostic, public-test)</li>
+        <li>Updated .gitignore for Python, backups, OS files</li>
+      </ul>
+    </div>
+
+    <div class="version-card" style="border-left-color:var(--text-muted)">
+      <div class="version-header">
+        <span class="version-tag" style="color:var(--text-muted)">v0.9.0 and earlier</span>
+        <span class="version-date">September 2026</span>
+      </div>
+      <ul class="change-list">
+        <li>Initial release with 52 templates</li>
+        <li>Cloudflare Worker backend</li>
+        <li>Supabase auth + database</li>
+        <li>GitHub Actions APK build pipeline</li>
+        <li>Signed APKs with stable keystore</li>
+        <li>PWA support</li>
+        <li>Dark mode toggle</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<script src="currency.js"></script>
+<script src="nav.js"></script>
+</body>
+</html>

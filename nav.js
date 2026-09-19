@@ -19,6 +19,9 @@
           <li><a href="build.html">Build</a></li>
           <li><a href="pricing.html">Pricing</a></li>
           <li><a href="sach.html">Sach</a></li>
+          <li><a href="changelog.html">Changelog</a></li>
+              <li><a href="api-docs.html">API Docs</a></li>
+              <li><a href="status.html">Status</a></li>
           <li><a href="faq.html">FAQ</a></li>
           <li><a href="about.html">About</a></li>
         </ul>
@@ -64,6 +67,9 @@
               <li><a href="features.html">Features</a></li>
               <li><a href="build.html">Build APK</a></li>
               <li><a href="pricing.html">Pricing</a></li>
+              <li><a href="changelog.html">Changelog</a></li>
+              <li><a href="api-docs.html">API Docs</a></li>
+              <li><a href="status.html">Status</a></li>
               <li><a href="build.html">Templates</a></li>
             </ul>
           </div>

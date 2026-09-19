@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>API Documentation | APKForge</title>
+<meta name="description" content="APKForge API documentation. Build APKs programmatically.">
+<meta name="theme-color" content="#059669">
+<link rel="stylesheet" href="style.css">
+<style>
+.docs-layout{display:grid;grid-template-columns:240px 1fr;gap:48px;align-items:start}
+.docs-sidebar{position:sticky;top:100px}
+.docs-sidebar ul{list-style:none;padding:0}
+.docs-sidebar a{display:block;padding:8px 12px;border-radius:8px;color:var(--text-muted);font-size:0.875rem;font-weight:500;transition:all var(--t-fast)}
+.docs-sidebar a:hover{background:var(--bg-alt);color:var(--primary)}
+.endpoint{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.endpoint-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.method{padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:700;font-family:monospace}
+.method.get{background:rgba(16,185,129,0.15);color:#10b981}
+.method.post{background:rgba(59,130,246,0.15);color:#3b82f6}
+.endpoint-path{font-family:monospace;font-size:0.9375rem;font-weight:600}
+.endpoint-desc{color:var(--text-muted);font-size:0.875rem;margin-bottom:16px}
+pre{background:#0a0a0a;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;font-size:0.8125rem;line-height:1.6;margin:12px 0}
+code{font-family:'JetBrains Mono',monospace}
+.docs-content h2{font-size:1.75rem;margin:40px 0 16px;scroll-margin-top:100px}
+.docs-content h3{font-size:1.125rem;margin:24px 0 12px}
+.docs-content p{line-height:1.8;color:var(--text-muted);margin-bottom:12px}
+.note{padding:16px;border-left:4px solid var(--primary);background:var(--bg-alt);border-radius:8px;margin:16px 0}
+.note strong{color:var(--primary)}
+@media(max-width:900px){.docs-layout{grid-template-columns:1fr}.docs-sidebar{position:static}}
+</style>
+</head>
+<body>
+<section class="section" style="padding-top:120px">
+  <div class="container">
+    <h1 class="section-title" style="text-align:left">API Documentation</h1>
+    <p style="color:var(--text-muted);margin-bottom:48px">Build APKs programmatically. Simple REST API.</p>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#auth">Authentication</a></li>
+          <li><a href="#endpoints">Endpoints</a></li>
+          <li><a href="#build">POST /api/build</a></li>
+          <li><a href="#status">GET /api/build/status</a></li>
+          <li><a href="#builds">GET /api/builds</a></li>
+          <li><a href="#rate">Rate Limits</a></li>
+          <li><a href="#errors">Errors</a></li>
+        </ul>
+      </aside>
+
+      <div class="docs-content">
+        <div class="note">
+          <strong>⚠️ Beta Status:</strong> API filhal development mein hai. Rate limits aur endpoints change ho sakte hain. Production use se pehle test karein.
+        </div>
+
+        <h2 id="intro">Introduction</h2>
+        <p>APKForge API aap ko programmatically APK build karne deti hai. Base URL:</p>
+        <pre><code>https://apk-builder-api.buisch2314.workers.dev</code></pre>
+
+        <h2 id="auth">Authentication</h2>
+        <p>Filhal API key system beta mein hai. Request bhejte waqt session cookie use hoti hai. API keys coming soon.</p>
+        <pre><code># Example: check current user
+curl https://apk-builder-api.buisch2314.workers.dev/api/auth/me \
+  -H "Cookie: session=YOUR_SESSION"</code></pre>
+
+        <h2 id="endpoints">Endpoints</h2>
+
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/health</span>
+          </div>
+          <div class="endpoint-desc">Health check. Authentication nahi chahiye.</div>
+          <pre><code>curl https://apk-builder-api.buisch2314.workers.dev/health
+
+# Response
+{"status":"ok","version":"2.0.0","time":1789815702419}</code></pre>
+        </div>
+
+        <h2 id="build">POST /api/build</h2>
+        <p>Naya APK build queue mein daalta hai. Islamic templates ke liye quota check nahi hota.</p>
+        <pre><code>curl -X POST https://apk-builder-api.buisch2314.workers.dev/api/build \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=YOUR_SESSION" \
+  -d '{
+    "buildType": "template",
+    "templateName": "quran",
+    "appName": "My Quran App",
+    "packageName": "com.example.quran",
+    "version": "1.0.0",
+    "splashStyle": "gradient",
+    "splashColor": "#059669",
+    "splashIcon": "📖",
+    "splashDuration": 2000,
+    "orientation": "portrait"
+  }'
+
+# Response
+{
+  "ok": true,
+  "buildId": "uuid-here",
+  "queuePosition": 1,
+  "estimatedWait": 90
+}</code></pre>
+
+        <h2 id="status">GET /api/build/status</h2>
+        <p>Build ka current status check karta hai.</p>
+        <pre><code>curl "https://apk-builder-api.buisch2314.workers.dev/api/build/status?buildId=YOUR_BUILD_ID" \
+  -H "Cookie: session=YOUR_SESSION"
+
+# Response
+{
+  "build": {
+    "id": "uuid",
+    "app_name": "My App",
+    "status": "success",
+    "apk_url": "https://..."
+  },
+  "queuePosition": null,
+  "githubStatus": {
+    "status": "completed",
+    "conclusion": "success"
+  }
+}</code></pre>
+
+        <h3>Build Status Values</h3>
+        <pre><code>queued     → Queue mein hai
+building   → APK build ho rahi hai
+success    → APK ready
+failed     → Build fail
+cancelled  → Cancel kiya gaya</code></pre>
+
+        <h2 id="builds">GET /api/builds</h2>
+        <p>User ke saare builds list karta hai.</p>
+        <pre><code>curl https://apk-builder-api.buisch2314.workers.dev/api/builds \
+  -H "Cookie: session=YOUR_SESSION"</code></pre>
+
+        <h2 id="rate">Rate Limits</h2>
+        <p>Fair-use rate limiting apply hoti hai:</p>
+        <ul style="padding-left:24px;color:var(--text-muted);line-height:2">
+          <li>Builds: 10 per minute</li>
+          <li>Status checks: 60 per minute</li>
+          <li>Login attempts: 5 per minute</li>
+        </ul>
+        <p>Rate limit cross karne pe <code>429 Too Many Requests</code> milega.</p>
+
+        <h2 id="errors">Error Responses</h2>
+        <pre><code>// Invalid API key
+{"error":"Invalid API key"}
+
+// Quota exceeded (non-Islamic)
+{
+  "error": "Quota exceeded",
+  "upgrade": true,
+  "message": "Islamic templates are always free..."
+}
+
+// Invalid input
+{"error": "Invalid package name (e.g. com.example.app)"}</code></pre>
+
+        <h2>SDKs</h2>
+        <p>Official SDKs coming soon. Filhal REST API use karein.</p>
+
+        <div class="note" style="margin-top:40px">
+          <strong>Questions?</strong> <a href="contact.html" style="color:var(--primary)">Contact page</a> pe poochein.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="currency.js"></script>
+<script src="nav.js"></script>
+</body>
+</html>

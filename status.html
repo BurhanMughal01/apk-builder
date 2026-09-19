@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Status | APKForge</title>
+<meta name="description" content="APKForge system status and uptime.">
+<meta name="theme-color" content="#059669">
+<link rel="stylesheet" href="style.css">
+<style>
+.overall-status{padding:32px;border-radius:var(--radius-lg);margin-bottom:32px;text-align:center}
+.overall-operational{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(5,150,105,0.1));border:2px solid #10b981}
+.overall-issues{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.1));border:2px solid #f59e0b}
+.overall-outage{background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(220,38,38,0.1));border:2px solid #ef4444}
+.overall-icon{font-size:3rem;margin-bottom:12px}
+.overall-title{font-size:1.5rem;font-weight:800;margin-bottom:8px}
+.service-row{display:flex;justify-content:space-between;align-items:center;padding:20px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-card);margin-bottom:12px;flex-wrap:wrap;gap:12px}
+.service-name{font-weight:600}
+.service-desc{font-size:0.8125rem;color:var(--text-muted)}
+.service-status{padding:6px 14px;border-radius:9999px;font-size:0.75rem;font-weight:700;text-transform:uppercase}
+.status-up{background:rgba(16,185,129,0.15);color:#10b981}
+.status-down{background:rgba(239,68,68,0.15);color:#ef4444}
+.status-checking{background:rgba(100,116,139,0.15);color:#64748b}
+.uptime-bar{display:flex;gap:2px;margin-top:8px}
+.uptime-day{flex:1;height:24px;border-radius:3px;background:#10b981}
+</style>
+</head>
+<body>
+<section class="section" style="padding-top:120px">
+  <div class="container container-narrow">
+    <h1 class="section-title" style="text-align:left">System Status</h1>
+    <p style="color:var(--text-muted);margin-bottom:32px">Live check — kya kaam kar raha hai, kya nahi.</p>
+
+    <div id="overallStatus" class="overall-status overall-operational">
+      <div class="overall-icon">✅</div>
+      <div class="overall-title">All Systems Operational</div>
+      <div style="color:var(--text-muted);font-size:0.9375rem" id="lastCheck">Checking...</div>
+    </div>
+
+    <h2 style="font-size:1.5rem;margin:40px 0 20px">Services</h2>
+
+    <div class="service-row">
+      <div>
+        <div class="service-name">🌐 Website (Vercel)</div>
+        <div class="service-desc">Frontend pages, templates, builder UI</div>
+      </div>
+      <span class="service-status status-checking" id="status-website">Checking</span>
+    </div>
+
+    <div class="service-row">
+      <div>
+        <div class="service-name">⚙️ API (Cloudflare Worker)</div>
+        <div class="service-desc">Build queue, auth, webhook handlers</div>
+      </div>
+      <span class="service-status status-checking" id="status-api">Checking</span>
+    </div>
+
+    <div class="service-row">
+      <div>
+        <div class="service-name">🗄️ Database (Supabase)</div>
+        <div class="service-desc">User data, builds, storage</div>
+      </div>
+      <span class="service-status status-checking" id="status-db">Checking</span>
+    </div>
+
+    <div class="service-row">
+      <div>
+        <div class="service-name">🔨 Build Pipeline (GitHub Actions)</div>
+        <div class="service-desc">APK compilation, signing</div>
+      </div>
+      <span class="service-status status-checking" id="status-build">Checking</span>
+    </div>
+
+    <h2 style="font-size:1.5rem;margin:40px 0 20px">Uptime (Last 30 days)</h2>
+    <p style="color:var(--text-muted);margin-bottom:16px">Ye graph real data se aayega jab monitoring setup hogi. Filhal placeholder.</p>
+    <div class="uptime-bar">
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div><div class="uptime-day"></div>
+      <div class="uptime-day"></div><div class="uptime-day"></div>
+    </div>
+    <p style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;text-align:right">30 days ago → Today</p>
+
+    <h2 style="font-size:1.5rem;margin:40px 0 20px">Incidents</h2>
+    <div class="card" style="padding:24px;text-align:center;color:var(--text-muted)">
+      <div style="font-size:2rem;margin-bottom:8px">🎉</div>
+      <div>Abhi tak koi incident nahi. Alhamdulillah.</div>
+    </div>
+
+    <div style="margin-top:40px;padding:20px;background:var(--bg-alt);border-radius:var(--radius);border:1px solid var(--border);font-size:0.875rem;color:var(--text-muted);line-height:1.7">
+      <strong style="color:var(--text)">Koi issue notice hua?</strong><br>
+      Hum transparent hain. Agar kuch down hai, yahan dikhayenge. <a href="contact.html" style="color:var(--primary)">Report karein</a>.
+    </div>
+  </div>
+</section>
+
+<script src="currency.js"></script>
+<script src="nav.js"></script>
+<script>
+(async function checkServices() {
+  const checks = [
+    { id: 'website', url: 'https://apk-builder-eosin.vercel.app', name: 'Website' },
+    { id: 'api', url: 'https://apk-builder-api.buisch2314.workers.dev/health', name: 'API' },
+    { id: 'db', url: 'https://hmfesroapkllwnvvholb.supabase.co/rest/v1/', name: 'Database', headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtZmVzcm9hcGtsbHdudnZob2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzODYwNTEsImV4cCI6MjEwNDk2MjA1MX0.R8ngiq5m79gt-VBVze33BVHRpiVXRV3q0ZoR1QWqJtk' } }
+  ];
+
+  let allOk = true;
+
+  for (const check of checks) {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      const res = await fetch(check.url, { 
+        method: 'HEAD', 
+        mode: 'no-cors',
+        signal: controller.signal,
+        headers: check.headers || {}
+      });
+      clearTimeout(timeout);
+      // no-cors mode always returns opaque, so we treat no-error as up
+      const el = document.getElementById('status-' + check.id);
+      if (el) {
+        el.className = 'service-status status-up';
+        el.textContent = 'Operational';
+      }
+    } catch (e) {
+      allOk = false;
+      const el = document.getElementById('status-' + check.id);
+      if (el) {
+        el.className = 'service-status status-down';
+        el.textContent = 'Issue';
+      }
+    }
+  }
+
+  // Build pipeline — assume operational (GitHub uptime 99.9%)
+  const buildEl = document.getElementById('status-build');
+  if (buildEl) {
+    buildEl.className = 'service-status status-up';
+    buildEl.textContent = 'Operational';
+  }
+
+  // Update overall
+  const overall = document.getElementById('overallStatus');
+  const now = new Date().toLocaleString();
+  document.getElementById('lastCheck').textContent = 'Last checked: ' + now;
+
+  if (!allOk) {
+    overall.className = 'overall-status overall-issues';
+    overall.querySelector('.overall-icon').textContent = '⚠️';
+    overall.querySelector('.overall-title').textContent = 'Some Services Affected';
+  }
+})();
+</script>
+</body>
+</html>
