@@ -58,7 +58,7 @@
         <ul class="price-features">
           <li>3 trial builds</li>
           <li>All 14 Islamic apps <strong style="color:var(--success);font-weight:800">FREE forever</strong></li>
-          <li>All 10 templates</li>
+          <li>All 52 templates</li>
           <li>12 splash styles</li>
           <li>Standard queue</li>
         </ul>
@@ -73,10 +73,9 @@
         <div class="price-amount"><span data-usd="5">$5</span><span> one-time</span></div>
         <ul class="price-features">
           <li>20 builds (1 point = 1 build)</li>
-          <li>All 10 templates</li>
-          <li>All 20 splash styles</li>
+          <li>All 52 templates</li>
+          <li>12 splash styles</li>
           <li>Custom app icon</li>
-          <li>No watermark</li>
           <li>Points never expire</li>
         </ul>
         <button onclick="buyPlan('basic')" class="btn btn-outline btn-block">Coming Soon</button>
@@ -89,12 +88,11 @@
         <div class="price-points">🔥 75 Points</div>
         <div class="price-amount"><span data-usd="15">$15</span><span> one-time</span></div>
         <ul class="price-features">
-          <li>75 builds</li>
+          <li>75 builds (1 point = 1 build)</li>
           <li>Everything in Basic</li>
-          <li>Priority queue (3x faster)</li>
-          <li>Email notifications</li>
-          <li>Build analytics</li>
-          <li>Bulk build (5 at once)</li>
+          <li>All 52 templates</li>
+          <li>12 splash styles</li>
+          <li>Custom app icon</li>
           <li>Points never expire</li>
         </ul>
         <button onclick="buyPlan('pro')" class="btn btn-primary btn-block">Coming Soon</button>
@@ -102,20 +100,19 @@
 
       <!-- UNLIMITED -->
       <div class="price-card">
-        <div class="price-name">Unlimited</div>
-        <div class="price-desc">For agencies</div>
-        <div class="price-points">👑 Unlimited Forever</div>
+        <div class="price-name">Mega</div>
+        <div class="price-desc">Best value</div>
+        <div class="price-points">👑 200 Points</div>
         <div class="price-amount"><span data-usd="30">$30</span><span> one-time</span></div>
         <ul class="price-features">
-          <li><strong>Unlimited builds</strong></li>
+          <li><strong>200 points (200 builds)</strong></li>
           <li>Everything in Pro</li>
-          <li>White-label APKs</li>
-          <li>API access</li>
-          <li>Custom domain</li>
-          <li>Priority support (24h)</li>
-          <li>Never pay again</li>
+          <li>All 52 templates</li>
+          <li>12 splash styles</li>
+          <li>Custom app icon</li>
+          <li>Points never expire</li>
         </ul>
-        <button onclick="buyPlan('unlimited')" class="btn btn-outline btn-block">Coming Soon</button>
+        <button onclick="buyPlan('mega')" class="btn btn-outline btn-block">Coming Soon</button>
       </div>
 
     </div>
@@ -188,15 +185,15 @@
       </div>
       <div class="faq-item">
         <button class="faq-q">Can I get a refund?</button>
-        <div class="faq-a"><div class="faq-a-inner">7-day money-back guarantee on all purchases. If you're not satisfied, we'll refund 100%.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Paid plans are coming soon. Once launched, we plan to offer a 7-day money-back guarantee.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Can I publish to Play Store?</button>
         <div class="faq-a"><div class="faq-a-inner">Yes — our signed APKs are Play Store compliant (subject to Google's policies).</div></div>
       </div>
       <div class="faq-item">
-        <button class="faq-q">What's the difference between Pro and Unlimited?</button>
-        <div class="faq-a"><div class="faq-a-inner">Pro = 75 builds. Unlimited = unlimited builds forever, plus white-label APKs, API access, and custom domain.</div></div>
+        <button class="faq-q">What's the difference between Pro and Mega?</button>
+        <div class="faq-a"><div class="faq-a-inner">Pro = 75 builds. Mega = 200 builds. All plans are one-time purchases. Points never expire.</div></div>
       </div>
     </div>
   </div>
@@ -206,8 +203,8 @@
 <script src="nav.js"></script>
 <script>
 function buyPlan(plan) {
-  const prices = { basic: '$5', pro: '$15', unlimited: '$30' };
-  const points = { basic: '20', pro: '75', unlimited: 'Unlimited' };
+  const prices = { basic: '$5', pro: '$15', mega: '$30' };
+  const points = { basic: '20', pro: '75', mega: '200' };
   
   // Check if logged in
   const user = localStorage.getItem('apkforge_user');
