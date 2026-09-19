@@ -1,16 +1,10 @@
+account_id = "37fa3d59c9ef09df224fa72384a5ff7a"
 name = "apk-builder-api"
 main = "index.js"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-[[durable_objects.bindings]]
-name = "BUILD_QUEUE"
-class_name = "BuildQueue"
-
-[[migrations]]
-tag = "v1"
-new_sqlite_classes = ["BuildQueue"]
-
+# KV Namespaces
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
 id = "4b50cc0bff95441f9db1a33248786280"
@@ -18,3 +12,18 @@ id = "4b50cc0bff95441f9db1a33248786280"
 [[kv_namespaces]]
 binding = "LOGS"
 id = "5d674bf790424724a6a806d7bef6572b"
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "BUILD_QUEUE"
+class_name = "BuildQueue"
+
+# DO Migrations
+[[migrations]]
+tag = "v1"
+new_classes = ["BuildQueue"]
+
+# Public variables (secrets alag se set hote hain)
+[vars]
+SUPABASE_URL = "https://hmfesroapkllwnvvholb.supabase.co"
+GITHUB_REPO = "BurhanMughal01/apk-builder"
