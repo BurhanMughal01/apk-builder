@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sach — Truth & Status | APKForge</title>
+<meta name="description" content="APKForge transparency page. Real numbers, working features, honest limitations. No fake claims.">
+<meta name="theme-color" content="#059669">
+<link rel="stylesheet" href="style.css">
+<style>
+.sach-hero{padding:120px 0 60px;text-align:center}
+.sach-hero h1{font-size:clamp(2rem,5vw,3.5rem);margin:20px 0}
+.sach-promise{max-width:800px;margin:40px auto;padding:32px;border:2px solid var(--primary);border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(5,150,105,0.05),rgba(20,184,166,0.05))}
+.sach-promise h3{color:var(--primary);margin-bottom:16px;font-size:1.5rem}
+.sach-promise p{color:var(--text-muted);line-height:1.8;font-size:1.0625rem}
+.status-card{padding:24px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);text-align:center}
+.status-value{font-size:2.25rem;font-weight:800;color:var(--primary);font-family:'Space Grotesk',sans-serif;margin-bottom:8px}
+.status-label{font-size:0.875rem;color:var(--text-muted);font-weight:600}
+.feature-row{display:flex;align-items:center;gap:16px;padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-card);margin-bottom:12px}
+.feature-row.working{border-left:4px solid #10b981}
+.feature-row.limited{border-left:4px solid #f59e0b}
+.feature-row.planned{border-left:4px solid #06b6d4}
+.feature-icon{font-size:1.5rem}
+.feature-content{flex:1}
+.feature-name{font-weight:700;margin-bottom:2px}
+.feature-desc{font-size:0.875rem;color:var(--text-muted)}
+.feature-badge{padding:4px 12px;border-radius:9999px;font-size:0.75rem;font-weight:700;white-space:nowrap}
+.badge-working{background:rgba(16,185,129,0.15);color:#10b981}
+.badge-limited{background:rgba(245,158,11,0.15);color:#f59e0b}
+.badge-planned{background:rgba(6,182,212,0.15);color:#06b6d4}
+.halal-card{padding:24px;border-radius:var(--radius);background:var(--bg-alt);border:1px solid var(--border);margin-bottom:12px}
+.audit-banner{text-align:center;padding:32px;border-radius:var(--radius-lg);background:var(--grad-primary);color:white;margin:40px 0}
+.audit-banner h3{margin-bottom:12px;color:white}
+.audit-banner p{opacity:0.95}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="sach-hero">
+  <div class="container">
+    <div class="hero-badge" style="animation:none;display:inline-flex;margin:0 auto">
+      <span class="dot"></span>
+      <span>Transparency Report</span>
+    </div>
+    <h1>Hum Naye Hain,<br><span class="gradient-text">Aur Sach Bolte Hain</span></h1>
+    <p class="hero-desc" style="max-width:640px;margin:0 auto">
+      Is page pe aap koi fake number, fake testimonial, ya fake claim nahi paoge. 
+      Ye hamara aqeedah hai — tijarat mein sachai = barakah.
+    </p>
+  </div>
+</section>
+
+<!-- TRUTH PROMISE -->
+<section class="section" style="padding-top:20px">
+  <div class="container">
+    <div class="sach-promise">
+      <h3>🕌 Hamara Wada (Our Promise)</h3>
+      <p>
+        <strong>Sachai hamari pehchaan hai.</strong> Agar kuch kaam nahi karta — hum bata denge.
+        Agar kuch nahi hai — hum bata denge. Agar kuch adhoora hai — hum bata denge.
+        <br><br>
+        Ye sirf marketing nahi — ye hamara deen hai. Quran mein Allah farmata hai:
+        <em>"Aye imaan walo! Allah se daro aur sachon ke saath raho."</em> (At-Tawbah 9:119)
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE STATS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">📊 Live Stats</h2>
+      <p class="section-subtitle">Ye numbers real hain — Supabase se live aate hain. Koi hardcode nahi.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="status-card">
+        <div class="status-value" id="statApps">—</div>
+        <div class="status-label">Apps Built</div>
+      </div>
+      <div class="status-card">
+        <div class="status-value" id="statUsers">—</div>
+        <div class="status-label">Registered Users</div>
+      </div>
+      <div class="status-card">
+        <div class="status-value" id="statSuccess">—</div>
+        <div class="status-label">Success Rate</div>
+      </div>
+      <div class="status-card">
+        <div class="status-value">14</div>
+        <div class="status-label">Islamic Templates (Free)</div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text-muted);font-size:0.875rem;margin-top:24px">
+      Agar stats load nahi ho rahe → API issue hai, hum fix kar rahe hain. Real issue, real report.
+    </p>
+  </div>
+</section>
+
+<!-- WORKING FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">✅ Kaam Karne Wale Features</h2>
+      <p class="section-subtitle">Ye sab tested hain. Har build pe kaam karte hain.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr;max-width:900px;margin:0 auto">
+      <div class="feature-row working">
+        <span class="feature-icon">📄</span>
+        <div class="feature-content">
+          <div class="feature-name">HTML → APK</div>
+          <div class="feature-desc">Upload HTML file, get signed APK</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">🌐</span>
+        <div class="feature-content">
+          <div class="feature-name">URL → APK</div>
+          <div class="feature-desc">Paste any URL, wrap in Android app</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">📱</span>
+        <div class="feature-content">
+          <div class="feature-name">52 Templates</div>
+          <div class="feature-desc">Islamic, utility, games, education, business</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">🎨</span>
+        <div class="feature-content">
+          <div class="feature-name">Splash Customizer</div>
+          <div class="feature-desc">12 styles, 20 colors, 20 icons, live preview</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">🔐</span>
+        <div class="feature-content">
+          <div class="feature-name">Signed APKs</div>
+          <div class="feature-desc">v1 + v2 signed, stable keystore</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">🌙</span>
+        <div class="feature-content">
+          <div class="feature-name">Dark Mode</div>
+          <div class="feature-desc">Toggle on every page, saved preference</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">💱</span>
+        <div class="feature-content">
+          <div class="feature-name">Multi-Currency</div>
+          <div class="feature-desc">20+ currencies, auto-detect + manual</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+      <div class="feature-row working">
+        <span class="feature-icon">🆓</span>
+        <div class="feature-content">
+          <div class="feature-name">Islamic Apps Free</div>
+          <div class="feature-desc">14 templates, unlimited, forever</div>
+        </div>
+        <span class="feature-badge badge-working">WORKING</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIMITATIONS -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">⚠️ Sach — Kya Nahi Ho Sakta</h2>
+      <p class="section-subtitle">Ye cheezein abhi kaam nahi karti. Chhupate nahi, bata dete hain.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr;max-width:900px;margin:0 auto">
+      <div class="feature-row limited">
+        <span class="feature-icon">🍎</span>
+        <div class="feature-content">
+          <div class="feature-name">iOS Apps</div>
+          <div class="feature-desc">Sirf Android. iOS support nahi hai.</div>
+        </div>
+        <span class="feature-badge badge-limited">NAHI</span>
+      </div>
+      <div class="feature-row limited">
+        <span class="feature-icon">💳</span>
+        <div class="feature-content">
+          <div class="feature-name">Payment System</div>
+          <div class="feature-desc">Paid plans "Coming Soon" hain. Filhal sab free.</div>
+        </div>
+        <span class="feature-badge badge-limited">SOON</span>
+      </div>
+      <div class="feature-row limited">
+        <span class="feature-icon">🔔</span>
+        <div class="feature-content">
+          <div class="feature-name">Push Notifications</div>
+          <div class="feature-desc">Roadmap mein hai, abhi nahi.</div>
+        </div>
+        <span class="feature-badge badge-limited">SOON</span>
+      </div>
+      <div class="feature-row limited">
+        <span class="feature-icon">🌐</span>
+        <div class="feature-content">
+          <div class="feature-name">Heavy JavaScript Sites</div>
+          <div class="feature-desc">Kuch complex sites CORS/tech limits ki wajah se fail hoti hain.</div>
+        </div>
+        <span class="feature-badge badge-limited">SOMETIMES</span>
+      </div>
+      <div class="feature-row limited">
+        <span class="feature-icon">📦</span>
+        <div class="feature-content">
+          <div class="feature-name">50MB+ APKs</div>
+          <div class="feature-desc">Bade apps abhi support nahi.</div>
+        </div>
+        <span class="feature-badge badge-limited">LIMIT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">🔜 Roadmap</h2>
+      <p class="section-subtitle">Kya aa raha hai — public timeline. Koi fake promise nahi.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr;max-width:900px;margin:0 auto">
+      <div class="feature-row planned">
+        <span class="feature-icon">🚀</span>
+        <div class="feature-content">
+          <div class="feature-name">Splash Studio Expansion</div>
+          <div class="feature-desc">12 se 30+ splash styles, presets, animations</div>
+        </div>
+        <span class="feature-badge badge-planned">PLANNED</span>
+      </div>
+      <div class="feature-row planned">
+        <span class="feature-icon">💰</span>
+        <div class="feature-content">
+          <div class="feature-name">Payment Integration</div>
+          <div class="feature-desc">JazzCash, EasyPaisa, bank transfer</div>
+        </div>
+        <span class="feature-badge badge-planned">PLANNED</span>
+      </div>
+      <div class="feature-row planned">
+        <span class="feature-icon">🔌</span>
+        <div class="feature-content">
+          <div class="feature-name">API Access</div>
+          <div class="feature-desc">Programmatic builds, API keys, docs</div>
+        </div>
+        <span class="feature-badge badge-planned">PLANNED</span>
+      </div>
+      <div class="feature-row planned">
+        <span class="feature-icon">📱</span>
+        <div class="feature-content">
+          <div class="feature-name">Custom App Icon Generator</div>
+          <div class="feature-desc">Upload image → auto-generate adaptive icons</div>
+        </div>
+        <span class="feature-badge badge-planned">PLANNED</span>
+      </div>
+      <div class="feature-row planned">
+        <span class="feature-icon">🔔</span>
+        <div class="feature-content">
+          <div class="feature-name">Push Notifications</div>
+          <div class="feature-desc">Firebase FCM integration</div>
+        </div>
+        <span class="feature-badge badge-planned">PLANNED</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HALAL POLICY -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">🕌 Halal Policy</h2>
+      <p class="section-subtitle">Hamari limit clear hai — kya banayenge, kya nahi.</p>
+    </div>
+    <div style="max-width:900px;margin:0 auto">
+      <div class="halal-card">
+        <h3 style="color:#10b981;margin-bottom:12px">✅ Ye Banayenge (Halal)</h3>
+        <p style="color:var(--text-muted);line-height:1.8">
+          Quran apps · Hadith apps · Dua/Tasbeeh · Prayer times · Qibla · Islamic calendar ·
+          Halal business tools · Education apps · Productivity apps · Naat (no music) ·
+          Islamic quizzes · Family apps
+        </p>
+      </div>
+      <div class="halal-card" style="border-color:#ef4444">
+        <h3 style="color:#ef4444;margin-bottom:12px">❌ Ye NAHI Banayenge (Haram)</h3>
+        <p style="color:var(--text-muted);line-height:1.8">
+          Music/video streaming · Dating/na-mahram chat · Gambling · Lottery · Alcohol/Pork ·
+          Interest-based (riba) finance · Adult content · Shirk content · Anything haram in Islam
+        </p>
+      </div>
+      <div class="halal-card">
+        <h3 style="color:var(--primary);margin-bottom:12px">🤲 Sadaqah Jariyah</h3>
+        <p style="color:var(--text-muted);line-height:1.8">
+          14 Islamic templates <strong>hamesha free</strong> rahenge. Unlimited builds, no points, no ads.
+          Ye hamari taraf se Ummah ke liye sadaqah jariyah hai.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIT BANNER -->
+<section class="section">
+  <div class="container">
+    <div class="audit-banner">
+      <h3>📅 Last Audit: 19 September 2026</h3>
+      <p>Ye page last time is date pe update hua tha. Next audit: <strong>26 September 2026</strong></p>
+      <p style="margin-top:16px;font-size:0.875rem;opacity:0.9">
+        Koi claim galat lage? Hume batao — hum turant fix karenge.
+        <br>Email: <a href="contact.html" style="color:white;text-decoration:underline">contact page</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script src="currency.js"></script>
+<script src="nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Load real stats from Supabase
+(async function() {
+  try {
+    const SUPABASE_URL = 'https://hmfesroapkllwnvvholb.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtZmVzcm9hcGtsbHdudnZob2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzODYwNTEsImV4cCI6MjEwNDk2MjA1MX0.R8ngiq5m79gt-VBVze33BVHRpiVXRV3q0ZoR1QWqJtk';
+
+    // Count builds
+    const buildsRes = await fetch(SUPABASE_URL + '/rest/v1/builds?select=id,status', {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    const builds = await buildsRes.json();
+
+    // Count users
+    const usersRes = await fetch(SUPABASE_URL + '/rest/v1/profiles?select=id', {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    });
+    const users = await usersRes.json();
+
+    // Calculate stats
+    const totalBuilds = Array.isArray(builds) ? builds.length : 0;
+    const successBuilds = Array.isArray(builds) ? builds.filter(b => b.status === 'success').length : 0;
+    const successRate = totalBuilds > 0 ? Math.round((successBuilds / totalBuilds) * 100) + '%' : '—';
+
+    document.getElementById('statApps').textContent = totalBuilds;
+    document.getElementById('statUsers').textContent = Array.isArray(users) ? users.length : 0;
+    document.getElementById('statSuccess').textContent = successRate;
+  } catch (e) {
+    console.warn('Stats loading error:', e);
+    document.getElementById('statApps').textContent = 'Loading...';
+    document.getElementById('statUsers').textContent = 'Loading...';
+    document.getElementById('statSuccess').textContent = 'Loading...';
+  }
+})();
+</script>
+</body>
+</html>

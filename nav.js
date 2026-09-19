@@ -18,6 +18,7 @@
           <li><a href="features.html">Features</a></li>
           <li><a href="build.html">Build</a></li>
           <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="sach.html">Sach</a></li>
           <li><a href="faq.html">FAQ</a></li>
           <li><a href="about.html">About</a></li>
         </ul>
@@ -55,7 +56,7 @@
               <div class="nav-logo-icon">⚡</div>
               <span>APKForge</span>
             </a>
-            <p>Turn any website or HTML into a professional Android APK in under 60 seconds. Free, fast, and no coding required.</p>
+            <p>Turn HTML and websites into Android apps. Free for Islamic projects. No coding needed.</p>
           </div>
           <div class="footer-col">
             <h4>Product</h4>
@@ -63,13 +64,14 @@
               <li><a href="features.html">Features</a></li>
               <li><a href="build.html">Build APK</a></li>
               <li><a href="pricing.html">Pricing</a></li>
-              <li><a href="templates.html">Templates</a></li>
+              <li><a href="build.html">Templates</a></li>
             </ul>
           </div>
           <div class="footer-col">
             <h4>Company</h4>
             <ul>
               <li><a href="about.html">About</a></li>
+              <li><a href="sach.html">Sach</a></li>
               <li><a href="contact.html">Contact</a></li>
               <li><a href="faq.html">FAQ</a></li>
               <li><a href="dashboard.html">Dashboard</a></li>
