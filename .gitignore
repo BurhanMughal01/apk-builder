@@ -18,3 +18,17 @@ Thumbs.db
 # Env
 .env
 .env.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Backups
+*.backup
+*~
+
+# OS
+*.swp
+.github/workflows/build-apk-old.yml
+.github/scripts/*.backup
